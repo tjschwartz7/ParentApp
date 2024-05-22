@@ -49,6 +49,16 @@
                 android:textAlignment="textStart"
                 android:textColor="#FFFFFF" />
 
+            <TextView
+                android:id="@+id/tv_rad_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="2dp"
+                android:paddingEnd="1dp"
+                android:text="@string/des_rad"
+                android:textAlignment="textStart"
+                android:textColor="#FFFFFF" />
+
             <View
                 android:id="@+id/divider"
                 android:layout_width="match_parent"
