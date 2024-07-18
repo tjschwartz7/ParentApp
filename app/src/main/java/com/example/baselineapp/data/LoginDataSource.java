@@ -13,6 +13,11 @@ public class LoginDataSource {
 
         try {
             // TODO: handle loggedInUser authentication
+            // We have a username and password
+            // So, we need to compare these to some
+            // stored credentials somewhere.
+            // We can't do anything with this until we have
+            // some stored credentials.
             LoggedInUser fakeUser =
                     new LoggedInUser(
                             java.util.UUID.randomUUID().toString(),

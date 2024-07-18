@@ -23,6 +23,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.baselineapp.MainActivity;
 import com.example.baselineapp.ui.createaccount.CreateAccount;
 import com.example.baselineapp.R;
 import com.example.baselineapp.databinding.ActivityLoginBinding;
@@ -136,6 +137,9 @@ public class LoginActivity extends AppCompatActivity {
     private void updateUiWithUser(LoggedInUserView model) {
         String welcome = getString(R.string.welcome) + model.getDisplayName();
         // TODO : initiate successful logged in experience
+        Intent dashboardPage = new Intent(LoginActivity.this, MainActivity.class);
+        LoginActivity.this.startActivity(dashboardPage);
+
         Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
     }
 
