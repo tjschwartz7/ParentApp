@@ -3,7 +3,6 @@ package com.example.baselineapp.ui.login;
 import android.app.Activity;
 import android.content.Intent;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -24,10 +23,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.baselineapp.CreateAccount;
+import com.example.baselineapp.ui.createaccount.CreateAccount;
 import com.example.baselineapp.R;
-import com.example.baselineapp.ui.login.LoginViewModel;
-import com.example.baselineapp.ui.login.LoginViewModelFactory;
 import com.example.baselineapp.databinding.ActivityLoginBinding;
 
 public class LoginActivity extends AppCompatActivity {
@@ -130,7 +127,6 @@ public class LoginActivity extends AppCompatActivity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("Clicked");
                 Intent createAccountPage = new Intent(LoginActivity.this, CreateAccount.class);
                 LoginActivity.this.startActivity(createAccountPage);
             }
