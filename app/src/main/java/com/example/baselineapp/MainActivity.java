@@ -12,6 +12,9 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.baselineapp.databinding.ActivityMainBinding;
 
+
+//Note: button onClick functions execute in the main thread.
+//Keep them short or the app will noticeably slow down!
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
