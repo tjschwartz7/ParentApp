@@ -22,7 +22,7 @@
         android:id="@+id/login_welcome_msg"
         android:layout_width="wrap_content"
         android:layout_height="120dp"
-        android:text="Hello There, Welcome Back"
+        android:text="@string/hello_there_welcome_back"
         android:textSize="40sp"
         android:textColor="#000"
         android:fontFamily="@font/bungee"
@@ -33,7 +33,7 @@
         android:id="@+id/login_sign_in_prompt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sign In to Continue"
+        android:text="@string/sign_in_to_continue"
         android:textSize="18sp"
         android:fontFamily="@font/antic"/>
     
@@ -48,7 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/username"
-            android:hint="Username"
+            android:hint="@string/username"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -62,7 +62,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/password"
             app:passwordToggleEnabled="true"
-            android:hint="Password"
+            android:hint="@string/password"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -76,7 +76,7 @@
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:background="#00000000"
-            android:text="Forgot Password?"
+            android:text="@string/forgot_password"
             android:layout_gravity="end"
             android:elevation="0dp"
             android:layout_margin="5dp"
@@ -90,13 +90,14 @@
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:background="#000"
-            android:text="GO"
+            android:text="@string/go"
             android:textColor="#fff" />
 
         <Button
+            android:id="@+id/sign_up"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="New User? SIGN UP"
+            android:text="@string/new_user_sign_up"
             android:layout_gravity="end"
             android:textColor="#000"
             android:elevation="0dp"

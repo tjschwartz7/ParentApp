@@ -15,6 +15,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.baselineapp.ui.createaccount.CreateAccount;
+
 public class Login2 extends AppCompatActivity {
 
     @Override
@@ -38,6 +40,14 @@ public class Login2 extends AppCompatActivity {
         go_button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(Login2.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+        Button sign_up = (Button) findViewById(R.id.sign_up);
+        sign_up.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(Login2.this, CreateAccount.class);
                 startActivity(intent);
                 finish();
             }

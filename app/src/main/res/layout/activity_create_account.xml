@@ -24,8 +24,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:paddingTop="100dp"
         >
-
 
         <EditText
             android:id="@+id/first_name_parent"
@@ -46,8 +46,5 @@
             android:layout_height="wrap_content"
             android:layout_weight="2"
             />
-
     </LinearLayout>
-
-
 </LinearLayout>

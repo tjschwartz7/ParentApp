@@ -26,6 +26,12 @@
     <activity
         android:id="@+id/navigation_login2"
         android:name="com.example.baselineapp.Login2"
-        android:label="Login"
+        android:label="@string/login"
         tools:layout="@layout/activity_login2" />
+
+    <activity
+        android:id="@+id/navigation_createaccount"
+        android:name="com.example.baselineapp.ui.createaccount.CreateAccount"
+        android:label="@string/create_account"
+        tools:layout="@layout/activity_create_account" />
 </navigation>
