@@ -16,7 +16,7 @@
             android:name=".CreateAccount"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".Splash"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,6 +24,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".Login2"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+<<<<<<< HEAD
+=======
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:label="@string/app_name"></activity>
+>>>>>>> 823f9504141b3981e5eec8c4121a9088427ff35c
     </application>
 
 </manifest>
