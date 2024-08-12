@@ -21,10 +21,13 @@ public class CreateAccount extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_create_account);
+
+        //The button that will be submit the user information
+        //and switch the user into the next state.
         Button create_account_button = (Button) findViewById(R.id.b_create_account);
         create_account_button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(CreateAccount.this, MainActivity.class);
+                Intent intent = new Intent(CreateAccount.this, Login2.class);
                 startActivity(intent);
                 finish();
             }
