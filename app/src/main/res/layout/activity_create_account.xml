@@ -100,5 +100,27 @@
                 android:layout_weight="2"
                 />
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="100dp"
+            >
+
+            <Button
+                android:id="@+id/b_create_account"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/action_register"
+                android:layout_gravity="end"
+                android:textColor="#FFF"
+                android:textSize="20sp"
+                android:elevation="0dp"
+                android:layout_margin="5dp"
+                android:fontFamily="@font/antic"/>
+
+        </LinearLayout>
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
