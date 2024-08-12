@@ -29,4 +29,5 @@
     <string name="username">Username</string>
     <string name="sign_in_to_continue">Sign In to Continue</string>
     <string name="hello_there_welcome_back">Hello There, Welcome Back</string>
+    <string name="save_changes">Save</string>
 </resources>
