@@ -27,6 +27,11 @@ public class SettingsFragment extends Fragment {
                 new ViewModelProvider(this).get(SettingsViewModel.class);
 
         binding = FragmentSettingsBinding.inflate(inflater, container, false);
+        binding.idProfileButton.setOnClickListener(v -> {
+            Intent intent = new Intent(SettingsFragment.this.getActivity(), ProfileActivity.class);
+            startActivity(intent);
+        });
+
         View root = binding.getRoot();
 
 

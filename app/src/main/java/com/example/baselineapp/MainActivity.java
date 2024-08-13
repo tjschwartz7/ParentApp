@@ -45,14 +45,6 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
-        @NonNull
-        Button b_profile_button = (Button) findViewById(R.id.id_profile_button);
-
-        b_profile_button.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-            startActivity(intent);
-            finish();
-        });
     }
 
 }
