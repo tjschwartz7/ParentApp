@@ -9,6 +9,7 @@
     <string name="str_logout">Logout</string>
     <string name="str_titlaActivityLogin">Login</string>
     <string name="str_promptEmail">Email</string>
+    <string name="str_promptOldPassword">Old Password</string>
     <string name="str_promptPassword">Password</string>
     <string name="str_promptConfirmPassword">Confirm Password</string>
     <string name="str_promptFname">First Name</string>
@@ -31,4 +32,5 @@
     <string name="str_signInToContinue">Sign In to Continue</string>
     <string name="str_helloThereWelcomeBack">Hello There, Welcome Back</string>
     <string name="str_saveChanges">Save</string>
+    <string name="str_sendEmail">Send Email</string>
 </resources>

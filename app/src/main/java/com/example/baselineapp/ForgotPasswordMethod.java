@@ -11,23 +11,24 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class CreateAccount extends AppCompatActivity {
+public class ForgotPasswordMethod extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_create_account);
+        setContentView(R.layout.activity_forgot_password_method);
 
         //Code starts here
         //-----------------
 
-        //The button that will be submit the user information
-        //and switch the user into the next state.
-        Button create_account_button = (Button) findViewById(R.id.id_createAccount);
-        create_account_button.setOnClickListener(new View.OnClickListener() {
+        //This button will send a code,
+        //and transfer the user to the next page.
+        //There, the user will enter the passcode they received.
+        Button btn_sendCode = (Button) findViewById(R.id.id_sendCodeButton);
+        btn_sendCode.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(CreateAccount.this, Login2.class);
+                Intent intent = new Intent(ForgotPasswordMethod.this, Login2.class);
                 startActivity(intent);
                 finish();
             }

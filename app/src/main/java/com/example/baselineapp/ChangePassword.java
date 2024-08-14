@@ -11,23 +11,23 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class CreateAccount extends AppCompatActivity {
+public class ChangePassword extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_create_account);
+        setContentView(R.layout.activity_change_password);
 
         //Code starts here
         //-----------------
 
         //The button that will be submit the user information
         //and switch the user into the next state.
-        Button create_account_button = (Button) findViewById(R.id.id_createAccount);
+        Button create_account_button = (Button) findViewById(R.id.id_confirmButton);
         create_account_button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(CreateAccount.this, Login2.class);
+                Intent intent = new Intent(ChangePassword.this, MainActivity.class);
                 startActivity(intent);
                 finish();
             }

@@ -32,18 +32,27 @@ public class Login2 extends AppCompatActivity {
         logo.start();
         //On Go button click, merely go to the MainActivity for now. Will implement appropriate login
         //functionality later.
-        Button go_button = (Button) findViewById(R.id.id_goButton);
-        go_button.setOnClickListener(new View.OnClickListener() {
+        Button btn_goButton = (Button) findViewById(R.id.id_goButton);
+        btn_goButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(Login2.this, MainActivity.class);
                 startActivity(intent);
                 finish();
             }
         });
-        Button sign_up = (Button) findViewById(R.id.id_signUp);
-        sign_up.setOnClickListener(new View.OnClickListener() {
+        Button btn_signUp = (Button) findViewById(R.id.id_signUp);
+        btn_signUp.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(Login2.this, CreateAccount.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        Button btn_forgotPassword = (Button) findViewById(R.id.id_forgotPasswordButton);
+        btn_forgotPassword.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(Login2.this, ForgotPasswordMethod.class);
                 startActivity(intent);
                 finish();
             }
