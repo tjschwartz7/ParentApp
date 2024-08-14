@@ -27,12 +27,12 @@ public class Login2 extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        final VideoView logo = (VideoView) findViewById(R.id.logo_video);
+        final VideoView logo = (VideoView) findViewById(R.id.id_logoVideo);
         logo.setVideoPath("android.resource://"+getPackageName()+"/"+R.raw.logoanimation);
         logo.start();
         //On Go button click, merely go to the MainActivity for now. Will implement appropriate login
         //functionality later.
-        Button go_button = (Button) findViewById(R.id.go_button);
+        Button go_button = (Button) findViewById(R.id.id_goButton);
         go_button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(Login2.this, MainActivity.class);
@@ -40,7 +40,7 @@ public class Login2 extends AppCompatActivity {
                 finish();
             }
         });
-        Button sign_up = (Button) findViewById(R.id.sign_up);
+        Button sign_up = (Button) findViewById(R.id.id_signUp);
         sign_up.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(Login2.this, CreateAccount.class);

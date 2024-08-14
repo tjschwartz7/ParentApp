@@ -11,8 +11,6 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.baselineapp.CreateAccount;
-import com.example.baselineapp.Login2;
 import com.example.baselineapp.MainActivity;
 import com.example.baselineapp.R;
 
@@ -29,7 +27,7 @@ public class ProfileActivity extends AppCompatActivity {
             return insets;
         });
 
-        Button save_button = (Button) findViewById(R.id.b_save);
+        Button save_button = (Button) findViewById(R.id.id_save);
         save_button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(ProfileActivity.this, MainActivity.class);

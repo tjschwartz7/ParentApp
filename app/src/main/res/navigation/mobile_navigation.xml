@@ -8,30 +8,30 @@
     <fragment
         android:id="@+id/navigation_settings"
         android:name="com.example.baselineapp.ui.settings.SettingsFragment"
-        android:label="@string/title_settings"
+        android:label="@string/str_titleSettings"
         tools:layout="@layout/fragment_settings" />
 
     <fragment
         android:id="@+id/navigation_dashboard"
         android:name="com.example.baselineapp.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
+        android:label="@string/str_titleDashboard"
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment
         android:id="@+id/navigation_notifications"
         android:name="com.example.baselineapp.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
+        android:label="@string/str_titleNotifications"
         tools:layout="@layout/fragment_notifications" />
 
     <activity
         android:id="@+id/navigation_login2"
         android:name="com.example.baselineapp.Login2"
-        android:label="@string/login"
+        android:label="@string/str_login"
         tools:layout="@layout/activity_login2" />
 
     <activity
         android:id="@+id/navigation_createaccount"
         android:name="com.example.baselineapp.ui.createaccount.CreateAccount"
-        android:label="@string/create_account"
+        android:label="@string/str_createAccount"
         tools:layout="@layout/activity_create_account" />
 </navigation>

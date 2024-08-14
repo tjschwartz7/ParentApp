@@ -18,25 +18,25 @@
 
 
     <Button
-        android:id="@+id/id_profile_button"
+        android:id="@+id/id_profileButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="24sp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
-        android:text="@string/b_profile"
+        android:text="@string/str_profile"
         android:textColor="@color/black"
         android:backgroundTint="@color/white"
         />
 
     <Button
-        android:id="@+id/id_notifs"
+        android:id="@+id/id_changePassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="24sp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
-        android:text="@string/b_notifs"
+        android:text="@string/str_changePassword"
         android:textColor="@color/black"
         android:backgroundTint="@color/white"
         />
@@ -48,7 +48,7 @@
         android:textSize="24sp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
-        android:text="@string/b_logout"
+        android:text="@string/str_logout"
         android:textColor="@color/black"
         android:backgroundTint="@color/white"
         />

@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.baselineapp.Login2;
 import com.example.baselineapp.MainActivity;
 import com.example.baselineapp.R;
 import com.example.baselineapp.databinding.FragmentSettingsBinding;
@@ -29,6 +30,11 @@ public class SettingsFragment extends Fragment {
         binding = FragmentSettingsBinding.inflate(inflater, container, false);
         binding.idProfileButton.setOnClickListener(v -> {
             Intent intent = new Intent(SettingsFragment.this.getActivity(), ProfileActivity.class);
+            startActivity(intent);
+        });
+
+        binding.idLogout.setOnClickListener(v -> {
+            Intent intent = new Intent(SettingsFragment.this.getActivity(), Login2.class);
             startActivity(intent);
         });
 

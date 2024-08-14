@@ -6,13 +6,10 @@ import android.view.View;
 import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
-import com.example.baselineapp.R;
 
 public class CreateAccount extends AppCompatActivity {
 
@@ -24,7 +21,7 @@ public class CreateAccount extends AppCompatActivity {
 
         //The button that will be submit the user information
         //and switch the user into the next state.
-        Button create_account_button = (Button) findViewById(R.id.b_create_account);
+        Button create_account_button = (Button) findViewById(R.id.id_createAccount);
         create_account_button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(CreateAccount.this, Login2.class);
