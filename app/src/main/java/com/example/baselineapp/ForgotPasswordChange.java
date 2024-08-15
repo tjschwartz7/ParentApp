@@ -11,13 +11,13 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class ChangePassword extends AppCompatActivity {
+public class ForgotPasswordChange extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_change_password);
+        setContentView(R.layout.activity_forgot_password_change);
 
         //Code starts here
         //-----------------
@@ -27,13 +27,14 @@ public class ChangePassword extends AppCompatActivity {
         Button btn_confirm = (Button) findViewById(R.id.id_confirmButton);
         btn_confirm.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(ChangePassword.this, MainActivity.class);
+                Intent intent = new Intent(ForgotPasswordChange.this, Login2.class);
                 startActivity(intent);
                 finish();
             }
         });
 
         //-----------------
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);

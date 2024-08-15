@@ -11,23 +11,20 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class ChangePassword extends AppCompatActivity {
+public class ForgotPasswordPasscode extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_change_password);
-
+        setContentView(R.layout.activity_forgot_password_passcode);
         //Code starts here
         //-----------------
 
-        //The button that will be submit the user information
-        //and switch the user into the next state.
-        Button btn_confirm = (Button) findViewById(R.id.id_confirmButton);
-        btn_confirm.setOnClickListener(new View.OnClickListener() {
+        Button btn_sendCode = (Button) findViewById(R.id.id_continueButton);
+        btn_sendCode.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(ChangePassword.this, MainActivity.class);
+                Intent intent = new Intent(ForgotPasswordPasscode.this, ForgotPasswordChange.class);
                 startActivity(intent);
                 finish();
             }

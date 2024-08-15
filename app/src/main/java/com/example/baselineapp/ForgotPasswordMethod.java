@@ -28,7 +28,7 @@ public class ForgotPasswordMethod extends AppCompatActivity {
         Button btn_sendCode = (Button) findViewById(R.id.id_sendCodeButton);
         btn_sendCode.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(ForgotPasswordMethod.this, Login2.class);
+                Intent intent = new Intent(ForgotPasswordMethod.this, ForgotPasswordPasscode.class);
                 startActivity(intent);
                 finish();
             }
