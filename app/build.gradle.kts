@@ -35,7 +35,8 @@ android {
 }
 
 dependencies {
-
+    implementation(libs.apache.commons.collections4)
+    implementation(libs.commons.validator)
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.constraintlayout)

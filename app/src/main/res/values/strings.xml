@@ -28,7 +28,6 @@
     <string name="str_go">GO</string>
     <string name="str_forgotPassword">Forgot Password?</string>
     <string name="str_password">Password</string>
-    <string name="str_username">Username</string>
     <string name="str_signInToContinue">Sign In to Continue</string>
     <string name="str_helloThereWelcomeBack">Hello There, Welcome Back</string>
     <string name="str_saveChanges">Save</string>
