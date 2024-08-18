@@ -36,4 +36,5 @@
     <string name="str_promptEmailOrPhone">Enter email or phone number</string>
     <string name="str_promptCode">Enter code</string>
     <string name="str_continue">Continue</string>
+    <string name="str_cancel">Cancel</string>
 </resources>

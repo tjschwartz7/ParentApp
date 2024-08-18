@@ -23,8 +23,17 @@ public class ProfileActivity extends AppCompatActivity {
         //Code starts here
         //-----------------
 
-        Button save_button = (Button) findViewById(R.id.id_save);
+        Button save_button = (Button) findViewById(R.id.id_saveButton);
         save_button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        Button cancel_button = (Button) findViewById(R.id.id_cancelButton);
+        cancel_button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
                 startActivity(intent);
