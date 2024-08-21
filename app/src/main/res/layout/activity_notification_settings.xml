@@ -5,7 +5,11 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ProfileActivity">
+    tools:context=".NotificationSettings">
+
+
+
+
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -15,18 +19,72 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Blood Ox lower bound"
+                android:textSize="24sp"
+                android:layout_gravity="center"/>
+
+            <EditText
+                android:id="@+id/id_bloodOxLowerBound"
+                android:hint="Blood Oxygen Lower Bound"
+                android:inputType="numberDecimal"
+                android:selectAllOnFocus="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pulse Bounds"
+                android:textSize="24sp"
+                android:layout_gravity="center"/>
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="100dp"
             >
+                <EditText
+                    android:id="@+id/id_pulseLowerBound"
+                    android:hint="Pulse lower bound"
+                    android:inputType="numberDecimal"
+                    android:selectAllOnFocus="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    />
 
+                <EditText
+                    android:id="@+id/id_pulseUpperBound"
+                    android:hint="Pulse upper bound"
+                    android:inputType="numberDecimal"
+                    android:selectAllOnFocus="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    />
+        </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Temperature Bounds"
+                android:textSize="24sp"
+                android:layout_gravity="center"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
             <EditText
-                android:id="@+id/id_firstNameParent"
-                android:hint="@string/str_promptFname"
-                android:inputType="textPersonName"
+                android:id="@+id/id_tempLowerBound"
+                android:hint="Temp lower bound"
+                android:inputType="numberDecimal"
                 android:selectAllOnFocus="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -34,9 +92,9 @@
                 />
 
             <EditText
-                android:id="@+id/id_lastNameParent"
-                android:hint="@string/str_promptLname"
-                android:inputType="textPersonName"
+                android:id="@+id/id_tempUpperBound"
+                android:hint="Temp upper bound"
+                android:inputType="numberDecimal"
                 android:selectAllOnFocus="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -44,33 +102,6 @@
                 />
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingTop="100dp"
-            >
-
-            <EditText
-                android:id="@+id/id_emailParent"
-                android:hint="@string/str_promptEmail"
-                android:inputType="textEmailAddress"
-                android:selectAllOnFocus="true"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                />
-
-            <EditText
-                android:id="@+id/id_phoneNumberParent"
-                android:hint="@string/str_promptPhone"
-                android:inputType="phone"
-                android:selectAllOnFocus="true"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                />
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

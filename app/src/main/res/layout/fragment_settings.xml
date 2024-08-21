@@ -30,6 +30,18 @@
         />
 
     <Button
+        android:id="@+id/id_notificationSettingsButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:text="@string/str_notificationSettings"
+        android:textColor="@color/black"
+        android:backgroundTint="@color/white"
+        />
+
+    <Button
         android:id="@+id/id_changePassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
