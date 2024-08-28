@@ -38,4 +38,11 @@
     <string name="str_continue">Continue</string>
     <string name="str_cancel">Cancel</string>
     <string name="str_notificationSettings">Notification Settings</string>
+    <string name="str_dataValue">%s %s</string>
+    <string name="str_percentSymbol">%</string>
+    <string name="str_bpmSymbol">bpm</string>
+    <string name="str_tempFSymbol">F</string>
+
+
+
 </resources>
