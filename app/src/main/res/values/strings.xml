@@ -42,7 +42,9 @@
     <string name="str_percentSymbol">%</string>
     <string name="str_bpmSymbol">bpm</string>
     <string name="str_tempFSymbol">F</string>
-
+    <string name="str_channelName">Notification Channel</string>
+    <string name="str_channelDescription">Sends out push notifications relating to baby health.</string>
+    <string name="str_channelId">42</string>
 
 
 </resources>

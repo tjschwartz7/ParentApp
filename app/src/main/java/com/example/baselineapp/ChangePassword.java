@@ -33,6 +33,15 @@ public class ChangePassword extends AppCompatActivity {
             }
         });
 
+        Button btn_cancel = (Button) findViewById(R.id.id_cancelButton);
+        btn_cancel.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(ChangePassword.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
         //-----------------
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
