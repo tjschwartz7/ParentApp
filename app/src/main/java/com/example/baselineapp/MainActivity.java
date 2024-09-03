@@ -63,11 +63,16 @@ public class MainActivity extends AppCompatActivity {
         )
         {
 
+            //Request permissions
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.POST_NOTIFICATIONS, Manifest.permission.VIBRATE},
                     101);
 
         }
+
+        //Start our NotificationSetup class
+        //This will do all of the setup work and eventually start our NotificationService class
+        //Which handles notification logic and sending later
         startService(new Intent( this, NotificationSetup. class ));
     }
 
