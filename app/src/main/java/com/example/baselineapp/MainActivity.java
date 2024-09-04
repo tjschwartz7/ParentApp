@@ -55,24 +55,53 @@ public class MainActivity extends AppCompatActivity {
         if (ActivityCompat.checkSelfPermission(
                 getApplicationContext(),
                 Manifest.permission.POST_NOTIFICATIONS
-        ) != PackageManager.PERMISSION_GRANTED ||
-            ActivityCompat.checkSelfPermission(
-                    getApplicationContext(),
-                    Manifest.permission.VIBRATE
-            ) != PackageManager.PERMISSION_GRANTED
+        ) != PackageManager.PERMISSION_GRANTED
         )
         {
 
             //Request permissions
             ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.POST_NOTIFICATIONS, Manifest.permission.VIBRATE},
+                    new String[]{Manifest.permission.POST_NOTIFICATIONS},
                     101);
+        }
 
+        if(ActivityCompat.checkSelfPermission(
+                getApplicationContext(),
+                Manifest.permission.VIBRATE
+        ) != PackageManager.PERMISSION_GRANTED)
+        {
+            //Request permissions
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.VIBRATE},
+                    101);
+        }
+
+        if(ActivityCompat.checkSelfPermission(
+                getApplicationContext(),
+                Manifest.permission.FOREGROUND_SERVICE
+        ) != PackageManager.PERMISSION_GRANTED)
+        {
+            //Request permissions
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.FOREGROUND_SERVICE},
+                    101);
+        }
+
+        if(ActivityCompat.checkSelfPermission(
+                getApplicationContext(),
+                Manifest.permission.FOREGROUND_SERVICE_DATA_SYNC
+        ) != PackageManager.PERMISSION_GRANTED)
+        {
+            //Request permissions
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.FOREGROUND_SERVICE_DATA_SYNC},
+                    101);
         }
 
         //Start our NotificationSetup class
         //This will do all of the setup work and eventually start our NotificationService class
         //Which handles notification logic and sending later
+        System.out.println("Creating notification setup service... now!");
         startService(new Intent( this, NotificationSetup. class ));
     }
 

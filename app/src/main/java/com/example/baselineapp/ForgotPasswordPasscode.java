@@ -41,6 +41,15 @@ public class ForgotPasswordPasscode extends AppCompatActivity {
             }
         });
 
+        Button btn_backButton = (Button) findViewById(R.id.id_backButton);
+        btn_backButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(ForgotPasswordPasscode.this, Login2.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
         //-----------------
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());

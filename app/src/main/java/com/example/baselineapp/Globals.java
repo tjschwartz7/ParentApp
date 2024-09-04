@@ -14,7 +14,7 @@ public class Globals extends Application
     private String pulseUnit;
 
 
-    Globals()
+    public Globals()
     {
         bloodOxUnit = "%";
         tempUnit = "F";
