@@ -45,6 +45,12 @@ dependencies {
     implementation(libs.navigation.ui)
     implementation(libs.annotation)
     implementation(libs.activity)
+    // JavaMail API
+    implementation("com.sun.mail:android-mail:1.6.7")
+    implementation("com.sun.mail:android-activation:1.6.7")
+
+    // Optional: JavaBeans Activation Framework (JAF) (useful for attachments)
+    implementation("com.sun.activation:javax.activation:1.2.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
