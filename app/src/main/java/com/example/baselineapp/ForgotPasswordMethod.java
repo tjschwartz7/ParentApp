@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -53,7 +54,7 @@ public class ForgotPasswordMethod extends AppCompatActivity {
                 System.out.println("User email is: " + userEmail[0]);
 
                 //Send email with subject header
-                composeEmail(userEmail, "Change Password - Code is " + code);
+                composeEmail(userEmail, "Your code is " + code + "\nDo not share this code with anybody.");
                 startActivity(intent);
                 finish();
             }
@@ -76,13 +77,18 @@ public class ForgotPasswordMethod extends AppCompatActivity {
         });
     }
 
-    public void composeEmail(String[] addresses, String subject) {
+    public void composeEmail(String[] addresses, String messageBody) {
         Intent intent = new Intent(Intent.ACTION_SENDTO);
-        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
+        intent.setData(Uri.parse("mailto:")); // Only email apps should handle this
         intent.putExtra(Intent.EXTRA_EMAIL, addresses);
-        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Reset Password");
+        intent.putExtra(Intent.EXTRA_TEXT, messageBody);
+
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
+        } else {
+            // Notify the user that no email clients are installed
+            Toast.makeText(this, "No email client found", Toast.LENGTH_SHORT).show();
         }
     }
 }
