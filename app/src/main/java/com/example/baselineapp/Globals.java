@@ -1,8 +1,10 @@
 package com.example.baselineapp;
 import android.app.Application;
+import java.util.HashMap;
 
-public class Globals extends Application
+public final class Globals extends Application
 {
+    private static HashMap<String, String> map;
 
     private String str_code;
 
@@ -29,6 +31,9 @@ public class Globals extends Application
     private static double dbl_tempHighWarningThreshold = 101;
     private static double dbl_tempHighCautionThreshold = 99.5;
 
+    public Globals()
+    {
+    }
 
     public boolean isWarningActive() {
         return bool_warningActive;
@@ -59,6 +64,31 @@ public class Globals extends Application
 
     public double getBloodOxLowCautionThreshold() {
         return dbl_bloodOxLowCautionThreshold;
+        }
+    /*
+         List of Keys that will appear in map:
+            Email
+            Full Name
+            First Name
+            Last Name
+            Phone Number
+            Password
+    */
+    public static void setInitialValues(String profile)
+    {
+        map = new HashMap<>();
+        int beginIndex = 0;
+        while(profile.indexOf(';') != -1)
+        {
+            int endIndex = profile.indexOf(':');
+            //Iterate through profile string. Split off each key and each value. Add key-value pair to map.
+            String key = profile.substring(beginIndex, endIndex);
+            profile = profile.substring(endIndex+1);
+            endIndex = profile.indexOf(';');
+            String value = profile.substring(beginIndex, endIndex);
+            profile = profile.substring(endIndex+1);
+            map.put(key, value);
+        }
     }
 
     public void setBloodOxLowCautionThreshold(double dbl_bloodOxLowCautionThreshold) {
@@ -129,17 +159,15 @@ public class Globals extends Application
         Globals.dbl_tempHighCautionThreshold = dbl_tempHighCautionThreshold;
     }
 
-    public void setCode(String code) {
+    public void setCode(String code){
         this.str_code = code;
     }
 
     public double getBloodOxVal() {return dbl_bloodOxVal;}
     public String getBloodOxUnit() {return str_bloodOxUnit;}
-
     public double getTempVal() {return dbl_tempVal;}
     public String getTempUnit() {return str_tempUnit;}
-
     public double getPulseVal() {return dbl_pulseVal;}
-
     public String getPulseUnit() {return str_pulseUnit;}
+    public static HashMap<String,String> getMap() {return map;}
 }
