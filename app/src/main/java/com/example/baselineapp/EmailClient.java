@@ -1,5 +1,5 @@
 package com.example.baselineapp;
-
+/*
 import java.util.Properties;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -44,4 +44,4 @@ public class EmailClient {
             e.printStackTrace();
         }
     }
-}
+}*/

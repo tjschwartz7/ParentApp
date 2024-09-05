@@ -43,6 +43,15 @@ public class NotificationService extends Service
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true);
 
+    NotificationCompat.Builder notif_notificationsActive = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_dashboard_black_24dp)
+            .setContentTitle("Notifications Enabled")
+            .setContentText("Your baby is safe with us")
+            .setStyle(new NotificationCompat.BigTextStyle()
+                    .bigText("Notifications will be sent if anything seems off."))
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setAutoCancel(true);
+
     @Override
     public IBinder onBind (Intent arg0)
     {
@@ -53,7 +62,7 @@ public class NotificationService extends Service
         Log. e ( TAG , "onStartCommand" ) ;
         super .onStartCommand(intent , flags , startId) ;
 
-        startForeground(1, notif_babyWarning.build());
+        startForeground(1, notif_notificationsActive.build());
         startTimer() ;
         return START_STICKY ;
     }
@@ -123,9 +132,55 @@ public class NotificationService extends Service
             mNotificationManager.createNotificationChannel(notificationChannel) ;
         }
 
-        System.out.println("Notifying");
-        assert mNotificationManager != null;
-        mNotificationManager.notify(( int ) System. currentTimeMillis () , notif_babyWarning.build()) ;
-        System.out.println("Notified");
+        //Read lots of data from Globals for readability sake
+        boolean pulseWarning   = ((Globals) getApplication()).getPulseVal() >= ((Globals) getApplication()).getPulseHighWarningThreshold() ||
+                                 ((Globals) getApplication()).getPulseVal() <= ((Globals) getApplication()).getPulseLowWarningThreshold();
+        boolean tempWarning    = ((Globals) getApplication()).getTempVal() >= ((Globals) getApplication()).getTempHighWarningThreshold() ||
+                                 ((Globals) getApplication()).getTempVal() <= ((Globals) getApplication()).getTempLowWarningThreshold();
+        boolean bloodOxWarning = ((Globals) getApplication()).getBloodOxVal() <= ((Globals) getApplication()).getBloodOxLowWarningThreshold();
+
+        boolean pulseCaution   = ((Globals) getApplication()).getPulseVal() >= ((Globals) getApplication()).getPulseHighCautionThreshold() ||
+                ((Globals) getApplication()).getPulseVal() <= ((Globals) getApplication()).getPulseLowCautionThreshold();
+        boolean tempCaution    = ((Globals) getApplication()).getTempVal() >= ((Globals) getApplication()).getTempHighCautionThreshold() ||
+                ((Globals) getApplication()).getTempVal() <= ((Globals) getApplication()).getTempLowCautionThreshold();
+        boolean bloodOxCaution = ((Globals) getApplication()).getBloodOxVal() <= ((Globals) getApplication()).getBloodOxLowCautionThreshold();
+        boolean isWarningActive = ((Globals) getApplication()).isWarningActive();
+        boolean isCautionActive = ((Globals) getApplication()).isCautionActive();
+
+        //If there is a warning active (priority over cautions!)
+        if(pulseWarning || tempWarning || bloodOxWarning)
+        {
+            //If the warning has already been notified, don't notify again
+            if(!isWarningActive)
+            {
+                //Notify
+                assert mNotificationManager != null;
+                mNotificationManager.notify(( int ) System. currentTimeMillis () , notif_babyWarning.build()) ;
+                ((Globals) getApplication()).setWarningActive(true);
+                ((Globals) getApplication()).setCautionActive(false);
+            }
+        }
+        //If a caution is active
+        else if(pulseCaution || tempCaution || bloodOxCaution)
+        {
+            //If the caution has already been notified, don't do it again
+            if(!isCautionActive)
+            {
+                //Notify
+                assert mNotificationManager != null;
+                mNotificationManager.notify(( int ) System. currentTimeMillis () , notif_babyCaution.build()) ;
+                ((Globals) getApplication()).setCautionActive(true);
+                ((Globals) getApplication()).setWarningActive(false);
+            }
+        }
+        //If the warning or caution were active before
+        //but aren't anymore (otherwise it wouldn't have made it here)
+        //go ahead and disable them.
+        else if(isCautionActive || isWarningActive)
+        {
+            ((Globals) getApplication()).setCautionActive(false);
+            ((Globals) getApplication()).setWarningActive(false);
+        }
+
     }
 }

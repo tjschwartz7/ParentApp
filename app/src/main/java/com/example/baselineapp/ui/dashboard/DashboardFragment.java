@@ -16,6 +16,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.baselineapp.Globals;
 import com.example.baselineapp.R;
 import com.example.baselineapp.databinding.FragmentDashboardBinding;
 
@@ -35,24 +36,23 @@ public class DashboardFragment extends Fragment {
 
 
         //These are magical numbers for testing
-        double dbl_bloodOxValue = 95;
-        double dbl_tempValue = 102.7;
-        double dbl_pulseValue = 68;
+        double dbl_bloodOxValue = ((Globals) getActivity().getApplication()).getBloodOxVal();
+        double dbl_tempValue = ((Globals) getActivity().getApplication()).getTempVal();
+        double dbl_pulseValue = ((Globals) getActivity().getApplication()).getPulseVal();
 
-        //These are currently magical numbers from the fairy forest
-        //They'll be coming from a saved text file later
-        double dbl_bloodOxLowWarningThreshold = 88;
-        double dbl_bloodOxLowCautionThreshold = 90;
+        //Get all of our data from the Globals class where its maintained
+        double dbl_bloodOxLowWarningThreshold = ((Globals) getActivity().getApplication()).getBloodOxLowWarningThreshold();
+        double dbl_bloodOxLowCautionThreshold = ((Globals) getActivity().getApplication()).getBloodOxLowCautionThreshold();
 
-        double dbl_pulseLowWarningThreshold = 65;
-        double dbl_pulseLowCautionThreshold = 70;
-        double dbl_pulseHighWarningThreshold = 195;
-        double dbl_pulseHighCautionThreshold = 190;
+        double dbl_pulseLowWarningThreshold = ((Globals) getActivity().getApplication()).getPulseLowWarningThreshold();
+        double dbl_pulseLowCautionThreshold = ((Globals) getActivity().getApplication()).getPulseLowCautionThreshold();
+        double dbl_pulseHighWarningThreshold = ((Globals) getActivity().getApplication()).getPulseHighWarningThreshold();
+        double dbl_pulseHighCautionThreshold = ((Globals) getActivity().getApplication()).getPulseHighCautionThreshold();
 
-        double dbl_tempLowWarningThreshold = 95;
-        double dbl_tempLowCautionThreshold = 101;
-        double dbl_tempHighWarningThreshold = 96.8;
-        double dbl_tempHighCautionThreshold = 99.5;
+        double dbl_tempLowWarningThreshold = ((Globals) getActivity().getApplication()).getTempLowWarningThreshold();
+        double dbl_tempLowCautionThreshold = ((Globals) getActivity().getApplication()).getTempLowCautionThreshold();
+        double dbl_tempHighWarningThreshold = ((Globals) getActivity().getApplication()).getTempHighWarningThreshold();
+        double dbl_tempHighCautionThreshold = ((Globals) getActivity().getApplication()).getTempHighCautionThreshold();
 
         int color_healthyGreen = getResources().getColor(R.color.healthy_green, getActivity().getTheme());
         int color_cautionYellow = getResources().getColor(R.color.caution_yellow, getActivity().getTheme());
