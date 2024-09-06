@@ -16,8 +16,7 @@ import androidx.core.content.ContextCompat;
 import android.util.Log ;
 import java.util.Timer ;
 import java.util.TimerTask ;
-public class NotificationService extends Service
-{
+public class NotificationService extends Service {
     public static final String NOTIFICATION_CHANNEL_ID = "10001" ;
     private final static String default_notification_channel_id = "default" ;
     Timer timer ;
@@ -80,21 +79,18 @@ public class NotificationService extends Service
     }
     //we are going to use a handler to be able to run in our TimerTask
     final Handler handler = new Handler() ;
-    public void startTimer ()
-    {
+    public void startTimer () {
         timer = new Timer() ;
         initializeTimerTask() ;
         timer .schedule( timerTask , 5000 , Your_X_SECS * 1000 ) ; //
     }
-    public void stopTimerTask ()
-    {
+    public void stopTimerTask () {
         if ( timer != null ) {
             timer .cancel() ;
             timer = null;
         }
     }
-    public void initializeTimerTask ()
-    {
+    public void initializeTimerTask () {
         timerTask = new TimerTask()
         {
             public void run ()
@@ -108,8 +104,7 @@ public class NotificationService extends Service
             }
         } ;
     }
-    private void createNotification ()
-    {
+    private void createNotification () {
         // Check if the permission for POST_NOTIFICATION is provided or not
         if (ActivityCompat.checkSelfPermission(
                 getApplicationContext(),

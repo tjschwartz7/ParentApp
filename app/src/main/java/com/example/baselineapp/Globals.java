@@ -9,11 +9,11 @@ public class Globals extends Application
     private boolean bool_warningActive = false;
     private boolean bool_cautionActive = false;
 
-    private static double dbl_bloodOxVal = 89;
+    private static double dbl_bloodOxVal = 94;
     private static String str_bloodOxUnit = "%";
     private static double dbl_tempVal = 98.7;
     private static String str_tempUnit = "F";
-    private static double dbl_pulseVal = 205;
+    private static double dbl_pulseVal = 120;
     private static String str_pulseUnit = "bpm";
 
     private static double dbl_bloodOxLowWarningThreshold = 88;
@@ -50,7 +50,7 @@ public class Globals extends Application
     }
 
     public double getBloodOxLowWarningThreshold() {
-        return dbl_bloodOxLowWarningThreshold;
+        return Globals.dbl_bloodOxLowWarningThreshold;
     }
 
     public void setBloodOxLowWarningThreshold(double dbl_bloodOxLowWarningThreshold) {
