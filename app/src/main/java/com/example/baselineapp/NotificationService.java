@@ -14,6 +14,8 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
 import android.util.Log ;
+
+import java.util.Calendar;
 import java.util.Timer ;
 import java.util.TimerTask ;
 public class NotificationService extends Service {
@@ -63,6 +65,7 @@ public class NotificationService extends Service {
 
         startForeground(1, notif_notificationsActive.build());
         startTimer() ;
+        startDailyTimer();
         return START_STICKY ;
     }
     @Override
@@ -75,6 +78,7 @@ public class NotificationService extends Service {
     {
         Log. e ( TAG , "onDestroy" ) ;
         stopTimerTask() ;
+        stopDailyTimerTask();
         super .onDestroy() ;
     }
     //we are going to use a handler to be able to run in our TimerTask
@@ -178,4 +182,63 @@ public class NotificationService extends Service {
         }
 
     }
+
+    public void startDailyTimer () {
+        timer = new Timer() ;
+        initializeDateUpdateTask() ;
+        timer .schedule( timerTask , 5000 , 86400 * 1000 ) ; //
+    }
+    public void stopDailyTimerTask () {
+        if ( timer != null ) {
+            timer .cancel() ;
+            timer = null;
+        }
+    }
+
+    void initializeDateUpdateTask()
+    {
+        int year = Calendar.getInstance().get(Calendar.YEAR) -
+                   ((Globals) getApplication()).getBirthdate().getYear();
+        int months = year * 12 + (Calendar.getInstance().get(Calendar.MONTH) -
+                     ((Globals) getApplication()).getBirthdate().getMonth());
+
+
+
+        //TODO Not right, dunno what normal blood ox is
+        if(months <= 3)
+        {
+            ((Globals)getApplication()).setBloodOxLowCautionThreshold(86);
+            ((Globals)getApplication()).setBloodOxLowWarningThreshold(84);
+        }
+
+
+        //Handle pulse thresholds
+        if(months <= 1)
+        {
+            ((Globals)getApplication()).setPulseLowCautionThreshold(70);
+            ((Globals)getApplication()).setPulseLowWarningThreshold(65);
+
+            ((Globals)getApplication()).setPulseHighCautionThreshold(190);
+            ((Globals)getApplication()).setPulseHighWarningThreshold(195);
+
+        }
+        else if(months <= 11)
+        {
+            ((Globals)getApplication()).setPulseLowCautionThreshold(80);
+            ((Globals)getApplication()).setPulseLowWarningThreshold(75);
+
+            ((Globals)getApplication()).setPulseHighCautionThreshold(160);
+            ((Globals)getApplication()).setPulseHighWarningThreshold(165);
+        }
+        if(months <= 24)
+        {
+            ((Globals)getApplication()).setPulseLowCautionThreshold(80);
+            ((Globals)getApplication()).setPulseLowWarningThreshold(75);
+
+            ((Globals)getApplication()).setPulseHighCautionThreshold(130);
+            ((Globals)getApplication()).setPulseHighWarningThreshold(135);
+        }
+
+    }
+
 }

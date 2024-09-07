@@ -1,5 +1,6 @@
 package com.example.baselineapp;
 import android.app.Application;
+import android.widget.DatePicker;
 
 public class Globals extends Application
 {
@@ -29,6 +30,15 @@ public class Globals extends Application
     private static double dbl_tempHighWarningThreshold = 101;
     private static double dbl_tempHighCautionThreshold = 99.5;
 
+    private DatePicker birthdate;
+
+    public DatePicker getBirthdate() {
+        return birthdate;
+    }
+
+    public void setBirthdate(DatePicker birthdate) {
+        this.birthdate = birthdate;
+    }
 
     public boolean isWarningActive() {
         return bool_warningActive;
@@ -142,4 +152,26 @@ public class Globals extends Application
     public double getPulseVal() {return dbl_pulseVal;}
 
     public String getPulseUnit() {return str_pulseUnit;}
+
+    public void setWarningThresholds(                     double temp_high, double pulse_high,
+                                     double bloodOx_low,  double temp_low,  double pulse_low)
+    {
+        setBloodOxLowWarningThreshold(bloodOx_low);
+        setTempLowWarningThreshold(temp_high);
+        setTempLowWarningThreshold(temp_low);
+        setPulseHighWarningThreshold(pulse_high);
+        setPulseLowWarningThreshold(pulse_low);
+    }
+
+    public void setCautionThresholds(                     double temp_high, double pulse_high,
+                                     double bloodOx_low,  double temp_low,  double pulse_low)
+    {
+        setBloodOxLowCautionThreshold(bloodOx_low);
+        setTempLowCautionThreshold(temp_high);
+        setTempLowCautionThreshold(temp_low);
+        setPulseHighCautionThreshold(pulse_high);
+        setPulseLowCautionThreshold(pulse_low);
+    }
+
+
 }
