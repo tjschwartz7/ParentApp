@@ -42,18 +42,22 @@ public class YourBabyActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(YourBabyActivity.this, Login2.class);
                 int currentYear = Calendar.getInstance().get(Calendar.YEAR);
-                int birthyear = birthdate.getYear();
+                int birthYear = birthdate.getYear();
 
-                int currentmonth = Calendar.getInstance().get(Calendar.MONTH);
-                int birthmonth = birthdate.getMonth();
+                int currentMonth = Calendar.getInstance().get(Calendar.MONTH);
+                int birthMonth = birthdate.getMonth();
 
-                int currentday = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+                int currentDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
                 int birthday = birthdate.getDayOfMonth();
 
-                if(birthyear <= currentYear &&
-                        birthmonth <= currentmonth &&
-                        birthday <= currentday)
+                //Integer date codes for comparison
+                int birthDateId = birthYear * 10000 + birthMonth*100 + birthday;
+                int currentDateId = currentYear * 10000 + currentMonth*100 + currentDay;
+
+                //If date is valid (before or equal to current day)
+                if(currentDateId >= birthDateId)
                 {
+                    //Set birthdate and change activity
                     ((Globals)getApplication()).setBirthdate(birthdate);
                     startActivity(intent);
                     finish();

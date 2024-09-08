@@ -25,7 +25,12 @@ public class NotificationService extends Service {
     TimerTask timerTask ;
     String TAG = "Timers" ;
     int timer_20_s = 20 ;
+    int timer_5_s = 5 ;
     int timer_day_s = 86400;
+
+    boolean warning_hasBeenActive5s = false;
+    boolean caution_hasBeenActive5s = false;
+
 
     NotificationCompat.Builder notif_babyWarning = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_dashboard_black_24dp)
@@ -90,7 +95,7 @@ public class NotificationService extends Service {
     public void startTimer () {
         timer = new Timer() ;
         initializeTimerTask() ;
-        timer .schedule( timerTask , 5000 , timer_20_s * 1000 ) ; //
+        timer .schedule( timerTask , 5000 , timer_5_s * 1000 ) ; //
     }
     public void stopTimerTask () {
         if ( timer != null ) {
@@ -136,17 +141,17 @@ public class NotificationService extends Service {
         }
 
         //Read lots of data from Globals for readability sake
-        boolean pulseWarning   = ((Globals) getApplication()).getPulseVal() >= ((Globals) getApplication()).getPulseHighWarningThreshold() ||
-                                 ((Globals) getApplication()).getPulseVal() <= ((Globals) getApplication()).getPulseLowWarningThreshold();
-        boolean tempWarning    = ((Globals) getApplication()).getTempVal() >= ((Globals) getApplication()).getTempHighWarningThreshold() ||
-                                 ((Globals) getApplication()).getTempVal() <= ((Globals) getApplication()).getTempLowWarningThreshold();
-        boolean bloodOxWarning = ((Globals) getApplication()).getBloodOxVal() <= ((Globals) getApplication()).getBloodOxLowWarningThreshold();
+        boolean pulseWarning    = ((Globals) getApplication()).getPulseVal() >= ((Globals) getApplication()).getPulseHighWarningThreshold() ||
+                                  ((Globals) getApplication()).getPulseVal() <= ((Globals) getApplication()).getPulseLowWarningThreshold();
+        boolean tempWarning     = ((Globals) getApplication()).getTempVal() >= ((Globals) getApplication()).getTempHighWarningThreshold() ||
+                                  ((Globals) getApplication()).getTempVal() <= ((Globals) getApplication()).getTempLowWarningThreshold();
+        boolean bloodOxWarning  = ((Globals) getApplication()).getBloodOxVal() <= ((Globals) getApplication()).getBloodOxLowWarningThreshold();
 
-        boolean pulseCaution   = ((Globals) getApplication()).getPulseVal() >= ((Globals) getApplication()).getPulseHighCautionThreshold() ||
-                ((Globals) getApplication()).getPulseVal() <= ((Globals) getApplication()).getPulseLowCautionThreshold();
-        boolean tempCaution    = ((Globals) getApplication()).getTempVal() >= ((Globals) getApplication()).getTempHighCautionThreshold() ||
-                ((Globals) getApplication()).getTempVal() <= ((Globals) getApplication()).getTempLowCautionThreshold();
-        boolean bloodOxCaution = ((Globals) getApplication()).getBloodOxVal() <= ((Globals) getApplication()).getBloodOxLowCautionThreshold();
+        boolean pulseCaution    = ((Globals) getApplication()).getPulseVal() >= ((Globals) getApplication()).getPulseHighCautionThreshold() ||
+                                  ((Globals) getApplication()).getPulseVal() <= ((Globals) getApplication()).getPulseLowCautionThreshold();
+        boolean tempCaution     = ((Globals) getApplication()).getTempVal() >= ((Globals) getApplication()).getTempHighCautionThreshold() ||
+                                  ((Globals) getApplication()).getTempVal() <= ((Globals) getApplication()).getTempLowCautionThreshold();
+        boolean bloodOxCaution  = ((Globals) getApplication()).getBloodOxVal() <= ((Globals) getApplication()).getBloodOxLowCautionThreshold();
         boolean isWarningActive = ((Globals) getApplication()).isWarningActive();
         boolean isCautionActive = ((Globals) getApplication()).isCautionActive();
 
@@ -156,12 +161,21 @@ public class NotificationService extends Service {
             //If the warning has already been notified, don't notify again
             if(!isWarningActive)
             {
-                //Notify
-                assert mNotificationManager != null;
-                mNotificationManager.notify(( int ) System. currentTimeMillis () , notif_babyWarning.build()) ;
-                ((Globals) getApplication()).setWarningActive(true);
-                ((Globals) getApplication()).setCautionActive(false);
+                //Warning has been active for one full tick
+                if(warning_hasBeenActive5s)
+                {
+                    //Notify
+                    assert mNotificationManager != null;
+                    mNotificationManager.notify(( int ) System. currentTimeMillis () , notif_babyWarning.build()) ;
+                    ((Globals) getApplication()).setWarningActive(true);
+                    ((Globals) getApplication()).setCautionActive(false);
+                    warning_hasBeenActive5s = false;
+                }
+                //If this is still active during next tick, run notification
+                else warning_hasBeenActive5s = true;
             }
+            //Warning was disabled during that tick
+            else if (warning_hasBeenActive5s) warning_hasBeenActive5s = false;
         }
         //If a caution is active
         else if(pulseCaution || tempCaution || bloodOxCaution)
@@ -169,12 +183,21 @@ public class NotificationService extends Service {
             //If the caution has already been notified, don't do it again
             if(!isCautionActive)
             {
-                //Notify
-                assert mNotificationManager != null;
-                mNotificationManager.notify(( int ) System. currentTimeMillis () , notif_babyCaution.build()) ;
-                ((Globals) getApplication()).setCautionActive(true);
-                ((Globals) getApplication()).setWarningActive(false);
+                //Caution has been active for one full tick
+                if(caution_hasBeenActive5s)
+                {
+                    //Notify
+                    assert mNotificationManager != null;
+                    mNotificationManager.notify(( int ) System. currentTimeMillis () , notif_babyCaution.build()) ;
+                    ((Globals) getApplication()).setCautionActive(true);
+                    ((Globals) getApplication()).setWarningActive(false);
+                    caution_hasBeenActive5s = false;
+                }
+                //If this is still active during next tick, run notification
+                else caution_hasBeenActive5s = true;
             }
+            //Caution was disabled during that tick
+            else if (caution_hasBeenActive5s) caution_hasBeenActive5s = false;
         }
         //If the warning or caution were active before
         //but aren't anymore (otherwise it wouldn't have made it here)
@@ -219,7 +242,6 @@ public class NotificationService extends Service {
                 ((Globals) getApplication()).getBirthdate().getYear();
         int months = year * 12 + (Calendar.getInstance().get(Calendar.MONTH) -
                 ((Globals) getApplication()).getBirthdate().getMonth());
-
 
         //Temperature thresholds don't change
         ((Globals)getApplication()).setTempLowCautionThreshold(98);
@@ -269,6 +291,4 @@ public class NotificationService extends Service {
             ((Globals)getApplication()).setPulseHighWarningThreshold(135);
         }
     }
-
-
 }

@@ -174,6 +174,4 @@ public class Globals extends Application
         setPulseHighCautionThreshold(pulse_high);
         setPulseLowCautionThreshold(pulse_low);
     }
-
-
 }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +28,16 @@ public class CreateAccount extends AppCompatActivity {
         Button create_account_button = (Button) findViewById(R.id.id_createAccount);
         create_account_button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+
+                String str_firstName = ((EditText) findViewById(R.id.id_firstNameParent)).getText().toString();
+                String str_lastName = ((EditText) findViewById(R.id.id_lastNameParent)).getText().toString();
+                String str_emailParent = ((EditText) findViewById(R.id.id_emailParent)).getText().toString();
+                String str_phoneNumber = ((EditText) findViewById(R.id.id_phoneNumberParent)).getText().toString();
+                String str_password1 = ((EditText) findViewById(R.id.id_passwordParent)).getText().toString();
+                String str_password2 = ((EditText) findViewById(R.id.id_passwordConfirm)).getText().toString();
+
+                boolean nameValid = !str_firstName.isEmpty() && !str_lastName.isEmpty();
+
                 Intent intent = new Intent(CreateAccount.this, YourBabyActivity.class);
                 startActivity(intent);
                 finish();
