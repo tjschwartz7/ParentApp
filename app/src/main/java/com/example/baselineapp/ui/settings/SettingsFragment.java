@@ -54,11 +54,6 @@ public class SettingsFragment extends Fragment {
             startActivity(intent);
         });
 
-        binding.idBabyProfile.setOnClickListener(v -> {
-            Intent intent = new Intent(SettingsFragment.this.getActivity(), YourBabyActivity.class);
-            startActivity(intent);
-        });
-
         //-----------------
         View root = binding.getRoot();
 

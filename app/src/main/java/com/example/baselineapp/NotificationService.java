@@ -24,7 +24,8 @@ public class NotificationService extends Service {
     Timer timer ;
     TimerTask timerTask ;
     String TAG = "Timers" ;
-    int Your_X_SECS = 20 ;
+    int timer_20_s = 20 ;
+    int timer_day_s = 86400;
 
     NotificationCompat.Builder notif_babyWarning = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_dashboard_black_24dp)
@@ -64,7 +65,10 @@ public class NotificationService extends Service {
         super .onStartCommand(intent , flags , startId) ;
 
         startForeground(1, notif_notificationsActive.build());
+        //Start two timer tasks
+        //One handles notifications
         startTimer() ;
+        //The other handles daily threshold updates
         startDailyTimer();
         return START_STICKY ;
     }
@@ -86,7 +90,7 @@ public class NotificationService extends Service {
     public void startTimer () {
         timer = new Timer() ;
         initializeTimerTask() ;
-        timer .schedule( timerTask , 5000 , Your_X_SECS * 1000 ) ; //
+        timer .schedule( timerTask , 5000 , timer_20_s * 1000 ) ; //
     }
     public void stopTimerTask () {
         if ( timer != null ) {
@@ -186,7 +190,7 @@ public class NotificationService extends Service {
     public void startDailyTimer () {
         timer = new Timer() ;
         initializeDateUpdateTask() ;
-        timer .schedule( timerTask , 5000 , 86400 * 1000 ) ; //
+        timer .schedule( timerTask , 5000 , (long)timer_day_s * 1000 ) ; //
     }
     public void stopDailyTimerTask () {
         if ( timer != null ) {
@@ -195,20 +199,47 @@ public class NotificationService extends Service {
         }
     }
 
-    void initializeDateUpdateTask()
+    void initializeDateUpdateTask() {
+        timerTask = new TimerTask() {
+            public void run() {
+                handler.post(new Runnable() {
+                    public void run() {
+                        handleThresholds();
+                    }
+                });
+            }
+        };
+    }
+
+    void handleThresholds()
     {
+        if(((Globals) getApplication()).getBirthdate() == null) return;
+
         int year = Calendar.getInstance().get(Calendar.YEAR) -
-                   ((Globals) getApplication()).getBirthdate().getYear();
+                ((Globals) getApplication()).getBirthdate().getYear();
         int months = year * 12 + (Calendar.getInstance().get(Calendar.MONTH) -
-                     ((Globals) getApplication()).getBirthdate().getMonth());
+                ((Globals) getApplication()).getBirthdate().getMonth());
 
 
+        //Temperature thresholds don't change
+        ((Globals)getApplication()).setTempLowCautionThreshold(98);
+        ((Globals)getApplication()).setTempLowWarningThreshold(97);
 
-        //TODO Not right, dunno what normal blood ox is
-        if(months <= 3)
+        ((Globals)getApplication()).setTempHighCautionThreshold(99);
+        ((Globals)getApplication()).setTempHighWarningThreshold(100);
+
+        //Handle blood oxygen thresholds
+        if(months <= 1)
         {
-            ((Globals)getApplication()).setBloodOxLowCautionThreshold(86);
-            ((Globals)getApplication()).setBloodOxLowWarningThreshold(84);
+            //Bigger caution range here, but very young babies can have a lower blood ox (>90%)
+            ((Globals)getApplication()).setBloodOxLowCautionThreshold(94);
+            ((Globals)getApplication()).setBloodOxLowWarningThreshold(91);
+        }
+        else
+        {
+            //Blood ox should stabilize between 95-100%
+            ((Globals)getApplication()).setBloodOxLowCautionThreshold(95);
+            ((Globals)getApplication()).setBloodOxLowWarningThreshold(94);
         }
 
 
@@ -220,7 +251,6 @@ public class NotificationService extends Service {
 
             ((Globals)getApplication()).setPulseHighCautionThreshold(190);
             ((Globals)getApplication()).setPulseHighWarningThreshold(195);
-
         }
         else if(months <= 11)
         {
@@ -238,7 +268,7 @@ public class NotificationService extends Service {
             ((Globals)getApplication()).setPulseHighCautionThreshold(130);
             ((Globals)getApplication()).setPulseHighWarningThreshold(135);
         }
-
     }
+
 
 }

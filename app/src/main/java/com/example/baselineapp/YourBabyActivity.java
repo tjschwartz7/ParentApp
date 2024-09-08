@@ -31,7 +31,7 @@ public class YourBabyActivity extends AppCompatActivity {
         Button btn_cancelButton = (Button) findViewById(R.id.id_cancelButton);
         btn_cancelButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(YourBabyActivity.this, MainActivity.class);
+                Intent intent = new Intent(YourBabyActivity.this, Login2.class);
                 startActivity(intent);
                 finish();
             }
@@ -40,7 +40,7 @@ public class YourBabyActivity extends AppCompatActivity {
         Button btn_saveButton = (Button) findViewById(R.id.id_saveButton);
         btn_saveButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(YourBabyActivity.this, MainActivity.class);
+                Intent intent = new Intent(YourBabyActivity.this, Login2.class);
                 int currentYear = Calendar.getInstance().get(Calendar.YEAR);
                 int birthyear = birthdate.getYear();
 

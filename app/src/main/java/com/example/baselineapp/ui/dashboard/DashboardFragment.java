@@ -64,12 +64,12 @@ public class DashboardFragment extends Fragment {
         String str_tempTextBoxValue = getString(R.string.str_dataValue, Double.toString(dbl_tempValue), "F");
         String str_pulseTextBoxValue = getString(R.string.str_dataValue, Double.toString(dbl_pulseValue), "bpm");
 
-        if(dbl_bloodOxValue < dbl_bloodOxLowWarningThreshold)
+        if(dbl_bloodOxValue <= dbl_bloodOxLowWarningThreshold)
         {
             binding.idBloodOxTextBox.setBackgroundColor(color_warningRed);
             binding.idBloodOxTextBox.setTextColor(color_white);
         }
-        else if(dbl_bloodOxValue < dbl_bloodOxLowCautionThreshold)
+        else if(dbl_bloodOxValue <= dbl_bloodOxLowCautionThreshold)
         {
             binding.idBloodOxTextBox.setBackgroundColor(color_cautionYellow);
             binding.idBloodOxTextBox.setTextColor(color_black);

@@ -27,7 +27,7 @@ public class CreateAccount extends AppCompatActivity {
         Button create_account_button = (Button) findViewById(R.id.id_createAccount);
         create_account_button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(CreateAccount.this, Login2.class);
+                Intent intent = new Intent(CreateAccount.this, YourBabyActivity.class);
                 startActivity(intent);
                 finish();
             }
