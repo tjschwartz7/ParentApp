@@ -12,6 +12,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.baselineapp.ui.notifications.NotificationsFragment;
+
 public class DebugConsole extends AppCompatActivity {
 
     @Override
@@ -19,8 +21,6 @@ public class DebugConsole extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_debug_console);
-
-
 
         ((EditText)findViewById(R.id.id_bloodOxygenEdit)).setText(String.valueOf(((Globals)getApplication()).getBloodOxVal()));
         ((EditText)findViewById(R.id.id_pulseEdit)).setText(String.valueOf(((Globals)getApplication()).getPulseVal()));

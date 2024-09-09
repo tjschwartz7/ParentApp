@@ -34,7 +34,23 @@ public class DashboardFragment extends Fragment {
         //Code starts here
         //-----------------
 
+        updatePage();
 
+        //-----------------
+
+        View root = binding.getRoot();
+
+        return root;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
+    public void updatePage()
+    {
         //These are magical numbers for testing
         double dbl_bloodOxValue = ((Globals) getActivity().getApplication()).getBloodOxVal();
         double dbl_tempValue = ((Globals) getActivity().getApplication()).getTempVal();
@@ -115,18 +131,6 @@ public class DashboardFragment extends Fragment {
         binding.idBloodOxTextBox.setText(str_bloodOxTextBoxValue);
         binding.idPulseTextBox.setText(str_pulseTextBoxValue);
         binding.idTempTextBox.setText(str_tempTextBoxValue);
-
-        //-----------------
-
-        View root = binding.getRoot();
-
-        return root;
     }
 
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
 }
