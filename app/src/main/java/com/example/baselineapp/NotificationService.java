@@ -170,6 +170,14 @@ public class NotificationService extends Service {
                     ((Globals) getApplication()).setWarningActive(true);
                     ((Globals) getApplication()).setCautionActive(false);
                     warning_hasBeenActive5s = false;
+
+                    //Handle notification logging
+                    String msg = "";
+                    if(pulseWarning) msg += ("Pulse out of range: " +  String.valueOf(((Globals) getApplication()).getPulseVal())) + "\n";
+                    if(tempWarning) msg += ("Temperature out of range: " +  String.valueOf(((Globals) getApplication()).getTempVal())) + "\n";
+                    if(bloodOxWarning) msg += ("Blood Oxygen out of range: " +  String.valueOf(((Globals) getApplication()).getBloodOxVal())) + "\n";
+
+                    ((Globals)getApplication()).addNotification("WARNING", msg);
                 }
                 //If this is still active during next tick, run notification
                 else warning_hasBeenActive5s = true;
@@ -192,6 +200,15 @@ public class NotificationService extends Service {
                     ((Globals) getApplication()).setCautionActive(true);
                     ((Globals) getApplication()).setWarningActive(false);
                     caution_hasBeenActive5s = false;
+
+                    //Handle notification logging
+                    String msg = "";
+                    if(pulseCaution) msg += ("Pulse out of range: " +  String.valueOf(((Globals) getApplication()).getPulseVal())) + "\n";
+                    if(tempCaution) msg += ("Temperature out of range: " +  String.valueOf(((Globals) getApplication()).getTempVal())) + "\n";
+                    if(bloodOxCaution) msg += ("Blood Oxygen out of range: " +  String.valueOf(((Globals) getApplication()).getBloodOxVal())) + "\n";
+
+                    ((Globals)getApplication()).addNotification("CAUTION", msg);
+
                 }
                 //If this is still active during next tick, run notification
                 else caution_hasBeenActive5s = true;

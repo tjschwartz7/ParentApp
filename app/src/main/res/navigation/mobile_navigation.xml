@@ -31,7 +31,7 @@
 
     <activity
         android:id="@+id/navigation_createaccount"
-        android:name="com.example.baselineapp.ui.createaccount.CreateAccount"
+        android:name="com.example.baselineapp.CreateAccount"
         android:label="@string/str_createAccount"
         tools:layout="@layout/activity_create_account" />
 </navigation>

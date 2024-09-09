@@ -1,12 +1,15 @@
 package com.example.baselineapp;
 import android.app.Application;
+import android.app.NotificationChannel;
 import android.widget.DatePicker;
+import java.util.LinkedList;
 
 import java.util.Calendar;
 
 public class Globals extends Application
 {
 
+    private LinkedList<Notification> notifications = new LinkedList<Notification>();
     private String str_code;
 
     private boolean bool_warningActive = false;
@@ -154,6 +157,29 @@ public class Globals extends Application
     public double getPulseVal() {return dbl_pulseVal;}
 
     public String getPulseUnit() {return str_pulseUnit;}
+
+    public LinkedList<Notification> getNotifications() {return notifications;}
+
+    public void addNotification(String title, String body)
+    {
+        //Adds notification to the front of the LL
+        notifications.addFirst(new Notification(title, body));
+
+        //We only maintain 10 notifications at a time, max
+        if(notifications.size() >= 10)
+        {
+            //Remove the oldest notification
+            notifications.removeLast();
+        }
+    }
+
+    public String getNotificationString(int index)
+    {
+        return notifications.get(index).title + "\n" + notifications.get(index).body + "\n";
+    }
+
+
+    public int getNumNotifications() {return notifications.size();}
 
     public void setWarningThresholds(                     double temp_high, double pulse_high,
                                      double bloodOx_low,  double temp_low,  double pulse_low)
