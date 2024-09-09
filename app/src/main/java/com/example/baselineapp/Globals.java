@@ -156,6 +156,14 @@ public class Globals extends Application
 
     public double getPulseVal() {return dbl_pulseVal;}
 
+    public void debugOnlySetVitals(double bloodOx, double pulse, double temp)
+    {
+        dbl_bloodOxVal = bloodOx;
+        dbl_pulseVal = pulse;
+        dbl_tempVal = temp;
+    }
+
+
     public String getPulseUnit() {return str_pulseUnit;}
 
     public LinkedList<Notification> getNotifications() {return notifications;}

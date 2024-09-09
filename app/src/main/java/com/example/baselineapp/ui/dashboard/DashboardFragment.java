@@ -80,12 +80,12 @@ public class DashboardFragment extends Fragment {
             binding.idBloodOxTextBox.setTextColor(color_black);
         }
 
-        if(dbl_pulseValue < dbl_pulseLowWarningThreshold || dbl_pulseValue > dbl_pulseHighWarningThreshold)
+        if(dbl_pulseValue <= dbl_pulseLowWarningThreshold || dbl_pulseValue >= dbl_pulseHighWarningThreshold)
         {
             binding.idPulseTextBox.setBackgroundColor(color_warningRed);
             binding.idPulseTextBox.setTextColor(color_white);
         }
-        else if(dbl_pulseValue < dbl_pulseLowCautionThreshold || dbl_pulseValue > dbl_pulseHighCautionThreshold)
+        else if(dbl_pulseValue <= dbl_pulseLowCautionThreshold || dbl_pulseValue >= dbl_pulseHighCautionThreshold)
         {
             binding.idPulseTextBox.setBackgroundColor(color_cautionYellow);
             binding.idPulseTextBox.setTextColor(color_black);
@@ -96,12 +96,12 @@ public class DashboardFragment extends Fragment {
             binding.idPulseTextBox.setTextColor(color_black);
         }
 
-        if(dbl_tempValue < dbl_tempLowWarningThreshold || dbl_tempValue > dbl_tempHighWarningThreshold)
+        if(dbl_tempValue <= dbl_tempLowWarningThreshold || dbl_tempValue >= dbl_tempHighWarningThreshold)
         {
             binding.idTempTextBox.setBackgroundColor(color_warningRed);
             binding.idTempTextBox.setTextColor(color_white);
         }
-        else if(dbl_tempValue < dbl_tempLowCautionThreshold || dbl_tempValue > dbl_tempHighCautionThreshold)
+        else if(dbl_tempValue <= dbl_tempLowCautionThreshold || dbl_tempValue >= dbl_tempHighCautionThreshold)
         {
             binding.idTempTextBox.setBackgroundColor(color_cautionYellow);
             binding.idTempTextBox.setTextColor(color_black);

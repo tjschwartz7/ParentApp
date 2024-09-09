@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".DebugConsole">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/id_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Baby Vitals Debugger"
+            android:textStyle="bold"
+            android:textSize="24sp"
+            android:layout_gravity="center"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Blood Oxygen (%)"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:layout_gravity="center"/>
+
+        <EditText
+            android:id="@+id/id_bloodOxygenEdit"
+            android:hint="Blood Oxygen (%)"
+            android:inputType="numberDecimal"
+            android:selectAllOnFocus="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pulse (bpm)"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:layout_gravity="center"/>
+        <EditText
+            android:id="@+id/id_pulseEdit"
+            android:hint="Pulse (bpm)"
+            android:inputType="numberDecimal"
+            android:selectAllOnFocus="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Temperature (F)"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:layout_gravity="center"/>
+        <EditText
+            android:id="@+id/id_tempEdit"
+            android:hint="Temperature (F)"
+            android:inputType="numberDecimal"
+            android:selectAllOnFocus="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="100dp"
+            >
+
+            <Button
+                android:id="@+id/id_cancelButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/str_cancel"
+                android:layout_gravity="end"
+                android:textColor="#FFF"
+                android:textSize="20sp"
+                android:elevation="0dp"
+                android:layout_margin="5dp"
+                android:fontFamily="@font/antic"
+                android:backgroundTint="@color/grey"
+                android:layout_weight="2"/>
+
+            <Button
+                android:id="@+id/id_saveButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/str_saveChanges"
+                android:layout_gravity="end"
+                android:textColor="#FFF"
+                android:textSize="20sp"
+                android:elevation="0dp"
+                android:layout_margin="5dp"
+                android:fontFamily="@font/antic"
+                android:layout_weight="2"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
