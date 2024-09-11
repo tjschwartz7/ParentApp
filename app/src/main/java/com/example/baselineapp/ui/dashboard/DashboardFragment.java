@@ -14,15 +14,22 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.baselineapp.DataChangeListener;
 import com.example.baselineapp.Globals;
+import com.example.baselineapp.LiveViewModel;
 import com.example.baselineapp.R;
 import com.example.baselineapp.databinding.FragmentDashboardBinding;
 
-public class DashboardFragment extends Fragment {
+public class DashboardFragment extends Fragment implements DataChangeListener {
 
     private FragmentDashboardBinding binding;
+
+    private LiveViewModel bloodOxViewer;
+    private LiveViewModel pulseViewer;
+    private LiveViewModel tempViewer;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -35,6 +42,7 @@ public class DashboardFragment extends Fragment {
         //-----------------
 
         updatePage();
+
 
         //-----------------
 
@@ -131,6 +139,13 @@ public class DashboardFragment extends Fragment {
         binding.idBloodOxTextBox.setText(str_bloodOxTextBoxValue);
         binding.idPulseTextBox.setText(str_pulseTextBoxValue);
         binding.idTempTextBox.setText(str_tempTextBoxValue);
+    }
+
+    @Override
+    public void onDataChanged(String newData) {
+        // Update the UI when data changes
+        System.out.println("Data changed!!");
+        updatePage();
     }
 
 }

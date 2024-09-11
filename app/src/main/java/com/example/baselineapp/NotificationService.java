@@ -8,12 +8,15 @@ import android.os.Handler ;
 import android.os.IBinder ;
 import android.Manifest;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
 import android.util.Log ;
+
+import com.example.baselineapp.ui.dashboard.DashboardFragment;
 
 import java.util.Calendar;
 import java.util.Timer ;
@@ -118,6 +121,11 @@ public class NotificationService extends Service {
         } ;
     }
     private void createNotification () {
+        double pulse = ((Globals)getApplication()).getPulseVal();
+        double temp = ((Globals)getApplication()).getTempVal();
+        double bloodOx = ((Globals)getApplication()).getBloodOxVal();
+
+        ((Globals)getApplication()).debugOnlySetVitals(++bloodOx, ++pulse, ++temp);
         // Check if the permission for POST_NOTIFICATION is provided or not
         if (ActivityCompat.checkSelfPermission(
                 getApplicationContext(),
