@@ -6,6 +6,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,9 @@ import com.example.baselineapp.LiveViewModel;
 import com.example.baselineapp.R;
 import com.example.baselineapp.databinding.FragmentDashboardBinding;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class DashboardFragment extends Fragment implements DataChangeListener {
 
     private FragmentDashboardBinding binding;
@@ -30,6 +34,8 @@ public class DashboardFragment extends Fragment implements DataChangeListener {
     private LiveViewModel bloodOxViewer;
     private LiveViewModel pulseViewer;
     private LiveViewModel tempViewer;
+
+    private Thread repeatTaskThread;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -42,6 +48,8 @@ public class DashboardFragment extends Fragment implements DataChangeListener {
         //-----------------
 
         updatePage();
+
+        RepeatTask();
 
 
         //-----------------
@@ -87,6 +95,8 @@ public class DashboardFragment extends Fragment implements DataChangeListener {
         String str_bloodOxTextBoxValue = getString(R.string.str_dataValue, Double.toString(dbl_bloodOxValue), "%");
         String str_tempTextBoxValue = getString(R.string.str_dataValue, Double.toString(dbl_tempValue), "F");
         String str_pulseTextBoxValue = getString(R.string.str_dataValue, Double.toString(dbl_pulseValue), "bpm");
+
+        if(binding == null) return;
 
         if(dbl_bloodOxValue <= dbl_bloodOxLowWarningThreshold)
         {
@@ -147,5 +157,41 @@ public class DashboardFragment extends Fragment implements DataChangeListener {
         System.out.println("Data changed!!");
         updatePage();
     }
+
+    private void RepeatTask()
+    {
+        repeatTaskThread = new Thread()
+        {
+            public void run()
+            {
+                while (!Thread.currentThread().isInterrupted())
+                {
+
+
+                    // Update TextView in runOnUiThread
+                    getActivity().runOnUiThread(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            updatePage();
+                        }
+                    });
+                    try
+                    {
+                        // Sleep for 10 minutes
+                        Thread.sleep(60);
+                    }
+
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            };
+        };
+        repeatTaskThread.start();
+    }
+
 
 }
