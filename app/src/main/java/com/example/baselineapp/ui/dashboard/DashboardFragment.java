@@ -27,13 +27,9 @@ import com.example.baselineapp.databinding.FragmentDashboardBinding;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class DashboardFragment extends Fragment implements DataChangeListener {
+public class DashboardFragment extends Fragment {
 
     private FragmentDashboardBinding binding;
-
-    private LiveViewModel bloodOxViewer;
-    private LiveViewModel pulseViewer;
-    private LiveViewModel tempViewer;
 
     private Thread repeatTaskThread;
 
@@ -149,13 +145,6 @@ public class DashboardFragment extends Fragment implements DataChangeListener {
         binding.idBloodOxTextBox.setText(str_bloodOxTextBoxValue);
         binding.idPulseTextBox.setText(str_pulseTextBoxValue);
         binding.idTempTextBox.setText(str_tempTextBoxValue);
-    }
-
-    @Override
-    public void onDataChanged(String newData) {
-        // Update the UI when data changes
-        System.out.println("Data changed!!");
-        updatePage();
     }
 
     private void RepeatTask()
