@@ -102,7 +102,7 @@ public class CreateAccount extends AppCompatActivity
         });
 
         //Cancel button --> Takes user back to login activity
-        Button cancel_button = (Button) findViewById(R.id.id_cancelToLogin);
+        Button cancel_button = (Button) findViewById(R.id.id_cancelButton);
         cancel_button.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View v)

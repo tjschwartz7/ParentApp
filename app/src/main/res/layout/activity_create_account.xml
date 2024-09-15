@@ -114,7 +114,7 @@
             android:paddingTop="100dp"
             >
             <Button
-                android:id="@+id/id_cancelToLogin"
+                android:id="@+id/id_cancelButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/str_cancel"
@@ -125,6 +125,7 @@
                 android:layout_margin="5dp"
                 android:fontFamily="@font/antic"
                 android:layout_weight="2"
+                android:backgroundTint="@color/grey"
                 />
 
             <Button
