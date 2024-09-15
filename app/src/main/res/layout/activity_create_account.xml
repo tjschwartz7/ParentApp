@@ -33,6 +33,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
+                android:maxLength="25"
                 />
 
             <EditText
@@ -43,6 +44,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
+                android:maxLength="25"
                 />
         </LinearLayout>
 
@@ -61,6 +63,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
+                android:maxLength="100"
                 />
 
             <EditText
@@ -89,6 +92,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
+                android:maxLength="25"
                 />
 
             <EditText
@@ -99,6 +103,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
+                android:maxLength="25"
                 />
         </LinearLayout>
 
@@ -108,6 +113,19 @@
             android:orientation="horizontal"
             android:paddingTop="100dp"
             >
+            <Button
+                android:id="@+id/id_cancelToLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/str_cancel"
+                android:layout_gravity="end"
+                android:textColor="#FFF"
+                android:textSize="17sp"
+                android:elevation="0dp"
+                android:layout_margin="5dp"
+                android:fontFamily="@font/antic"
+                android:layout_weight="2"
+                />
 
             <Button
                 android:id="@+id/id_createAccount"
@@ -116,10 +134,11 @@
                 android:text="@string/str_actionRegister"
                 android:layout_gravity="end"
                 android:textColor="#FFF"
-                android:textSize="20sp"
+                android:textSize="17sp"
                 android:elevation="0dp"
                 android:layout_margin="5dp"
                 android:fontFamily="@font/antic"
+                android:layout_weight="2"
                 />
 
         </LinearLayout>

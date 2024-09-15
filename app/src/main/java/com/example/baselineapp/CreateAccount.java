@@ -101,159 +101,17 @@ public class CreateAccount extends AppCompatActivity
             }
         });
 
-        firstNameEditText.addTextChangedListener(new TextWatcher()
+        //Cancel button --> Takes user back to login activity
+        Button cancel_button = (Button) findViewById(R.id.id_cancelToLogin);
+        cancel_button.setOnClickListener(new View.OnClickListener()
         {
-            private boolean isFormatting;
-            public void beforeTextChanged(CharSequence s, int start, int count, int after)
+            public void onClick(View v)
             {
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count)
-            {
-                if (!isFormatting)
-                {
-                    String currentText = s.toString();
-                    // Format the string (limit to 20 characters)
-                    if (currentText.length() > 20)
-                    {
-                        currentText = currentText.substring(0, 20);
-                    }
-
-                    isFormatting = true;
-                    firstNameEditText.setText(currentText);
-                    firstNameEditText.setSelection(currentText.length());
-                    isFormatting = false;
-                }
-            }
-
-            public void afterTextChanged(Editable s)
-            {
+                Intent intent = new Intent(CreateAccount.this, Login2.class);
+                startActivity(intent);
+                finish();
             }
         });
-
-        lastNameEditText.addTextChangedListener(new TextWatcher()
-        {
-            private boolean isFormatting;
-            public void beforeTextChanged(CharSequence s, int start, int count, int after)
-            {
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count)
-            {
-                if (!isFormatting)
-                {
-                    String currentText = s.toString();
-                    // Format the string (limit to 20 characters)
-                    if (currentText.length() > 20)
-                    {
-                        currentText = currentText.substring(0, 20);
-                    }
-
-                    isFormatting = true;
-                    lastNameEditText.setText(currentText);
-                    lastNameEditText.setSelection(currentText.length());
-                    isFormatting = false;
-                }
-            }
-
-            public void afterTextChanged(Editable s)
-            {
-            }
-        });
-
-        passwordEditText.addTextChangedListener(new TextWatcher()
-        {
-            private boolean isFormatting;
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after)
-            {
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count)
-            {
-                if (!isFormatting)
-                {
-                    String currentText = s.toString();
-                    // Format the string (limit to 20 characters)
-                    if (currentText.length() > 20)
-                    {
-                        currentText = currentText.substring(0, 20);
-                    }
-
-                    isFormatting = true;
-                    passwordEditText.setText(currentText);
-                    passwordEditText.setSelection(currentText.length());
-                    isFormatting = false;
-                }
-            }
-
-            public void afterTextChanged(Editable s)
-            {
-            }
-        });
-
-        passwordConfirmEditText.addTextChangedListener(new TextWatcher()
-        {
-            private boolean isFormatting;
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after)
-            {
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count)
-            {
-                if (!isFormatting)
-                {
-                    String currentText = s.toString();
-                    // Format the string (limit to 20 characters)
-                    if (currentText.length() > 20)
-                    {
-                        currentText = currentText.substring(0, 20);
-                    }
-
-                    isFormatting = true;
-                    passwordConfirmEditText.setText(currentText);
-                    passwordConfirmEditText.setSelection(currentText.length());
-                    isFormatting = false;
-                }
-            }
-
-            public void afterTextChanged(Editable s)
-            {
-            }
-        });
-
-        emailEditText.addTextChangedListener(new TextWatcher()
-        {
-            private boolean isFormatting;
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after)
-            {
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count)
-            {
-                if (!isFormatting)
-                {
-                    String currentText = s.toString();
-                    // Format the string (limit to 100 characters)
-                    if (currentText.length() > 100)
-                    {
-                        currentText = currentText.substring(0, 100);
-                    }
-
-                    isFormatting = true;
-                    emailEditText.setText(currentText);
-                    emailEditText.setSelection(currentText.length());
-                    isFormatting = false;
-                }
-            }
-
-            public void afterTextChanged(Editable s)
-            {
-            }
-        });
-
 
         //The button that will be submit the user information
         //and switch the user into the next state.
