@@ -356,7 +356,7 @@ public class CreateAccount extends AppCompatActivity
                     e.printStackTrace();
                 }
 
-                Intent intent = new Intent(CreateAccount.this, Login2.class);
+                Intent intent = new Intent(CreateAccount.this, YourBabyActivity.class);
                 startActivity(intent);
                 finish();
             }

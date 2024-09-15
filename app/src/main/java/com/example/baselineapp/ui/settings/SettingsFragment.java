@@ -5,13 +5,19 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.baselineapp.ChangePassword;
+import com.example.baselineapp.DebugConsole;
 import com.example.baselineapp.Login2;
+import com.example.baselineapp.MainActivity;
+import com.example.baselineapp.NotificationSettings;
+import com.example.baselineapp.R;
+import com.example.baselineapp.YourBabyActivity;
 import com.example.baselineapp.databinding.FragmentSettingsBinding;
 import com.example.baselineapp.ProfileActivity;
 
@@ -39,9 +45,18 @@ public class SettingsFragment extends Fragment {
             startActivity(intent);
         });
 
-
         binding.idLogout.setOnClickListener(v -> {
             Intent intent = new Intent(SettingsFragment.this.getActivity(), Login2.class);
+            startActivity(intent);
+        });
+
+        binding.idNotificationSettingsButton.setOnClickListener(v -> {
+            Intent intent = new Intent(SettingsFragment.this.getActivity(), NotificationSettings.class);
+            startActivity(intent);
+        });
+
+        binding.idDebugConsole.setOnClickListener(v -> {
+            Intent intent = new Intent(SettingsFragment.this.getActivity(), DebugConsole.class);
             startActivity(intent);
         });
 

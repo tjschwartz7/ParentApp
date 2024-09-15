@@ -1,9 +1,11 @@
 package com.example.baselineapp;
 
+import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,10 +23,28 @@ public class ForgotPasswordPasscode extends AppCompatActivity {
         //Code starts here
         //-----------------
 
-        Button btn_sendCode = (Button) findViewById(R.id.id_continueButton);
-        btn_sendCode.setOnClickListener(new View.OnClickListener() {
+        Button btn_continueButton = (Button) findViewById(R.id.id_continueButton);
+        btn_continueButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(ForgotPasswordPasscode.this, ForgotPasswordChange.class);
+
+                String userEnteredPasscode = ((EditText) findViewById(R.id.id_codeInput)).getText().toString();
+                String actualPasscode = ((Globals) getApplication()).getCode();
+
+                //If user entered valid passcode
+                if(userEnteredPasscode.compareTo(actualPasscode) == 0)
+                {
+                    //Allow them to continue
+                    startActivity(intent);
+                    finish();
+                }
+            }
+        });
+
+        Button btn_backButton = (Button) findViewById(R.id.id_backButton);
+        btn_backButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(ForgotPasswordPasscode.this, Login2.class);
                 startActivity(intent);
                 finish();
             }

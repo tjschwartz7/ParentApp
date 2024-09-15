@@ -5,8 +5,9 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ChangePassword"
+    tools:context=".YourBabyActivity"
     >
+
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -14,37 +15,33 @@
         android:id="@+id/id_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ChangePassword"
         android:orientation="vertical"
+        android:gravity="center"
         >
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingTop="100dp"
-            >
+            android:text="Some more information..."
+            android:textStyle="bold"
+            android:textSize="24sp"
+            android:layout_gravity="center"
+            />
 
-            <EditText
-                android:id="@+id/id_passwordParent"
-                android:hint="@string/str_promptPassword"
-                android:inputType="textPassword"
-                android:selectAllOnFocus="true"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                />
 
-            <EditText
-                android:id="@+id/id_passwordConfirm"
-                android:hint="@string/str_promptConfirmPassword"
-                android:inputType="textPassword"
-                android:selectAllOnFocus="true"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                />
-        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="When was your baby born?"
+            android:textSize="24sp"
+            android:layout_gravity="center"
+            />
+
+        <DatePicker
+            android:id="@+id/id_birthdatePicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -54,7 +51,7 @@
             >
 
             <Button
-                android:id="@+id/id_backButton"
+                android:id="@+id/id_cancelButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/str_cancel"
@@ -64,11 +61,12 @@
                 android:elevation="0dp"
                 android:layout_margin="5dp"
                 android:fontFamily="@font/antic"
+                android:backgroundTint="@color/grey"
                 android:layout_weight="2"
                 />
 
             <Button
-                android:id="@+id/id_confirmButton"
+                android:id="@+id/id_saveButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/str_saveChanges"

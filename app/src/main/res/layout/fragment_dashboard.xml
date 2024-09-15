@@ -27,22 +27,26 @@
         android:layout_height="wrap_content"
         android:padding="10dp"
         >
+
         <TextView
             android:layout_weight="2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="24dp"
             android:text="Blood Oxygen:"
+            android:textColor="@color/black"
             android:background="@color/purple_200"
             android:layout_marginRight="20dp"
             android:padding="5dp"
         />
+
         <TextView
+            android:id="@+id/id_bloodOxTextBox"
             android:layout_weight="2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="24dp"
-            android:text="95%"
+            android:text="@string/str_percentSymbol"
             android:background="@color/healthy_green"
             android:padding="5dp"
             />
@@ -61,18 +65,20 @@
             android:layout_height="wrap_content"
             android:textSize="24dp"
             android:text="Pulse:"
+            android:textColor="@color/black"
             android:background="@color/purple_200"
             android:layout_marginRight="20dp"
             android:padding="5dp"
             />
 
         <TextView
+            android:id="@+id/id_pulseTextBox"
             android:layout_weight="2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="24dp"
-            android:text="110 bpm"
-            android:background="@color/caution_yellow"
+            android:text="@string/str_bpmSymbol"
+            android:background="@color/healthy_green"
             android:padding="5dp"
             />
     </LinearLayout>
@@ -89,18 +95,19 @@
             android:layout_height="wrap_content"
             android:textSize="24dp"
             android:text="Temperature: "
+            android:textColor="@color/black"
             android:background="@color/purple_200"
             android:layout_marginRight="20dp"
             android:padding="5dp"
             />
         <TextView
+            android:id="@+id/id_tempTextBox"
             android:layout_weight="2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="24dp"
-            android:text="102 F"
-            android:textColor="@color/white"
-            android:background="@color/warning_red"
+            android:text="@string/str_tempFSymbol"
+            android:background="@color/healthy_green"
             android:padding="5dp"
             />
     </LinearLayout>

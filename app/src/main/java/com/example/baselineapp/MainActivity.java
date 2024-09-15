@@ -1,10 +1,23 @@
 package com.example.baselineapp;
 
+import static androidx.core.content.ContextCompat.getSystemService;
+
+import static com.example.baselineapp.NotificationService.NOTIFICATION_CHANNEL_ID;
+
+import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -36,6 +49,15 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.idNavView, navController);
 
+        //Code goes here
+
+    }
+
+    @Override
+    protected void onStop ()
+    {
+        super .onStop() ;
     }
 
 }
+

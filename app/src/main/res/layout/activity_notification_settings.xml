@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".NotificationSettings">
+
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/id_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Warning Thresholds"
+                android:textStyle="bold"
+                android:textSize="24sp"
+                android:layout_gravity="center"/>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Blood Ox lower bound"
+                android:textSize="24sp"
+                android:layout_gravity="center"/>
+
+            <EditText
+                android:id="@+id/id_bloodOxWarningLowerBound"
+                android:hint="Blood Oxygen Lower Bound"
+                android:inputType="numberDecimal"
+                android:selectAllOnFocus="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pulse Bounds"
+                android:textSize="24sp"
+                android:layout_gravity="center"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+                <EditText
+                    android:id="@+id/id_pulseWarningLowerBound"
+                    android:hint="Pulse lower bound"
+                    android:inputType="numberDecimal"
+                    android:selectAllOnFocus="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    />
+
+                <EditText
+                    android:id="@+id/id_pulseWarningUpperBound"
+                    android:hint="Pulse upper bound"
+                    android:inputType="numberDecimal"
+                    android:selectAllOnFocus="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    />
+        </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Temperature Bounds"
+                android:textSize="24sp"
+                android:layout_gravity="center"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <EditText
+                android:id="@+id/id_tempWarningLowerBound"
+                android:hint="Temp lower bound"
+                android:inputType="numberDecimal"
+                android:selectAllOnFocus="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                />
+
+            <EditText
+                android:id="@+id/id_tempWarningUpperBound"
+                android:hint="Temp upper bound"
+                android:inputType="numberDecimal"
+                android:selectAllOnFocus="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Caution Thresholds"
+            android:textStyle="bold"
+            android:textSize="24sp"
+            android:layout_gravity="center"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Blood Ox lower bound"
+            android:textSize="24sp"
+            android:layout_gravity="center"/>
+
+        <EditText
+            android:id="@+id/id_bloodOxCautionLowerBound"
+            android:hint="Blood Oxygen Lower Bound"
+            android:inputType="numberDecimal"
+            android:selectAllOnFocus="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pulse Bounds"
+            android:textSize="24sp"
+            android:layout_gravity="center"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <EditText
+                android:id="@+id/id_pulseCautionLowerBound"
+                android:hint="Pulse lower bound"
+                android:inputType="numberDecimal"
+                android:selectAllOnFocus="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                />
+
+            <EditText
+                android:id="@+id/id_pulseCautionUpperBound"
+                android:hint="Pulse upper bound"
+                android:inputType="numberDecimal"
+                android:selectAllOnFocus="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Temperature Bounds"
+            android:textSize="24sp"
+            android:layout_gravity="center"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <EditText
+                android:id="@+id/id_tempCautionLowerBound"
+                android:hint="Temp lower bound"
+                android:inputType="numberDecimal"
+                android:selectAllOnFocus="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                />
+
+            <EditText
+                android:id="@+id/id_tempCautionUpperBound"
+                android:hint="Temp upper bound"
+                android:inputType="numberDecimal"
+                android:selectAllOnFocus="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                />
+        </LinearLayout>
+
+
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="100dp"
+            >
+
+            <Button
+                android:id="@+id/id_cancelButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/str_cancel"
+                android:layout_gravity="end"
+                android:textColor="#FFF"
+                android:textSize="20sp"
+                android:elevation="0dp"
+                android:layout_margin="5dp"
+                android:fontFamily="@font/antic"
+                android:backgroundTint="@color/grey"
+                android:layout_weight="2"/>
+
+            <Button
+                android:id="@+id/id_saveButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/str_saveChanges"
+                android:layout_gravity="end"
+                android:textColor="#FFF"
+                android:textSize="20sp"
+                android:elevation="0dp"
+                android:layout_margin="5dp"
+                android:fontFamily="@font/antic"
+                android:layout_weight="2"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
