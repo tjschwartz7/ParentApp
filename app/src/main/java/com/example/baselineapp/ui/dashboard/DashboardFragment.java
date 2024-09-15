@@ -6,6 +6,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,15 +15,27 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.baselineapp.DataChangeListener;
 import com.example.baselineapp.Globals;
+import com.example.baselineapp.LiveViewModel;
 import com.example.baselineapp.R;
 import com.example.baselineapp.databinding.FragmentDashboardBinding;
 
-public class DashboardFragment extends Fragment {
+import java.util.Timer;
+import java.util.TimerTask;
+
+public class DashboardFragment extends Fragment implements DataChangeListener {
 
     private FragmentDashboardBinding binding;
+
+    private LiveViewModel bloodOxViewer;
+    private LiveViewModel pulseViewer;
+    private LiveViewModel tempViewer;
+
+    private Thread repeatTaskThread;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -34,7 +47,26 @@ public class DashboardFragment extends Fragment {
         //Code starts here
         //-----------------
 
+        updatePage();
 
+        RepeatTask();
+
+
+        //-----------------
+
+        View root = binding.getRoot();
+
+        return root;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
+    public void updatePage()
+    {
         //These are magical numbers for testing
         double dbl_bloodOxValue = ((Globals) getActivity().getApplication()).getBloodOxVal();
         double dbl_tempValue = ((Globals) getActivity().getApplication()).getTempVal();
@@ -64,12 +96,14 @@ public class DashboardFragment extends Fragment {
         String str_tempTextBoxValue = getString(R.string.str_dataValue, Double.toString(dbl_tempValue), "F");
         String str_pulseTextBoxValue = getString(R.string.str_dataValue, Double.toString(dbl_pulseValue), "bpm");
 
-        if(dbl_bloodOxValue < dbl_bloodOxLowWarningThreshold)
+        if(binding == null) return;
+
+        if(dbl_bloodOxValue <= dbl_bloodOxLowWarningThreshold)
         {
             binding.idBloodOxTextBox.setBackgroundColor(color_warningRed);
             binding.idBloodOxTextBox.setTextColor(color_white);
         }
-        else if(dbl_bloodOxValue < dbl_bloodOxLowCautionThreshold)
+        else if(dbl_bloodOxValue <= dbl_bloodOxLowCautionThreshold)
         {
             binding.idBloodOxTextBox.setBackgroundColor(color_cautionYellow);
             binding.idBloodOxTextBox.setTextColor(color_black);
@@ -80,12 +114,12 @@ public class DashboardFragment extends Fragment {
             binding.idBloodOxTextBox.setTextColor(color_black);
         }
 
-        if(dbl_pulseValue < dbl_pulseLowWarningThreshold || dbl_pulseValue > dbl_pulseHighWarningThreshold)
+        if(dbl_pulseValue <= dbl_pulseLowWarningThreshold || dbl_pulseValue >= dbl_pulseHighWarningThreshold)
         {
             binding.idPulseTextBox.setBackgroundColor(color_warningRed);
             binding.idPulseTextBox.setTextColor(color_white);
         }
-        else if(dbl_pulseValue < dbl_pulseLowCautionThreshold || dbl_pulseValue > dbl_pulseHighCautionThreshold)
+        else if(dbl_pulseValue <= dbl_pulseLowCautionThreshold || dbl_pulseValue >= dbl_pulseHighCautionThreshold)
         {
             binding.idPulseTextBox.setBackgroundColor(color_cautionYellow);
             binding.idPulseTextBox.setTextColor(color_black);
@@ -96,12 +130,12 @@ public class DashboardFragment extends Fragment {
             binding.idPulseTextBox.setTextColor(color_black);
         }
 
-        if(dbl_tempValue < dbl_tempLowWarningThreshold || dbl_tempValue > dbl_tempHighWarningThreshold)
+        if(dbl_tempValue <= dbl_tempLowWarningThreshold || dbl_tempValue >= dbl_tempHighWarningThreshold)
         {
             binding.idTempTextBox.setBackgroundColor(color_warningRed);
             binding.idTempTextBox.setTextColor(color_white);
         }
-        else if(dbl_tempValue < dbl_tempLowCautionThreshold || dbl_tempValue > dbl_tempHighCautionThreshold)
+        else if(dbl_tempValue <= dbl_tempLowCautionThreshold || dbl_tempValue >= dbl_tempHighCautionThreshold)
         {
             binding.idTempTextBox.setBackgroundColor(color_cautionYellow);
             binding.idTempTextBox.setTextColor(color_black);
@@ -115,18 +149,49 @@ public class DashboardFragment extends Fragment {
         binding.idBloodOxTextBox.setText(str_bloodOxTextBoxValue);
         binding.idPulseTextBox.setText(str_pulseTextBoxValue);
         binding.idTempTextBox.setText(str_tempTextBoxValue);
-
-        //-----------------
-
-        View root = binding.getRoot();
-
-        return root;
     }
-
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+    public void onDataChanged(String newData) {
+        // Update the UI when data changes
+        System.out.println("Data changed!!");
+        updatePage();
     }
+
+    private void RepeatTask()
+    {
+        repeatTaskThread = new Thread()
+        {
+            public void run()
+            {
+                while (!Thread.currentThread().isInterrupted())
+                {
+
+
+                    // Update TextView in runOnUiThread
+                    getActivity().runOnUiThread(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            updatePage();
+                        }
+                    });
+                    try
+                    {
+                        // Sleep for 10 minutes
+                        Thread.sleep(60);
+                    }
+
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            };
+        };
+        repeatTaskThread.start();
+    }
+
+
 }

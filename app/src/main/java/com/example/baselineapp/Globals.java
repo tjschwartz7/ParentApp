@@ -1,21 +1,37 @@
 package com.example.baselineapp;
 import android.app.Application;
+import android.app.NotificationChannel;
+import android.widget.DatePicker;
+
+import com.example.baselineapp.ui.dashboard.DashboardFragment;
 import java.util.HashMap;
+
+import java.util.LinkedList;
+
+import java.util.Calendar;
 
 public final class Globals extends Application
 {
+    private static String code;
+    private static double bloodOxVal;
+    private static String bloodOxUnit;
+    private static double tempVal;
+    private static String tempUnit;
+    private static double pulseVal;
+    private static String pulseUnit;
     private static HashMap<String, String> map;
 
+    private LinkedList<Notification> notifications = new LinkedList<Notification>();
     private String str_code;
 
     private boolean bool_warningActive = false;
     private boolean bool_cautionActive = false;
 
-    private static double dbl_bloodOxVal = 89;
+    private static double dbl_bloodOxVal = 94;
     private static String str_bloodOxUnit = "%";
     private static double dbl_tempVal = 98.7;
     private static String str_tempUnit = "F";
-    private static double dbl_pulseVal = 205;
+    private static double dbl_pulseVal = 120;
     private static String str_pulseUnit = "bpm";
 
     private static double dbl_bloodOxLowWarningThreshold = 88;
@@ -31,8 +47,14 @@ public final class Globals extends Application
     private static double dbl_tempHighWarningThreshold = 101;
     private static double dbl_tempHighCautionThreshold = 99.5;
 
-    public Globals()
-    {
+    private DatePicker birthdate;
+
+    public DatePicker getBirthdate() {
+        return birthdate;
+    }
+
+    public void setBirthdate(DatePicker birthdate) {
+        this.birthdate = birthdate;
     }
 
     public boolean isWarningActive() {
@@ -42,6 +64,8 @@ public final class Globals extends Application
     public void setWarningActive(boolean bool_warningActive) {
         this.bool_warningActive = bool_warningActive;
     }
+
+    private Globals(String profile){}
 
     public boolean isCautionActive() {
         return bool_cautionActive;
@@ -55,7 +79,7 @@ public final class Globals extends Application
     }
 
     public double getBloodOxLowWarningThreshold() {
-        return dbl_bloodOxLowWarningThreshold;
+        return Globals.dbl_bloodOxLowWarningThreshold;
     }
 
     public void setBloodOxLowWarningThreshold(double dbl_bloodOxLowWarningThreshold) {
@@ -64,31 +88,6 @@ public final class Globals extends Application
 
     public double getBloodOxLowCautionThreshold() {
         return dbl_bloodOxLowCautionThreshold;
-        }
-    /*
-         List of Keys that will appear in map:
-            Email
-            Full Name
-            First Name
-            Last Name
-            Phone Number
-            Password
-    */
-    public static void setInitialValues(String profile)
-    {
-        map = new HashMap<>();
-        int beginIndex = 0;
-        while(profile.indexOf(';') != -1)
-        {
-            int endIndex = profile.indexOf(':');
-            //Iterate through profile string. Split off each key and each value. Add key-value pair to map.
-            String key = profile.substring(beginIndex, endIndex);
-            profile = profile.substring(endIndex+1);
-            endIndex = profile.indexOf(';');
-            String value = profile.substring(beginIndex, endIndex);
-            profile = profile.substring(endIndex+1);
-            map.put(key, value);
-        }
     }
 
     public void setBloodOxLowCautionThreshold(double dbl_bloodOxLowCautionThreshold) {
@@ -159,15 +158,102 @@ public final class Globals extends Application
         Globals.dbl_tempHighCautionThreshold = dbl_tempHighCautionThreshold;
     }
 
-    public void setCode(String code){
+    public void setCode(String code) {
         this.str_code = code;
     }
 
     public double getBloodOxVal() {return dbl_bloodOxVal;}
     public String getBloodOxUnit() {return str_bloodOxUnit;}
+
     public double getTempVal() {return dbl_tempVal;}
     public String getTempUnit() {return str_tempUnit;}
+
     public double getPulseVal() {return dbl_pulseVal;}
+
+    public void debugOnlySetVitals(double bloodOx, double pulse, double temp)
+    {
+        dbl_bloodOxVal = bloodOx;
+        dbl_pulseVal = pulse;
+        dbl_tempVal = temp;
+    }
+
+    /*
+         List of Keys that will appear in map:
+            Email
+            Full Name
+            First Name
+            Last Name
+            Phone Number
+            Password
+    */
+    public static void setInitialValues(String profile)
+    {
+        map = new HashMap<>();
+        int beginIndex = 0;
+        while(profile.indexOf(';') != -1)
+        {
+            int endIndex = profile.indexOf(':');
+            //Iterate through profile string. Split off each key and each value. Add key-value pair to map.
+            String key = profile.substring(beginIndex, endIndex);
+            profile = profile.substring(endIndex+1);
+            endIndex = profile.indexOf(';');
+            String value = profile.substring(beginIndex, endIndex);
+            profile = profile.substring(endIndex+1);
+            map.put(key, value);
+        }
+        bloodOxVal = 0.0;
+        bloodOxUnit = "%";
+        tempVal = 0.0;
+        tempUnit = "F";
+        pulseVal = 0.0;
+        pulseUnit = "bpm";
+    }
+
     public String getPulseUnit() {return str_pulseUnit;}
+
+    public LinkedList<Notification> getNotifications() {return notifications;}
+
+    public void addNotification(String title, String body)
+    {
+
+        //Adds notification to the front of the LL
+        notifications.addFirst(new Notification(title, body));
+
+        //We only maintain 10 notifications at a time, max
+        if(notifications.size() >= 10)
+        {
+            //Remove the oldest notification
+            notifications.removeLast();
+        }
+
+    }
+
+    public String getNotificationString(int index)
+    {
+        return notifications.get(index).title + "\n" + notifications.get(index).body + "\n";
+    }
+
+
+    public int getNumNotifications() {return notifications.size();}
+
+    public void setWarningThresholds(                     double temp_high, double pulse_high,
+                                     double bloodOx_low,  double temp_low,  double pulse_low)
+    {
+        setBloodOxLowWarningThreshold(bloodOx_low);
+        setTempLowWarningThreshold(temp_high);
+        setTempLowWarningThreshold(temp_low);
+        setPulseHighWarningThreshold(pulse_high);
+        setPulseLowWarningThreshold(pulse_low);
+    }
+
     public static HashMap<String,String> getMap() {return map;}
+    public void setCautionThresholds(                     double temp_high, double pulse_high,
+                                     double bloodOx_low,  double temp_low,  double pulse_low)
+    {
+        setBloodOxLowCautionThreshold(bloodOx_low);
+        setTempLowCautionThreshold(temp_high);
+        setTempLowCautionThreshold(temp_low);
+        setPulseHighCautionThreshold(pulse_high);
+        setPulseLowCautionThreshold(pulse_low);
+    }
 }

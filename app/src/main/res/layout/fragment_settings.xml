@@ -6,62 +6,75 @@
     android:layout_height="match_parent"
     tools:context=".ui.settings.SettingsFragment">-->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.settings.SettingsFragment"
-    android:orientation="vertical"
-    android:background="@color/white"
-    >
 
-
-    <Button
-        android:id="@+id/id_profileButton"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="24sp"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:text="@string/str_profile"
-        android:textColor="@color/black"
-        android:backgroundTint="@color/white"
-        />
+        android:layout_height="match_parent"
+        tools:context=".ui.settings.SettingsFragment"
+        android:orientation="vertical"
+        android:background="@color/white"
+        >
 
-    <Button
-        android:id="@+id/id_notificationSettingsButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="24sp"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:text="@string/str_notificationSettings"
-        android:textColor="@color/black"
-        android:backgroundTint="@color/white"
-        />
 
-    <Button
-        android:id="@+id/id_changePassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="24sp"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:text="@string/str_changePassword"
-        android:textColor="@color/black"
-        android:backgroundTint="@color/white"
-        />
+        <Button
+            android:id="@+id/id_profileButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:text="@string/str_profile"
+            android:textColor="@color/black"
+            android:backgroundTint="@color/white"
+            />
 
-    <Button
-        android:id="@+id/id_logout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="24sp"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:text="@string/str_logout"
-        android:textColor="@color/black"
-        android:backgroundTint="@color/white"
-        />
-</LinearLayout>
+        <Button
+            android:id="@+id/id_notificationSettingsButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:text="@string/str_notificationSettings"
+            android:textColor="@color/black"
+            android:backgroundTint="@color/white"
+            />
+
+        <Button
+            android:id="@+id/id_changePassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:text="@string/str_changePassword"
+            android:textColor="@color/black"
+            android:backgroundTint="@color/white"
+            />
+
+        <Button
+            android:id="@+id/id_debugConsole"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:text="Debug Console"
+            android:textColor="@color/black"
+            android:backgroundTint="@color/white"
+            />
+
+        <Button
+            android:id="@+id/id_logout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:text="@string/str_logout"
+            android:textColor="@color/black"
+            android:backgroundTint="@color/white"
+            />
+    </LinearLayout>
