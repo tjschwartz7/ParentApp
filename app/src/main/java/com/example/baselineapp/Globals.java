@@ -65,7 +65,8 @@ public final class Globals extends Application
         this.bool_warningActive = bool_warningActive;
     }
 
-    private Globals(String profile){}
+    public Globals(){}
+    public Globals(String profile){}
 
     public boolean isCautionActive() {
         return bool_cautionActive;
