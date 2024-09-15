@@ -186,6 +186,7 @@ public final class Globals extends Application
             Last Name
             Phone Number
             Password
+            Baby Birthday
     */
     public static void setInitialValues(String profile)
     {

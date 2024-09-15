@@ -42,11 +42,6 @@ public class CreateAccount extends AppCompatActivity
         setContentView(R.layout.activity_create_account);
 
         EditText phoneNumberEditText = findViewById(R.id.id_phoneNumberParent);
-        EditText firstNameEditText = findViewById(R.id.id_firstNameParent);
-        EditText lastNameEditText = findViewById(R.id.id_lastNameParent);
-        EditText passwordEditText = findViewById(R.id.id_passwordParent);
-        EditText passwordConfirmEditText = findViewById(R.id.id_passwordConfirm);
-        EditText emailEditText = findViewById(R.id.id_emailParent);
 
         phoneNumberEditText.addTextChangedListener(new TextWatcher()
         {
@@ -113,8 +108,7 @@ public class CreateAccount extends AppCompatActivity
             }
         });
 
-        //The button that will be submit the user information
-        //and switch the user into the next state.
+        //The button that will submit the user information and send the user to the next activity.
         Button create_account_button = (Button) findViewById(R.id.id_createAccount);
         create_account_button.setOnClickListener(new View.OnClickListener()
         {
@@ -172,49 +166,17 @@ public class CreateAccount extends AppCompatActivity
                     return;
                 }
 
-                try
-                {
-                    String str_filename = "AccountData.txt";
+                String str_accountString = "Email:" + str_emailParent +
+                        ";Full Name:" + str_fullNameParent +
+                        ";First Name:" + str_firstNameParent +
+                        ";Last Name:" + str_lastNameParent +
+                        ";Phone Number:" + str_phoneNumberParent +
+                        ";Password:" + str_passwordParent;
 
-                    String str_accountString = "Email:" + str_emailParent +
-                            ";Full Name:" + str_fullNameParent +
-                            ";First Name:" + str_firstNameParent +
-                            ";Last Name:" + str_lastNameParent +
-                            ";Phone Number:" + str_phoneNumberParent +
-                            ";Password:" + str_passwordParent + ";\n";
-
-                    try (FileOutputStream fos = v.getContext().openFileOutput(str_filename, Context.MODE_PRIVATE))
-                    {
-                        fos.write(str_accountString.getBytes());
-                    }
-
-                    //Following code gets the file, opens it, and then logs the first line of the file as output. Used for testing purposes. Comment out the block if you are not testing it.
-                    //File file = new File(v.getContext().getFilesDir(), str_filename);
-                    FileInputStream fis = v.getContext().openFileInput("AccountData.txt");
-                    InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
-                    StringBuilder stringBuilder = new StringBuilder();
-                    try (BufferedReader reader = new BufferedReader(isr)) {
-                        String line = reader.readLine();
-                        while (line != null) {
-                            stringBuilder.append(line).append('\n');
-                            line = reader.readLine();
-                        }
-                    }
-                    catch (IOException e) {
-                        // Error occurred when opening raw file for reading.
-                    }
-                    finally {
-                        String contents = stringBuilder.toString();
-                        String tag = "CreateAccount";
-                        Log.d(tag, contents);
-                    }
-                }
-                catch(IOException e)
-                {
-                    e.printStackTrace();
-                }
 
                 Intent intent = new Intent(CreateAccount.this, YourBabyActivity.class);
+                Bundle bundle_forBabyActivity = new Bundle();
+                intent.putExtra("Account String", str_accountString);
                 startActivity(intent);
                 finish();
             }
