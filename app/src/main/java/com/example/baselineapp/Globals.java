@@ -4,13 +4,22 @@ import android.app.NotificationChannel;
 import android.widget.DatePicker;
 
 import com.example.baselineapp.ui.dashboard.DashboardFragment;
+import java.util.HashMap;
 
 import java.util.LinkedList;
 
 import java.util.Calendar;
 
-public class Globals extends Application
+public final class Globals extends Application
 {
+    private static String code;
+    private static double bloodOxVal;
+    private static String bloodOxUnit;
+    private static double tempVal;
+    private static String tempUnit;
+    private static double pulseVal;
+    private static String pulseUnit;
+    private static HashMap<String, String> map;
 
     private LinkedList<Notification> notifications = new LinkedList<Notification>();
     private String str_code;
@@ -55,6 +64,9 @@ public class Globals extends Application
     public void setWarningActive(boolean bool_warningActive) {
         this.bool_warningActive = bool_warningActive;
     }
+
+    public Globals(){}
+    public Globals(String profile){}
 
     public boolean isCautionActive() {
         return bool_cautionActive;
@@ -166,6 +178,38 @@ public class Globals extends Application
         dbl_tempVal = temp;
     }
 
+    /*
+         List of Keys that will appear in map:
+            Email
+            Full Name
+            First Name
+            Last Name
+            Phone Number
+            Password
+            Baby Birthday
+    */
+    public static void setInitialValues(String profile)
+    {
+        map = new HashMap<>();
+        int beginIndex = 0;
+        while(profile.indexOf(';') != -1)
+        {
+            int endIndex = profile.indexOf(':');
+            //Iterate through profile string. Split off each key and each value. Add key-value pair to map.
+            String key = profile.substring(beginIndex, endIndex);
+            profile = profile.substring(endIndex+1);
+            endIndex = profile.indexOf(';');
+            String value = profile.substring(beginIndex, endIndex);
+            profile = profile.substring(endIndex+1);
+            map.put(key, value);
+        }
+        bloodOxVal = 0.0;
+        bloodOxUnit = "%";
+        tempVal = 0.0;
+        tempUnit = "F";
+        pulseVal = 0.0;
+        pulseUnit = "bpm";
+    }
 
     public String getPulseUnit() {return str_pulseUnit;}
 
@@ -173,6 +217,7 @@ public class Globals extends Application
 
     public void addNotification(String title, String body)
     {
+
         //Adds notification to the front of the LL
         notifications.addFirst(new Notification(title, body));
 
@@ -182,6 +227,7 @@ public class Globals extends Application
             //Remove the oldest notification
             notifications.removeLast();
         }
+
     }
 
     public String getNotificationString(int index)
@@ -202,6 +248,7 @@ public class Globals extends Application
         setPulseLowWarningThreshold(pulse_low);
     }
 
+    public static HashMap<String,String> getMap() {return map;}
     public void setCautionThresholds(                     double temp_high, double pulse_high,
                                      double bloodOx_low,  double temp_low,  double pulse_low)
     {

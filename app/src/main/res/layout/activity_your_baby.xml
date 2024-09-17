@@ -22,7 +22,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Some more information..."
+            android:text="Some more information is required..."
             android:textStyle="bold"
             android:textSize="24sp"
             android:layout_gravity="center"

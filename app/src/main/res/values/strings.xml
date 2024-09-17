@@ -28,7 +28,6 @@
     <string name="str_go">GO</string>
     <string name="str_forgotPassword">Forgot Password?</string>
     <string name="str_password">Password</string>
-    <string name="str_username">Username</string>
     <string name="str_signInToContinue">Sign In to Continue</string>
     <string name="str_helloThereWelcomeBack">Hello There, Welcome Back</string>
     <string name="str_saveChanges">Save</string>
@@ -50,6 +49,7 @@
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
+    <string name="str_babyBirthdayPrompt">Baby\'s Birthday</string>
 
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
