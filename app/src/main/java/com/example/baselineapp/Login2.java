@@ -1,5 +1,6 @@
 package com.example.baselineapp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -41,6 +42,10 @@ public class Login2 extends AppCompatActivity {
         final VideoView logo = (VideoView) findViewById(R.id.id_logoVideo);
         logo.setVideoPath("android.resource://"+getPackageName()+"/"+R.raw.logoanimation);
         logo.start();
+
+        //TODO: CHECK THIS!!!
+        ReaderWriter rw = new ReaderWriter();
+        rw.readTextFileAndInitiallyPopulateGlobals(this.getFilesDir().getPath() + "/AccountData");
 
         TextInputEditText emailInput = findViewById(R.id.id_emailLoginInput);
         TextInputEditText passwordInput = findViewById(R.id.id_passwordLoginInput);
@@ -88,14 +93,16 @@ public class Login2 extends AppCompatActivity {
                             str_errorMessage += "Wrong password.";
                         }
                     }
-
                 }
                 catch (IOException e)
                 {
                     // Error occurred when opening raw file for reading.
+                    e.printStackTrace();
                 }
                 if(str_errorMessage.isEmpty())
                 {
+                    ReaderWriter rw = new ReaderWriter();
+                    rw.testPrintTextFile(v.getContext().getFilesDir().getPath() + "\\AccountData");
                     startActivity(intent);
                     finish();
                 }
@@ -105,6 +112,7 @@ public class Login2 extends AppCompatActivity {
                 }
             }
         });
+
         Button btn_signUp = (Button) findViewById(R.id.id_signUp);
         btn_signUp.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

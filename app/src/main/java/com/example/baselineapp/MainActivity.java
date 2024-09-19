@@ -51,6 +51,12 @@ public class MainActivity extends AppCompatActivity {
 
         //Code goes here
 
+        //Start our NotificationSetup class
+        //This will do all of the setup work and eventually start our NotificationService class
+        //Which handles notification logic and sending later
+        System.out.println("Creating notification setup service... now!");
+        startService(new Intent( this, NotificationSetup.class ));
+
     }
 
     @Override

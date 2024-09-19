@@ -181,11 +181,11 @@ public class NotificationService extends Service {
 
                     //Handle notification logging
                     String msg = "";
-                    if(pulseWarning) msg += ("Pulse out of range: " +  String.valueOf(((Globals) getApplication()).getPulseVal())) + "\n";
-                    if(tempWarning) msg += ("Temperature out of range: " +  String.valueOf(((Globals) getApplication()).getTempVal())) + "\n";
-                    if(bloodOxWarning) msg += ("Blood Oxygen out of range: " +  String.valueOf(((Globals) getApplication()).getBloodOxVal())) + "\n";
+                    if(pulseWarning) msg += ("Pulse out of range - " +  String.valueOf(((Globals) getApplication()).getPulseVal())) + "\n";
+                    if(tempWarning) msg += ("Temperature out of range - " +  String.valueOf(((Globals) getApplication()).getTempVal())) + "\n";
+                    if(bloodOxWarning) msg += ("Blood Oxygen out of range - " +  String.valueOf(((Globals) getApplication()).getBloodOxVal())) + "\n";
 
-                    ((Globals)getApplication()).addNotification("WARNING", msg);
+                    Globals.addNotification("WARNING", msg, getBaseContext().getFilesDir().getPath() + "/AccountData");
                 }
                 //If this is still active during next tick, run notification
                 else warning_hasBeenActive5s = true;
@@ -211,11 +211,11 @@ public class NotificationService extends Service {
 
                     //Handle notification logging
                     String msg = "";
-                    if(pulseCaution) msg += ("Pulse out of range: " +  String.valueOf(((Globals) getApplication()).getPulseVal())) + "\n";
-                    if(tempCaution) msg += ("Temperature out of range: " +  String.valueOf(((Globals) getApplication()).getTempVal())) + "\n";
-                    if(bloodOxCaution) msg += ("Blood Oxygen out of range: " +  String.valueOf(((Globals) getApplication()).getBloodOxVal())) + "\n";
+                    if(pulseCaution) msg += ("Pulse out of range -  " +  String.valueOf(((Globals) getApplication()).getPulseVal())) + "\n";
+                    if(tempCaution) msg += ("Temperature out of range -  " +  String.valueOf(((Globals) getApplication()).getTempVal())) + "\n";
+                    if(bloodOxCaution) msg += ("Blood Oxygen out of range -  " +  String.valueOf(((Globals) getApplication()).getBloodOxVal())) + "\n";
 
-                    ((Globals)getApplication()).addNotification("CAUTION", msg);
+                    Globals.addNotification("CAUTION", msg, getBaseContext().getFilesDir().getPath() + "/AccountData");
 
                 }
                 //If this is still active during next tick, run notification
