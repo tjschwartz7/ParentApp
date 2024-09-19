@@ -28,7 +28,6 @@ public class NotificationsFragment extends Fragment {
         binding = FragmentNotificationsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-
         int N = Globals.getNumNotifications(); // total number of textviews to add
 
         for (int i = 0; i < N; i++) {

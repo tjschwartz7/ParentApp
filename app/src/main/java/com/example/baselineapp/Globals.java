@@ -1,8 +1,14 @@
 package com.example.baselineapp;
 import android.app.Application;
 import android.content.Intent;
+import android.app.NotificationChannel;
+import android.content.Context;
+import android.view.View;
 import android.widget.DatePicker;
 
+import com.example.baselineapp.ui.dashboard.DashboardFragment;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import java.util.LinkedList;
@@ -276,10 +282,18 @@ public final class Globals extends Application
             Phone Number
             Password
             Baby Birthday
+            Notification 1 Title
+            Notification 1 Body
+            Notification 2 Title
+            Notification 2 Body
+            ...
+            Notification 10 Title
+            Notification 10 Body
     */
     public static void setInitialValues(String profile)
     {
         map = new HashMap<>();
+
         int beginIndex = 0;
         while(profile.indexOf(';') != -1)
         {
@@ -298,6 +312,16 @@ public final class Globals extends Application
         str_tempUnit = "F";
         dbl_pulseVal = 0.0;
         str_pulseUnit = "bpm";
+        //Replace all occurrences of $ with \n for notifications.
+        for(int i = 1; i <= 10; i++)
+        {
+            String title = Globals.getMap().get("Notification " + i + " Title").replace('$', '\n');
+            String body = Globals.getMap().get("Notification " + i + " Body").replace('$', '\n');
+            Globals.getMap().put("Notification " + i + " Title", title);
+            Globals.getMap().put("Notification " + i + " Body", body);
+            //Adds notification to the front of the LL
+            addNotificationInitial(title, body);
+        }
     }
 
     public static HashMap<String,String> getMap() {return map;}
@@ -306,7 +330,34 @@ public final class Globals extends Application
     //Notifications
     public static LinkedList<Notification> getNotifications() {return notifications;}
 
-    public static void addNotification(String title, String body)
+    public static void addNotification(String title, String body, String path)
+    {
+        if(map == null)
+        {
+            map = new HashMap<>();
+        }
+
+        //Adds notification to the front of the LL
+        notifications.addFirst(new Notification(title, body));
+
+        //We only maintain 10 notifications at a time, max
+        if(notifications.size() >= 10)
+        {
+            //Remove the oldest notification
+            notifications.removeLast();
+        }
+        int i = 1;
+        for(Notification notif:notifications)
+        {
+            map.put("Notification " + i + " Title", notif.getTitle());
+            map.put("Notification " + i + " Body", notif.getBody());
+            i++;
+        }
+        ReaderWriter rw = new ReaderWriter();
+        rw.writeDataToTextFile(path, Globals.getMap());
+    }
+
+    public static void addNotificationInitial(String title, String body)
     {
 
         //Adds notification to the front of the LL
@@ -337,5 +388,4 @@ public final class Globals extends Application
     public static void setCode(String code) {
         str_code = code;
     }
-
 }

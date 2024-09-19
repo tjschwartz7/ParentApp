@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 
 public class CreateAccount extends AppCompatActivity
 {
@@ -130,6 +131,8 @@ public class CreateAccount extends AppCompatActivity
                 String str_passwordConfirm = edt_passwordConfirm.getText().toString();
 
                 String str_errorMessage = "";
+
+                //TODO: Check if email address already exists
                 //Email validation
                 if(!EmailValidator.getInstance().isValid(str_emailParent))
                 {

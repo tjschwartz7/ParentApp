@@ -1,5 +1,6 @@
 package com.example.baselineapp;
 
+import android.content.Context;
 import android.Manifest;
 import android.app.ActivityManager;
 import android.content.Context;
@@ -117,6 +118,10 @@ public class Login2 extends AppCompatActivity {
             }
         });
 
+        //TODO: CHECK THIS!!!
+        ReaderWriter rw = new ReaderWriter();
+        rw.readTextFileAndInitiallyPopulateGlobals(this.getFilesDir().getPath() + "/AccountData");
+
         TextInputEditText emailInput = findViewById(R.id.id_emailLoginInput);
         TextInputEditText passwordInput = findViewById(R.id.id_passwordLoginInput);
         //On Go button click, merely go to the MainActivity for now. Will implement appropriate login
@@ -163,14 +168,16 @@ public class Login2 extends AppCompatActivity {
                             str_errorMessage += "Wrong password.";
                         }
                     }
-
                 }
                 catch (IOException e)
                 {
                     // Error occurred when opening raw file for reading.
+                    e.printStackTrace();
                 }
                 if(str_errorMessage.isEmpty())
                 {
+                    ReaderWriter rw = new ReaderWriter();
+                    rw.testPrintTextFile(v.getContext().getFilesDir().getPath() + "\\AccountData");
                     //Start our NotificationSetup class
                     //This will do all of the setup work and eventually start our NotificationService class
                     //Which handles notification logic and sending later
@@ -206,6 +213,7 @@ public class Login2 extends AppCompatActivity {
                 }
             }
         });
+
 
 
         Button btn_signUp = (Button) findViewById(R.id.id_signUp);

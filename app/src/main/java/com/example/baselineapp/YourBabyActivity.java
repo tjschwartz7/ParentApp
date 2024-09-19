@@ -73,12 +73,20 @@ public class YourBabyActivity extends AppCompatActivity {
                         String str_filename = "AccountData.txt";
 
                         String str_accountString = getIntent().getExtras().getString("Account String") +
-                                ";Baby Birthday:" + birthYear + "-" + birthMonth + "-" + birthDay + "\n";
+                                ";Baby Birthday:" + birthYear + "-" + birthMonth + "-" + birthDay;
 
-                        try (FileOutputStream fos = v.getContext().openFileOutput(str_filename, Context.MODE_PRIVATE))
+                        for(int i = 1; i <= 10; i++)
+                        {
+                            str_accountString += ";Notification " + i + " Title:" + "" +
+                                    ";Notification " + i + " Body:" + "";
+                        }
+                        str_accountString += ";\n";
+
+                        try (FileOutputStream fos = v.getContext().openFileOutput(str_filename, Context.MODE_APPEND))
                         {
                             fos.write(str_accountString.getBytes());
                         }
+
 
                         //Following code gets the file, opens it, and then logs the first line of the file as output. Used for testing purposes. Comment out the block if you are not testing it.
                         FileInputStream fis = v.getContext().openFileInput(str_filename);
@@ -97,6 +105,7 @@ public class YourBabyActivity extends AppCompatActivity {
                         catch (IOException e)
                         {
                             // Error occurred when opening raw file for reading.
+                            e.printStackTrace();
                         }
                         finally {
                             String contents = stringBuilder.toString();
