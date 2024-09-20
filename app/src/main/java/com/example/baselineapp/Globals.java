@@ -1,18 +1,14 @@
 package com.example.baselineapp;
 import android.app.Application;
-import android.app.NotificationChannel;
+import android.content.Intent;
 import android.widget.DatePicker;
 
-import com.example.baselineapp.ui.dashboard.DashboardFragment;
 import java.util.HashMap;
 
 import java.util.LinkedList;
 
-import java.util.Calendar;
-
 public final class Globals extends Application
 {
-    private static String code;
     private static double bloodOxVal;
     private static String bloodOxUnit;
     private static double tempVal;
@@ -21,11 +17,21 @@ public final class Globals extends Application
     private static String pulseUnit;
     private static HashMap<String, String> map;
 
-    private LinkedList<Notification> notifications = new LinkedList<Notification>();
-    private String str_code;
+    public static Intent getNotificationService() {
+        return NotificationService;
+    }
 
-    private boolean bool_warningActive = false;
-    private boolean bool_cautionActive = false;
+    public static void setNotificationService(Intent notificationService) {
+        NotificationService = notificationService;
+    }
+
+    private static Intent NotificationService;
+
+    private static LinkedList<Notification> notifications = new LinkedList<Notification>();
+    private static String str_code;
+
+    private static boolean bool_warningActive = false;
+    private static boolean bool_cautionActive = false;
 
     private static double dbl_bloodOxVal = 94;
     private static String str_bloodOxUnit = "%";
@@ -47,131 +53,131 @@ public final class Globals extends Application
     private static double dbl_tempHighWarningThreshold = 101;
     private static double dbl_tempHighCautionThreshold = 99.5;
 
-    private DatePicker birthdate;
+    private static DatePicker dp_birthdate;
 
-    public DatePicker getBirthdate() {
-        return birthdate;
+    public static DatePicker getBirthdate() {
+        return dp_birthdate;
     }
 
-    public void setBirthdate(DatePicker birthdate) {
-        this.birthdate = birthdate;
+    public static void setBirthdate(DatePicker birthdate) {
+        dp_birthdate = birthdate;
     }
 
-    public boolean isWarningActive() {
+    public static boolean isWarningActive() {
         return bool_warningActive;
     }
 
-    public void setWarningActive(boolean bool_warningActive) {
-        this.bool_warningActive = bool_warningActive;
+    public static void setWarningActive(boolean warningActive) {
+        bool_warningActive = warningActive;
     }
 
     public Globals(){}
     public Globals(String profile){}
 
-    public boolean isCautionActive() {
+    public static boolean isCautionActive() {
         return bool_cautionActive;
     }
 
-    public void setCautionActive(boolean bool_cautionActive) {
-        this.bool_cautionActive = bool_cautionActive;
+    public static void setCautionActive(boolean cautionActive) {
+        bool_cautionActive = cautionActive;
     }
-    public String getCode() {
+    public static String getCode() {
         return str_code;
     }
 
-    public double getBloodOxLowWarningThreshold() {
+    public static double getBloodOxLowWarningThreshold() {
         return Globals.dbl_bloodOxLowWarningThreshold;
     }
 
-    public void setBloodOxLowWarningThreshold(double dbl_bloodOxLowWarningThreshold) {
+    public static void setBloodOxLowWarningThreshold(double dbl_bloodOxLowWarningThreshold) {
         Globals.dbl_bloodOxLowWarningThreshold = dbl_bloodOxLowWarningThreshold;
     }
 
-    public double getBloodOxLowCautionThreshold() {
+    public static double getBloodOxLowCautionThreshold() {
         return dbl_bloodOxLowCautionThreshold;
     }
 
-    public void setBloodOxLowCautionThreshold(double dbl_bloodOxLowCautionThreshold) {
+    public static void setBloodOxLowCautionThreshold(double dbl_bloodOxLowCautionThreshold) {
         Globals.dbl_bloodOxLowCautionThreshold = dbl_bloodOxLowCautionThreshold;
     }
 
-    public double getPulseLowWarningThreshold() {
+    public static double getPulseLowWarningThreshold() {
         return dbl_pulseLowWarningThreshold;
     }
 
-    public void setPulseLowWarningThreshold(double dbl_pulseLowWarningThreshold) {
+    public static void setPulseLowWarningThreshold(double dbl_pulseLowWarningThreshold) {
         Globals.dbl_pulseLowWarningThreshold = dbl_pulseLowWarningThreshold;
     }
 
-    public double getPulseLowCautionThreshold() {
+    public static double getPulseLowCautionThreshold() {
         return dbl_pulseLowCautionThreshold;
     }
 
-    public void setPulseLowCautionThreshold(double dbl_pulseLowCautionThreshold) {
+    public static void setPulseLowCautionThreshold(double dbl_pulseLowCautionThreshold) {
         Globals.dbl_pulseLowCautionThreshold = dbl_pulseLowCautionThreshold;
     }
 
-    public double getPulseHighWarningThreshold() {
+    public static double getPulseHighWarningThreshold() {
         return dbl_pulseHighWarningThreshold;
     }
 
-    public void setPulseHighWarningThreshold(double dbl_pulseHighWarningThreshold) {
+    public static void setPulseHighWarningThreshold(double dbl_pulseHighWarningThreshold) {
         Globals.dbl_pulseHighWarningThreshold = dbl_pulseHighWarningThreshold;
     }
 
-    public double getPulseHighCautionThreshold() {
+    public static double getPulseHighCautionThreshold() {
         return dbl_pulseHighCautionThreshold;
     }
 
-    public void setPulseHighCautionThreshold(double dbl_pulseHighCautionThreshold) {
+    public static void setPulseHighCautionThreshold(double dbl_pulseHighCautionThreshold) {
         Globals.dbl_pulseHighCautionThreshold = dbl_pulseHighCautionThreshold;
     }
 
-    public double getTempLowWarningThreshold() {
+    public static double getTempLowWarningThreshold() {
         return dbl_tempLowWarningThreshold;
     }
 
-    public void setTempLowWarningThreshold(double dbl_tempLowWarningThreshold) {
+    public static void setTempLowWarningThreshold(double dbl_tempLowWarningThreshold) {
         Globals.dbl_tempLowWarningThreshold = dbl_tempLowWarningThreshold;
     }
 
-    public double getTempLowCautionThreshold() {
+    public static double getTempLowCautionThreshold() {
         return dbl_tempLowCautionThreshold;
     }
 
-    public void setTempLowCautionThreshold(double dbl_tempLowCautionThreshold) {
+    public static void setTempLowCautionThreshold(double dbl_tempLowCautionThreshold) {
         Globals.dbl_tempLowCautionThreshold = dbl_tempLowCautionThreshold;
     }
 
-    public double getTempHighWarningThreshold() {
+    public static double getTempHighWarningThreshold() {
         return dbl_tempHighWarningThreshold;
     }
 
-    public void setTempHighWarningThreshold(double dbl_tempHighWarningThreshold) {
+    public static void setTempHighWarningThreshold(double dbl_tempHighWarningThreshold) {
         Globals.dbl_tempHighWarningThreshold = dbl_tempHighWarningThreshold;
     }
 
-    public double getTempHighCautionThreshold() {
+    public static double getTempHighCautionThreshold() {
         return dbl_tempHighCautionThreshold;
     }
 
-    public void setTempHighCautionThreshold(double dbl_tempHighCautionThreshold) {
+    public static void setTempHighCautionThreshold(double dbl_tempHighCautionThreshold) {
         Globals.dbl_tempHighCautionThreshold = dbl_tempHighCautionThreshold;
     }
 
-    public void setCode(String code) {
-        this.str_code = code;
+    public static void setCode(String code) {
+        str_code = code;
     }
 
-    public double getBloodOxVal() {return dbl_bloodOxVal;}
-    public String getBloodOxUnit() {return str_bloodOxUnit;}
+    public static double getBloodOxVal() {return dbl_bloodOxVal;}
+    public static String getBloodOxUnit() {return str_bloodOxUnit;}
 
-    public double getTempVal() {return dbl_tempVal;}
-    public String getTempUnit() {return str_tempUnit;}
+    public static double getTempVal() {return dbl_tempVal;}
+    public static String getTempUnit() {return str_tempUnit;}
 
-    public double getPulseVal() {return dbl_pulseVal;}
+    public static double getPulseVal() {return dbl_pulseVal;}
 
-    public void debugOnlySetVitals(double bloodOx, double pulse, double temp)
+    public static void debugOnlySetVitals(double bloodOx, double pulse, double temp)
     {
         dbl_bloodOxVal = bloodOx;
         dbl_pulseVal = pulse;
@@ -211,11 +217,11 @@ public final class Globals extends Application
         pulseUnit = "bpm";
     }
 
-    public String getPulseUnit() {return str_pulseUnit;}
+    public static String getPulseUnit() {return str_pulseUnit;}
 
-    public LinkedList<Notification> getNotifications() {return notifications;}
+    public static LinkedList<Notification> getNotifications() {return notifications;}
 
-    public void addNotification(String title, String body)
+    public static void addNotification(String title, String body)
     {
 
         //Adds notification to the front of the LL
@@ -230,15 +236,15 @@ public final class Globals extends Application
 
     }
 
-    public String getNotificationString(int index)
+    public static String getNotificationString(int index)
     {
         return notifications.get(index).title + "\n" + notifications.get(index).body + "\n";
     }
 
 
-    public int getNumNotifications() {return notifications.size();}
+    public static int getNumNotifications() {return notifications.size();}
 
-    public void setWarningThresholds(                     double temp_high, double pulse_high,
+    public static void setWarningThresholds(                     double temp_high, double pulse_high,
                                      double bloodOx_low,  double temp_low,  double pulse_low)
     {
         setBloodOxLowWarningThreshold(bloodOx_low);
@@ -249,7 +255,7 @@ public final class Globals extends Application
     }
 
     public static HashMap<String,String> getMap() {return map;}
-    public void setCautionThresholds(                     double temp_high, double pulse_high,
+    public static void setCautionThresholds(                     double temp_high, double pulse_high,
                                      double bloodOx_low,  double temp_low,  double pulse_low)
     {
         setBloodOxLowCautionThreshold(bloodOx_low);

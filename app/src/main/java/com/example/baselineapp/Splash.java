@@ -26,58 +26,8 @@ public class Splash extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
-        // Check if the permission for POST_NOTIFICATION is provided or not
-        if (ActivityCompat.checkSelfPermission(
-                getApplicationContext(),
-                android.Manifest.permission.POST_NOTIFICATIONS
-        ) != PackageManager.PERMISSION_GRANTED
-        )
-        {
 
-            //Request permissions
-            ActivityCompat.requestPermissions(this,
-                    new String[]{android.Manifest.permission.POST_NOTIFICATIONS},
-                    101);
-        }
 
-        if(ActivityCompat.checkSelfPermission(
-                getApplicationContext(),
-                android.Manifest.permission.VIBRATE
-        ) != PackageManager.PERMISSION_GRANTED)
-        {
-            //Request permissions
-            ActivityCompat.requestPermissions(this,
-                    new String[]{android.Manifest.permission.VIBRATE},
-                    101);
-        }
-
-        if(ActivityCompat.checkSelfPermission(
-                getApplicationContext(),
-                android.Manifest.permission.FOREGROUND_SERVICE
-        ) != PackageManager.PERMISSION_GRANTED)
-        {
-            //Request permissions
-            ActivityCompat.requestPermissions(this,
-                    new String[]{android.Manifest.permission.FOREGROUND_SERVICE},
-                    101);
-        }
-
-        if(ActivityCompat.checkSelfPermission(
-                getApplicationContext(),
-                android.Manifest.permission.FOREGROUND_SERVICE_DATA_SYNC
-        ) != PackageManager.PERMISSION_GRANTED)
-        {
-            //Request permissions
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.FOREGROUND_SERVICE_DATA_SYNC},
-                    101);
-        }
-
-        //Start our NotificationSetup class
-        //This will do all of the setup work and eventually start our NotificationService class
-        //Which handles notification logic and sending later
-        System.out.println("Creating notification setup service... now!");
-        startService(new Intent( this, NotificationSetup. class ));
 
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {

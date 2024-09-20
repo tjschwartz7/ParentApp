@@ -25,7 +25,7 @@ public class NotificationSetup extends Service
     private final static String default_notification_channel_id = "default" ;
     Timer timer ;
     TimerTask timerTask ;
-    String TAG = "Timers" ;
+    String TAG = "NotificationSetup" ;
     int Your_X_SECS = 5 ;
     @Override
     public IBinder onBind (Intent arg0)
@@ -58,7 +58,6 @@ public class NotificationSetup extends Service
         //Code goes here
 
         System.out.println("Creating notification service.");
-        createNotificationChannel();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService( new Intent( this, NotificationService. class )) ;
@@ -66,23 +65,7 @@ public class NotificationSetup extends Service
         else {
             startService( new Intent( this, NotificationService. class )) ;
         }
-    }
-
-    private void createNotificationChannel() {
-
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is not in the Support Library.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = getString(R.string.str_channelName);
-            String description = getString(R.string.str_channelDescription);
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, name, importance);
-            channel.setDescription(description);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this.
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
+        stopSelf();
     }
 
 

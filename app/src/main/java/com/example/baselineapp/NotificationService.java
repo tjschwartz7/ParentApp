@@ -8,15 +8,10 @@ import android.os.Handler ;
 import android.os.IBinder ;
 import android.Manifest;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.core.content.ContextCompat;
 
 import android.util.Log ;
-
-import com.example.baselineapp.ui.dashboard.DashboardFragment;
 
 import java.util.Calendar;
 import java.util.Timer ;
@@ -24,8 +19,9 @@ import java.util.TimerTask ;
 public class NotificationService extends Service {
     public static final String NOTIFICATION_CHANNEL_ID = "10001" ;
     private final static String default_notification_channel_id = "default" ;
-    Timer timer ;
-    TimerTask timerTask ;
+    Timer timer;
+    TimerTask shortTimerTask ;
+    TimerTask dailyTimerTask ;
     String TAG = "Timers" ;
     int timer_20_s = 20 ;
     int timer_5_s = 5 ;
@@ -33,6 +29,8 @@ public class NotificationService extends Service {
 
     boolean warning_hasBeenActive5s = false;
     boolean caution_hasBeenActive5s = false;
+
+    NotificationManager mNotificationManager;
 
 
     NotificationCompat.Builder notif_babyWarning = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
@@ -77,37 +75,58 @@ public class NotificationService extends Service {
         //One handles notifications
         startTimer() ;
         //The other handles daily threshold updates
-        startDailyTimer();
-        return START_STICKY ;
+        //startDailyTimer();
+        return START_NOT_STICKY ;
     }
     @Override
     public void onCreate ()
     {
+
         Log. e ( TAG , "onCreate" ) ;
+        mNotificationManager = (NotificationManager) getSystemService( NOTIFICATION_SERVICE ) ;
+
+        if (android.os.Build.VERSION. SDK_INT >= android.os.Build.VERSION_CODES. O ) {
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel notificationChannel = new NotificationChannel( NOTIFICATION_CHANNEL_ID , "NOTIFICATION_CHANNEL_NAME" , importance) ;
+            notif_babyWarning.setChannelId( NOTIFICATION_CHANNEL_ID ) ;
+            assert mNotificationManager != null;
+            mNotificationManager.createNotificationChannel(notificationChannel) ;
+        }
     }
     @Override
     public void onDestroy ()
     {
-        Log. e ( TAG , "onDestroy" ) ;
-        stopTimerTask() ;
-        stopDailyTimerTask();
-        super .onDestroy() ;
+        try
+        {
+            Log.e(TAG, "onDestroy");
+
+            stopForeground(true);
+
+            stopTimerTask();
+        } catch (Exception e) {
+            Log.e(TAG, "Error in onDestroy: " + e.getMessage());
+            e.printStackTrace(); // Print the stack trace to understand where the issue is
+        } finally {
+            super.onDestroy(); // Always call super.onDestroy() in the end
+        }
     }
     //we are going to use a handler to be able to run in our TimerTask
     final Handler handler = new Handler() ;
     public void startTimer () {
         timer = new Timer() ;
-        initializeTimerTask() ;
-        timer .schedule( timerTask , 5000 , timer_5_s * 1000 ) ; //
+        initializeTimerTasks() ;
+        timer.schedule( shortTimerTask , 5000 , timer_5_s * 1000 ) ; //
+        timer.schedule( dailyTimerTask , 5000 , timer_day_s * 1000 ) ; //
     }
     public void stopTimerTask () {
         if ( timer != null ) {
-            timer .cancel() ;
+            timer.cancel(); // Stop the timer
+            timer.purge();  // Clean up canceled tasks
             timer = null;
         }
     }
-    public void initializeTimerTask () {
-        timerTask = new TimerTask()
+    public void initializeTimerTasks () {
+        shortTimerTask = new TimerTask()
         {
             public void run ()
             {
@@ -119,13 +138,27 @@ public class NotificationService extends Service {
                 }) ;
             }
         } ;
+
+        dailyTimerTask = new TimerTask()
+        {
+            public void run ()
+            {
+                handler .post( new Runnable() {
+                    public void run ()
+                    {
+                        handleThresholds() ;
+                    }
+                }) ;
+            }
+        } ;
     }
     private void createNotification () {
-        double pulse = ((Globals)getApplication()).getPulseVal();
-        double temp = ((Globals)getApplication()).getTempVal();
-        double bloodOx = ((Globals)getApplication()).getBloodOxVal();
+        double pulse = Globals.getPulseVal();
+        double temp = Globals.getTempVal();
+        double bloodOx = Globals.getBloodOxVal();
 
-        ((Globals)getApplication()).debugOnlySetVitals(++bloodOx, ++pulse, ++temp);
+        //Debug only
+        //Globals.debugOnlySetVitals(++bloodOx, ++pulse, ++temp);
         // Check if the permission for POST_NOTIFICATION is provided or not
         if (ActivityCompat.checkSelfPermission(
                 getApplicationContext(),
@@ -136,32 +169,21 @@ public class NotificationService extends Service {
             return;
         }
 
-        NotificationManager mNotificationManager = (NotificationManager) getSystemService( NOTIFICATION_SERVICE ) ;
-
-
-
-        if (android.os.Build.VERSION. SDK_INT >= android.os.Build.VERSION_CODES. O ) {
-            int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel notificationChannel = new NotificationChannel( NOTIFICATION_CHANNEL_ID , "NOTIFICATION_CHANNEL_NAME" , importance) ;
-            notif_babyWarning.setChannelId( NOTIFICATION_CHANNEL_ID ) ;
-            assert mNotificationManager != null;
-            mNotificationManager.createNotificationChannel(notificationChannel) ;
-        }
 
         //Read lots of data from Globals for readability sake
-        boolean pulseWarning    = ((Globals) getApplication()).getPulseVal() >= ((Globals) getApplication()).getPulseHighWarningThreshold() ||
-                                  ((Globals) getApplication()).getPulseVal() <= ((Globals) getApplication()).getPulseLowWarningThreshold();
-        boolean tempWarning     = ((Globals) getApplication()).getTempVal() >= ((Globals) getApplication()).getTempHighWarningThreshold() ||
-                                  ((Globals) getApplication()).getTempVal() <= ((Globals) getApplication()).getTempLowWarningThreshold();
-        boolean bloodOxWarning  = ((Globals) getApplication()).getBloodOxVal() <= ((Globals) getApplication()).getBloodOxLowWarningThreshold();
+        boolean pulseWarning    = Globals.getPulseVal() >= Globals.getPulseHighWarningThreshold() ||
+                                  Globals.getPulseVal() <= Globals.getPulseLowWarningThreshold();
+        boolean tempWarning     = Globals.getTempVal() >= Globals.getTempHighWarningThreshold() ||
+                                  Globals.getTempVal() <= Globals.getTempLowWarningThreshold();
+        boolean bloodOxWarning  = Globals.getBloodOxVal() <= Globals.getBloodOxLowWarningThreshold();
 
-        boolean pulseCaution    = ((Globals) getApplication()).getPulseVal() >= ((Globals) getApplication()).getPulseHighCautionThreshold() ||
-                                  ((Globals) getApplication()).getPulseVal() <= ((Globals) getApplication()).getPulseLowCautionThreshold();
-        boolean tempCaution     = ((Globals) getApplication()).getTempVal() >= ((Globals) getApplication()).getTempHighCautionThreshold() ||
-                                  ((Globals) getApplication()).getTempVal() <= ((Globals) getApplication()).getTempLowCautionThreshold();
-        boolean bloodOxCaution  = ((Globals) getApplication()).getBloodOxVal() <= ((Globals) getApplication()).getBloodOxLowCautionThreshold();
-        boolean isWarningActive = ((Globals) getApplication()).isWarningActive();
-        boolean isCautionActive = ((Globals) getApplication()).isCautionActive();
+        boolean pulseCaution    = Globals.getPulseVal() >= Globals.getPulseHighCautionThreshold() ||
+                                  Globals.getPulseVal() <= Globals.getPulseLowCautionThreshold();
+        boolean tempCaution     = Globals.getTempVal() >= Globals.getTempHighCautionThreshold() ||
+                                  Globals.getTempVal() <= Globals.getTempLowCautionThreshold();
+        boolean bloodOxCaution  = Globals.getBloodOxVal() <= Globals.getBloodOxLowCautionThreshold();
+        boolean isWarningActive = Globals.isWarningActive();
+        boolean isCautionActive = Globals.isCautionActive();
 
         //If there is a warning active (priority over cautions!)
         if(pulseWarning || tempWarning || bloodOxWarning)
@@ -175,17 +197,17 @@ public class NotificationService extends Service {
                     //Notify
                     assert mNotificationManager != null;
                     mNotificationManager.notify(( int ) System. currentTimeMillis () , notif_babyWarning.build()) ;
-                    ((Globals) getApplication()).setWarningActive(true);
-                    ((Globals) getApplication()).setCautionActive(false);
+                    Globals.setWarningActive(true);
+                    Globals.setCautionActive(false);
                     warning_hasBeenActive5s = false;
 
                     //Handle notification logging
                     String msg = "";
-                    if(pulseWarning) msg += ("Pulse out of range: " +  String.valueOf(((Globals) getApplication()).getPulseVal())) + "\n";
-                    if(tempWarning) msg += ("Temperature out of range: " +  String.valueOf(((Globals) getApplication()).getTempVal())) + "\n";
-                    if(bloodOxWarning) msg += ("Blood Oxygen out of range: " +  String.valueOf(((Globals) getApplication()).getBloodOxVal())) + "\n";
+                    if(pulseWarning) msg += ("Pulse out of range: " +  String.valueOf(Globals.getPulseVal())) + "\n";
+                    if(tempWarning) msg += ("Temperature out of range: " +  String.valueOf(Globals.getTempVal())) + "\n";
+                    if(bloodOxWarning) msg += ("Blood Oxygen out of range: " +  String.valueOf(Globals.getBloodOxVal())) + "\n";
 
-                    ((Globals)getApplication()).addNotification("WARNING", msg);
+                    Globals.addNotification("WARNING", msg);
                 }
                 //If this is still active during next tick, run notification
                 else warning_hasBeenActive5s = true;
@@ -205,8 +227,8 @@ public class NotificationService extends Service {
                     //Notify
                     assert mNotificationManager != null;
                     mNotificationManager.notify(( int ) System. currentTimeMillis () , notif_babyCaution.build()) ;
-                    ((Globals) getApplication()).setCautionActive(true);
-                    ((Globals) getApplication()).setWarningActive(false);
+                    Globals.setCautionActive(true);
+                    Globals.setWarningActive(false);
                     caution_hasBeenActive5s = false;
 
                     //Handle notification logging
@@ -215,7 +237,7 @@ public class NotificationService extends Service {
                     if(tempCaution) msg += ("Temperature out of range: " +  String.valueOf(((Globals) getApplication()).getTempVal())) + "\n";
                     if(bloodOxCaution) msg += ("Blood Oxygen out of range: " +  String.valueOf(((Globals) getApplication()).getBloodOxVal())) + "\n";
 
-                    ((Globals)getApplication()).addNotification("CAUTION", msg);
+                    Globals.addNotification("CAUTION", msg);
 
                 }
                 //If this is still active during next tick, run notification
@@ -229,91 +251,67 @@ public class NotificationService extends Service {
         //go ahead and disable them.
         else if(isCautionActive || isWarningActive)
         {
-            ((Globals) getApplication()).setCautionActive(false);
-            ((Globals) getApplication()).setWarningActive(false);
+            Globals.setCautionActive(false);
+            Globals.setWarningActive(false);
         }
 
-    }
-
-    public void startDailyTimer () {
-        timer = new Timer() ;
-        initializeDateUpdateTask() ;
-        timer .schedule( timerTask , 5000 , (long)timer_day_s * 1000 ) ; //
-    }
-    public void stopDailyTimerTask () {
-        if ( timer != null ) {
-            timer .cancel() ;
-            timer = null;
-        }
-    }
-
-    void initializeDateUpdateTask() {
-        timerTask = new TimerTask() {
-            public void run() {
-                handler.post(new Runnable() {
-                    public void run() {
-                        handleThresholds();
-                    }
-                });
-            }
-        };
     }
 
     void handleThresholds()
     {
-        if(((Globals) getApplication()).getBirthdate() == null) return;
+        if(Globals.getBirthdate() == null) return;
 
         int year = Calendar.getInstance().get(Calendar.YEAR) -
-                ((Globals) getApplication()).getBirthdate().getYear();
+                Globals.getBirthdate().getYear();
         int months = year * 12 + (Calendar.getInstance().get(Calendar.MONTH) -
-                ((Globals) getApplication()).getBirthdate().getMonth());
+                Globals.getBirthdate().getMonth());
 
         //Temperature thresholds don't change
-        ((Globals)getApplication()).setTempLowCautionThreshold(98);
-        ((Globals)getApplication()).setTempLowWarningThreshold(97);
+        Globals.setTempLowCautionThreshold(98);
+        Globals.setTempLowWarningThreshold(97);
 
-        ((Globals)getApplication()).setTempHighCautionThreshold(99);
-        ((Globals)getApplication()).setTempHighWarningThreshold(100);
+        Globals.setTempHighCautionThreshold(99);
+        Globals.setTempHighWarningThreshold(100);
 
         //Handle blood oxygen thresholds
         if(months <= 1)
         {
             //Bigger caution range here, but very young babies can have a lower blood ox (>90%)
-            ((Globals)getApplication()).setBloodOxLowCautionThreshold(94);
-            ((Globals)getApplication()).setBloodOxLowWarningThreshold(91);
+            Globals.setBloodOxLowCautionThreshold(94);
+            Globals.setBloodOxLowWarningThreshold(91);
         }
         else
         {
             //Blood ox should stabilize between 95-100%
-            ((Globals)getApplication()).setBloodOxLowCautionThreshold(95);
-            ((Globals)getApplication()).setBloodOxLowWarningThreshold(94);
+            Globals.setBloodOxLowCautionThreshold(95);
+            Globals.setBloodOxLowWarningThreshold(94);
         }
 
 
         //Handle pulse thresholds
         if(months <= 1)
         {
-            ((Globals)getApplication()).setPulseLowCautionThreshold(70);
-            ((Globals)getApplication()).setPulseLowWarningThreshold(65);
+            Globals.setPulseLowCautionThreshold(70);
+            Globals.setPulseLowWarningThreshold(65);
 
-            ((Globals)getApplication()).setPulseHighCautionThreshold(190);
-            ((Globals)getApplication()).setPulseHighWarningThreshold(195);
+            Globals.setPulseHighCautionThreshold(190);
+            Globals.setPulseHighWarningThreshold(195);
         }
         else if(months <= 11)
         {
-            ((Globals)getApplication()).setPulseLowCautionThreshold(80);
-            ((Globals)getApplication()).setPulseLowWarningThreshold(75);
+            Globals.setPulseLowCautionThreshold(80);
+            Globals.setPulseLowWarningThreshold(75);
 
-            ((Globals)getApplication()).setPulseHighCautionThreshold(160);
-            ((Globals)getApplication()).setPulseHighWarningThreshold(165);
+            Globals.setPulseHighCautionThreshold(160);
+            Globals.setPulseHighWarningThreshold(165);
         }
         if(months <= 24)
         {
-            ((Globals)getApplication()).setPulseLowCautionThreshold(80);
-            ((Globals)getApplication()).setPulseLowWarningThreshold(75);
+            Globals.setPulseLowCautionThreshold(80);
+            Globals.setPulseLowWarningThreshold(75);
 
-            ((Globals)getApplication()).setPulseHighCautionThreshold(130);
-            ((Globals)getApplication()).setPulseHighWarningThreshold(135);
+            Globals.setPulseHighCautionThreshold(130);
+            Globals.setPulseHighWarningThreshold(135);
         }
     }
 }

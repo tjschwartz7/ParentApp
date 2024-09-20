@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.baselineapp.ChangePassword;
 import com.example.baselineapp.DebugConsole;
+import com.example.baselineapp.Globals;
 import com.example.baselineapp.Login2;
 import com.example.baselineapp.MainActivity;
 import com.example.baselineapp.NotificationSettings;
@@ -46,6 +47,7 @@ public class SettingsFragment extends Fragment {
         });
 
         binding.idLogout.setOnClickListener(v -> {
+            getActivity().getApplication().stopService(Globals.getNotificationService());
             Intent intent = new Intent(SettingsFragment.this.getActivity(), Login2.class);
             startActivity(intent);
         });

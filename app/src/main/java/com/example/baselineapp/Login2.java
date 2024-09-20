@@ -1,6 +1,8 @@
 package com.example.baselineapp;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -10,6 +12,7 @@ import android.widget.VideoView;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -96,6 +99,14 @@ public class Login2 extends AppCompatActivity {
                 }
                 if(str_errorMessage.isEmpty())
                 {
+                    //Start our NotificationSetup class
+                    //This will do all of the setup work and eventually start our NotificationService class
+                    //Which handles notification logic and sending later
+                    System.out.println("Creating notification setup service... now!");
+                    Globals.setNotificationService(new Intent( Login2.this, NotificationService. class ));
+                    startService(new Intent( Login2.this, NotificationSetup. class ));
+
+
                     startActivity(intent);
                     finish();
                 }
@@ -122,5 +133,54 @@ public class Login2 extends AppCompatActivity {
                 finish();
             }
         });
+
+        // Check if the permission for POST_NOTIFICATION is provided or not
+        if (ActivityCompat.checkSelfPermission(
+                getApplicationContext(),
+                android.Manifest.permission.POST_NOTIFICATIONS
+        ) != PackageManager.PERMISSION_GRANTED
+        )
+        {
+
+            //Request permissions
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.POST_NOTIFICATIONS},
+                    101);
+        }
+
+        if(ActivityCompat.checkSelfPermission(
+                getApplicationContext(),
+                android.Manifest.permission.VIBRATE
+        ) != PackageManager.PERMISSION_GRANTED)
+        {
+            //Request permissions
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.VIBRATE},
+                    101);
+        }
+
+        if(ActivityCompat.checkSelfPermission(
+                getApplicationContext(),
+                android.Manifest.permission.FOREGROUND_SERVICE
+        ) != PackageManager.PERMISSION_GRANTED)
+        {
+            //Request permissions
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.FOREGROUND_SERVICE},
+                    101);
+        }
+
+        if(ActivityCompat.checkSelfPermission(
+                getApplicationContext(),
+                android.Manifest.permission.FOREGROUND_SERVICE_DATA_SYNC
+        ) != PackageManager.PERMISSION_GRANTED)
+        {
+            //Request permissions
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.FOREGROUND_SERVICE_DATA_SYNC},
+                    101);
+        }
+
+
     }
 }
