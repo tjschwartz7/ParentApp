@@ -38,7 +38,7 @@ public class NotificationService extends Service {
             .setContentTitle("Baby Alert")
             .setContentText("Health warning detected")
             .setStyle(new NotificationCompat.BigTextStyle()
-                    .bigText("WARNING - An alert has been generated based on the health data of your baby."))
+                    .bigText("WARNING - An alert has been generated based on the health data of  " + Globals.getBabyFirstName() + "."))
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setAutoCancel(true);
 
@@ -47,7 +47,7 @@ public class NotificationService extends Service {
             .setContentTitle("Baby Caution")
             .setContentText("Health abnormality detected")
             .setStyle(new NotificationCompat.BigTextStyle()
-                    .bigText("CAUTION - An alert has been generated based on the health data of your baby."))
+                    .bigText("CAUTION - An alert has been generated based on the health data of " + Globals.getBabyFirstName() + "."))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true);
 

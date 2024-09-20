@@ -60,7 +60,7 @@ public class DebugConsole extends AppCompatActivity {
                     dbl_temp = Double.parseDouble(str_temp);
 
                 //DEBUG ONLY
-                ((Globals)getApplication()).debugOnlySetVitals(dbl_bloodOx, dbl_pulse, dbl_temp);
+                Globals.debugOnlySetVitals(dbl_bloodOx, dbl_pulse, dbl_temp);
 
                 Intent intent = new Intent(DebugConsole.this, MainActivity.class);
                 startActivity(intent);

@@ -55,6 +55,16 @@ public final class Globals extends Application
 
     private static DatePicker dp_birthdate;
 
+    public static String getBabyFirstName() {
+        return str_babyFirstName;
+    }
+
+    public static void setBabyFirstName(String str_babyFirstName) {
+        Globals.str_babyFirstName = str_babyFirstName;
+    }
+
+    private static String str_babyFirstName;
+
     public static DatePicker getBirthdate() {
         return dp_birthdate;
     }

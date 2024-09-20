@@ -92,6 +92,7 @@ public class YourBabyActivity extends AppCompatActivity {
                                 stringBuilder.append(line).append('\n');
                                 line = reader.readLine();
                             }
+                            Globals.setBirthdate(birthdate);
                         }
                         catch (IOException e)
                         {
@@ -107,7 +108,15 @@ public class YourBabyActivity extends AppCompatActivity {
                     {
                         e.printStackTrace();
                     }
-                    //((Globals)getApplication()).setBirthdate(birthdate);
+
+                    //Get string value of user input
+                    String str_babyName = ((EditText) findViewById(R.id.id_firstNameBaby)).getText().toString();
+
+                    //If user enters an empty string, leave at initialized value
+                    if (!str_babyName.isEmpty())
+                        //Otherwise, set to the new value!
+                        Globals.setBabyFirstName(str_babyName);
+
                     startActivity(intent);
                     finish();
                 }

@@ -8,78 +8,94 @@
     tools:context=".YourBabyActivity"
     >
 
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/id_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center"
-        >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Some more information is required..."
-            android:textStyle="bold"
-            android:textSize="24sp"
-            android:layout_gravity="center"
-            />
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="When was your baby born?"
-            android:textSize="24sp"
-            android:layout_gravity="center"
-            />
-
-        <DatePicker
-            android:id="@+id/id_birthdatePicker"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
-
-        <LinearLayout
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/id_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingTop="100dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
             >
 
-            <Button
-                android:id="@+id/id_cancelButton"
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/str_cancel"
-                android:layout_gravity="end"
-                android:textColor="#FFF"
-                android:textSize="20sp"
-                android:elevation="0dp"
-                android:layout_margin="5dp"
-                android:fontFamily="@font/antic"
-                android:backgroundTint="@color/grey"
-                android:layout_weight="2"
+                android:text="We need some info..."
+                android:textStyle="bold"
+                android:textSize="24sp"
+                android:layout_gravity="center"
                 />
 
-            <Button
-                android:id="@+id/id_saveButton"
+            <EditText
+                android:id="@+id/id_firstNameBaby"
+                android:hint="Baby First Name"
+                android:inputType="textPersonName"
+                android:selectAllOnFocus="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/str_saveChanges"
-                android:layout_gravity="end"
-                android:textColor="#FFF"
-                android:textSize="20sp"
-                android:elevation="0dp"
-                android:layout_margin="5dp"
-                android:fontFamily="@font/antic"
                 android:layout_weight="2"
+                android:maxLength="25"
                 />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="When was your baby born?"
+                android:textSize="24sp"
+                android:layout_gravity="center"
+                />
+
+            <DatePicker
+                android:id="@+id/id_birthdatePicker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="100dp"
+                >
+
+                <Button
+                    android:id="@+id/id_cancelButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/str_cancel"
+                    android:layout_gravity="end"
+                    android:textColor="#FFF"
+                    android:textSize="20sp"
+                    android:elevation="0dp"
+                    android:layout_margin="5dp"
+                    android:fontFamily="@font/antic"
+                    android:backgroundTint="@color/grey"
+                    android:layout_weight="2"
+                    />
+
+                <Button
+                    android:id="@+id/id_saveButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/str_saveChanges"
+                    android:layout_gravity="end"
+                    android:textColor="#FFF"
+                    android:textSize="20sp"
+                    android:elevation="0dp"
+                    android:layout_margin="5dp"
+                    android:fontFamily="@font/antic"
+                    android:layout_weight="2"
+                    />
+
+            </LinearLayout>
 
         </LinearLayout>
-
-    </LinearLayout>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
