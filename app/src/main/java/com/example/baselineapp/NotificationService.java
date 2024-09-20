@@ -19,11 +19,13 @@ import java.util.TimerTask ;
 public class NotificationService extends Service {
     public static final String NOTIFICATION_CHANNEL_ID = "10001" ;
     private final static String default_notification_channel_id = "default" ;
-    Timer timer;
+    Timer shortTimer;
+    Timer longTimer;
     TimerTask shortTimerTask ;
     TimerTask dailyTimerTask ;
     String TAG = "Timers" ;
     int timer_20_s = 20 ;
+    int timer_10_s = 10 ;
     int timer_5_s = 5 ;
     int timer_day_s = 86400;
 
@@ -113,16 +115,24 @@ public class NotificationService extends Service {
     //we are going to use a handler to be able to run in our TimerTask
     final Handler handler = new Handler() ;
     public void startTimer () {
-        timer = new Timer() ;
+        shortTimer = new Timer() ;
+        longTimer = new Timer();
         initializeTimerTasks() ;
-        timer.schedule( shortTimerTask , 5000 , timer_5_s * 1000 ) ; //
-        timer.schedule( dailyTimerTask , 5000 , timer_day_s * 1000 ) ; //
+
+        shortTimer.schedule( shortTimerTask , 5000 , timer_10_s * 1000 ) ; //
+        longTimer.schedule( dailyTimerTask , 5000 , timer_day_s * 1000 ) ; //
     }
     public void stopTimerTask () {
-        if ( timer != null ) {
-            timer.cancel(); // Stop the timer
-            timer.purge();  // Clean up canceled tasks
-            timer = null;
+        if ( shortTimer != null ) {
+            shortTimer.cancel(); // Stop the timer
+            shortTimer.purge();  // Clean up canceled tasks
+            shortTimer = null;
+        }
+
+        if ( longTimer != null ) {
+            longTimer.cancel(); // Stop the timer
+            longTimer.purge();  // Clean up canceled tasks
+            longTimer = null;
         }
     }
     public void initializeTimerTasks () {

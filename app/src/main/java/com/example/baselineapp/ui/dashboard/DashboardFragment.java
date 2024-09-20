@@ -31,8 +31,6 @@ public class DashboardFragment extends Fragment {
 
     private FragmentDashboardBinding binding;
 
-    private Thread repeatTaskThread;
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         DashboardViewModel dashboardViewModel =
@@ -63,24 +61,23 @@ public class DashboardFragment extends Fragment {
 
     public void updatePage()
     {
-        //These are magical numbers for testing
-        double dbl_bloodOxValue = ((Globals) getActivity().getApplication()).getBloodOxVal();
-        double dbl_tempValue = ((Globals) getActivity().getApplication()).getTempVal();
-        double dbl_pulseValue = ((Globals) getActivity().getApplication()).getPulseVal();
+        double dbl_bloodOxValue = Globals.getBloodOxVal();
+        double dbl_tempValue = Globals.getTempVal();
+        double dbl_pulseValue = Globals.getPulseVal();
 
         //Get all of our data from the Globals class where its maintained
-        double dbl_bloodOxLowWarningThreshold = ((Globals) getActivity().getApplication()).getBloodOxLowWarningThreshold();
-        double dbl_bloodOxLowCautionThreshold = ((Globals) getActivity().getApplication()).getBloodOxLowCautionThreshold();
+        double dbl_bloodOxLowWarningThreshold = Globals.getBloodOxLowWarningThreshold();
+        double dbl_bloodOxLowCautionThreshold = Globals.getBloodOxLowCautionThreshold();
 
-        double dbl_pulseLowWarningThreshold = ((Globals) getActivity().getApplication()).getPulseLowWarningThreshold();
-        double dbl_pulseLowCautionThreshold = ((Globals) getActivity().getApplication()).getPulseLowCautionThreshold();
-        double dbl_pulseHighWarningThreshold = ((Globals) getActivity().getApplication()).getPulseHighWarningThreshold();
-        double dbl_pulseHighCautionThreshold = ((Globals) getActivity().getApplication()).getPulseHighCautionThreshold();
+        double dbl_pulseLowWarningThreshold = Globals.getPulseLowWarningThreshold();
+        double dbl_pulseLowCautionThreshold = Globals.getPulseLowCautionThreshold();
+        double dbl_pulseHighWarningThreshold = Globals.getPulseHighWarningThreshold();
+        double dbl_pulseHighCautionThreshold = Globals.getPulseHighCautionThreshold();
 
-        double dbl_tempLowWarningThreshold = ((Globals) getActivity().getApplication()).getTempLowWarningThreshold();
-        double dbl_tempLowCautionThreshold = ((Globals) getActivity().getApplication()).getTempLowCautionThreshold();
-        double dbl_tempHighWarningThreshold = ((Globals) getActivity().getApplication()).getTempHighWarningThreshold();
-        double dbl_tempHighCautionThreshold = ((Globals) getActivity().getApplication()).getTempHighCautionThreshold();
+        double dbl_tempLowWarningThreshold = Globals.getTempLowWarningThreshold();
+        double dbl_tempLowCautionThreshold = Globals.getTempLowCautionThreshold();
+        double dbl_tempHighWarningThreshold = Globals.getTempHighWarningThreshold();
+        double dbl_tempHighCautionThreshold = Globals.getTempHighCautionThreshold();
 
         int color_healthyGreen = getResources().getColor(R.color.healthy_green, getActivity().getTheme());
         int color_cautionYellow = getResources().getColor(R.color.caution_yellow, getActivity().getTheme());
@@ -149,6 +146,7 @@ public class DashboardFragment extends Fragment {
 
     private void RepeatTask()
     {
+        Thread repeatTaskThread;
         repeatTaskThread = new Thread()
         {
             public void run()
@@ -168,8 +166,8 @@ public class DashboardFragment extends Fragment {
                     });
                     try
                     {
-                        // Sleep for 10 minutes
-                        Thread.sleep(60);
+                        // Sleep for 60 seconds
+                        Thread.sleep(60*1000);
                     }
 
                     catch (Exception e)

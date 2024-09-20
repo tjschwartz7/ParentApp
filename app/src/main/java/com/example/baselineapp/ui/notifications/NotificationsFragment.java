@@ -26,22 +26,17 @@ public class NotificationsFragment extends Fragment {
         binding = FragmentNotificationsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        int N = ((Globals)getActivity().getApplication()).getNumNotifications(); // total number of textviews to add
-
-        final TextView[] myTextViews = new TextView[N]; // create an empty array;
+        int N = Globals.getNumNotifications(); // total number of textviews to add
 
         for (int i = 0; i < N; i++) {
             // create a new textview
             final TextView rowTextView = new TextView(getActivity());
 
             // set some properties of rowTextView or something
-            rowTextView.setText(((Globals)getActivity().getApplication()).getNotificationString(i));
+            rowTextView.setText(Globals.getNotificationString(i));
             rowTextView.setTextSize(24);
             // add the textview to the linearlayout
             binding.idContainer.addView(rowTextView);
-
-            // save a reference to the textview for later
-            myTextViews[i] = rowTextView;
         }
         
 

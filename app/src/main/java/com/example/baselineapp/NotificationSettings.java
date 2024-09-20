@@ -25,11 +25,11 @@ public class NotificationSettings extends AppCompatActivity {
 
 
         //WARNINGS
-        double dbl_pulseHighWarningThreshold  = ((Globals) getApplication()).getPulseHighWarningThreshold();
-        double dbl_pulseLowWarningThreshold   = ((Globals) getApplication()).getPulseLowWarningThreshold();
-        double dbl_tempHighWarningThreshold   = ((Globals) getApplication()).getTempHighWarningThreshold();
-        double dbl_tempLowWarningThreshold    = ((Globals) getApplication()).getTempLowWarningThreshold();
-        double dbl_bloodOxLowWarningThreshold = ((Globals) getApplication()).getBloodOxLowWarningThreshold();
+        double dbl_pulseHighWarningThreshold  = Globals.getPulseHighWarningThreshold();
+        double dbl_pulseLowWarningThreshold   = Globals.getPulseLowWarningThreshold();
+        double dbl_tempHighWarningThreshold   = Globals.getTempHighWarningThreshold();
+        double dbl_tempLowWarningThreshold    = Globals.getTempLowWarningThreshold();
+        double dbl_bloodOxLowWarningThreshold = Globals.getBloodOxLowWarningThreshold();
 
         ((EditText)findViewById(R.id.id_pulseWarningUpperBound)).setText(String.valueOf(dbl_pulseHighWarningThreshold));
         ((EditText)findViewById(R.id.id_pulseWarningLowerBound)).setText(String.valueOf(dbl_pulseLowWarningThreshold));
@@ -38,11 +38,11 @@ public class NotificationSettings extends AppCompatActivity {
         ((EditText)findViewById(R.id.id_bloodOxWarningLowerBound)).setText(String.valueOf(dbl_bloodOxLowWarningThreshold));
 
         //CAUTIONS
-        double dbl_pulseHighCautionThreshold  = ((Globals) getApplication()).getPulseHighCautionThreshold();
-        double dbl_pulseLowCautionThreshold   = ((Globals) getApplication()).getPulseLowCautionThreshold();
-        double dbl_tempHighCautionThreshold   = ((Globals) getApplication()).getTempHighCautionThreshold();
-        double dbl_tempLowCautionThreshold    = ((Globals) getApplication()).getTempLowCautionThreshold();
-        double dbl_bloodOxLowCautionThreshold = ((Globals) getApplication()).getBloodOxLowCautionThreshold();
+        double dbl_pulseHighCautionThreshold  = Globals.getPulseHighCautionThreshold();
+        double dbl_pulseLowCautionThreshold   = Globals.getPulseLowCautionThreshold();
+        double dbl_tempHighCautionThreshold   = Globals.getTempHighCautionThreshold();
+        double dbl_tempLowCautionThreshold    = Globals.getTempLowCautionThreshold();
+        double dbl_bloodOxLowCautionThreshold = Globals.getBloodOxLowCautionThreshold();
 
         ((EditText)findViewById(R.id.id_pulseCautionUpperBound)).setText(String.valueOf(dbl_pulseHighCautionThreshold));
         ((EditText)findViewById(R.id.id_pulseCautionLowerBound)).setText(String.valueOf(dbl_pulseLowCautionThreshold));
@@ -103,11 +103,11 @@ public class NotificationSettings extends AppCompatActivity {
                         if (!str_tempUpperBound.isEmpty())
                             dbl_tempWarningUpperBound = Double.parseDouble(str_tempUpperBound);
                     }
-                    ((Globals) getApplication()).setBloodOxLowWarningThreshold(dbl_bloodOxWarningLowerBound);
-                    ((Globals) getApplication()).setPulseLowWarningThreshold(dbl_pulseWarningLowerBound);
-                    ((Globals) getApplication()).setPulseHighWarningThreshold(dbl_pulseWarningUpperBound);
-                    ((Globals) getApplication()).setTempLowWarningThreshold(dbl_tempWarningLowerBound);
-                    ((Globals) getApplication()).setTempHighWarningThreshold(dbl_tempWarningUpperBound);
+                    Globals.setBloodOxLowWarningThreshold(dbl_bloodOxWarningLowerBound);
+                    Globals.setPulseLowWarningThreshold(dbl_pulseWarningLowerBound);
+                    Globals.setPulseHighWarningThreshold(dbl_pulseWarningUpperBound);
+                    Globals.setTempLowWarningThreshold(dbl_tempWarningLowerBound);
+                    Globals.setTempHighWarningThreshold(dbl_tempWarningUpperBound);
                 }
 
 
@@ -151,11 +151,11 @@ public class NotificationSettings extends AppCompatActivity {
                         if (!str_tempUpperBound.isEmpty())
                             dbl_tempCautionUpperBound = Double.parseDouble(str_tempUpperBound);
                     }
-                    ((Globals) getApplication()).setBloodOxLowCautionThreshold(dbl_bloodOxCautionLowerBound);
-                    ((Globals) getApplication()).setPulseLowCautionThreshold(dbl_pulseCautionLowerBound);
-                    ((Globals) getApplication()).setPulseHighCautionThreshold(dbl_pulseCautionUpperBound);
-                    ((Globals) getApplication()).setTempLowCautionThreshold(dbl_tempCautionLowerBound);
-                    ((Globals) getApplication()).setTempHighCautionThreshold(dbl_tempCautionUpperBound);
+                    Globals.setBloodOxLowCautionThreshold(dbl_bloodOxCautionLowerBound);
+                    Globals.setPulseLowCautionThreshold(dbl_pulseCautionLowerBound);
+                    Globals.setPulseHighCautionThreshold(dbl_pulseCautionUpperBound);
+                    Globals.setTempLowCautionThreshold(dbl_tempCautionLowerBound);
+                    Globals.setTempHighCautionThreshold(dbl_tempCautionUpperBound);
                 }
                 Intent intent = new Intent(NotificationSettings.this, MainActivity.class);
                 startActivity(intent);
