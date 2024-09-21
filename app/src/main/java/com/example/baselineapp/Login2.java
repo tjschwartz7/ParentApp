@@ -44,8 +44,8 @@ public class Login2 extends AppCompatActivity {
         logo.start();
 
         //TODO: CHECK THIS!!!
-        ReaderWriter rw = new ReaderWriter();
-        rw.readTextFileAndInitiallyPopulateGlobals(this.getFilesDir().getPath() + "/AccountData");
+        //ReaderWriter rw = new ReaderWriter();
+        //rw.readTextFileAndInitiallyPopulateGlobals(this);
 
         TextInputEditText emailInput = findViewById(R.id.id_emailLoginInput);
         TextInputEditText passwordInput = findViewById(R.id.id_passwordLoginInput);
@@ -102,7 +102,7 @@ public class Login2 extends AppCompatActivity {
                 if(str_errorMessage.isEmpty())
                 {
                     ReaderWriter rw = new ReaderWriter();
-                    rw.testPrintTextFile(v.getContext().getFilesDir().getPath() + "\\AccountData");
+                    rw.testPrintTextFile(v.getContext());
                     startActivity(intent);
                     finish();
                 }

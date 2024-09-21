@@ -239,7 +239,7 @@ public final class Globals extends Application
 
     public static LinkedList<Notification> getNotifications() {return notifications;}
 
-    public static void addNotification(String title, String body, String path)
+    public static void addNotification(String title, String body, Context c)
     {
         if(map == null)
         {
@@ -263,7 +263,7 @@ public final class Globals extends Application
             i++;
         }
         ReaderWriter rw = new ReaderWriter();
-        rw.writeDataToTextFile(path, Globals.getMap());
+        rw.writeDataToTextFile(c, Globals.getMap());
     }
 
     public static void addNotificationInitial(String title, String body)
