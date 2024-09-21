@@ -1,5 +1,6 @@
 package com.example.baselineapp.ui.notifications;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,11 +21,13 @@ public class NotificationsFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+
         NotificationsViewModel notificationsViewModel =
                 new ViewModelProvider(this).get(NotificationsViewModel.class);
 
         binding = FragmentNotificationsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
 
         int N = Globals.getNumNotifications(); // total number of textviews to add
 
@@ -38,6 +41,9 @@ public class NotificationsFragment extends Fragment {
             // add the textview to the linearlayout
             binding.idContainer.addView(rowTextView);
         }
+
+
+
         
 
 

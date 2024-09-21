@@ -1,31 +1,18 @@
 package com.example.baselineapp.ui.dashboard;
 
-import static androidx.core.content.ContextCompat.getSystemService;
-
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.os.Build;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.baselineapp.DataChangeListener;
 import com.example.baselineapp.Globals;
-import com.example.baselineapp.LiveViewModel;
 import com.example.baselineapp.R;
 import com.example.baselineapp.databinding.FragmentDashboardBinding;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class DashboardFragment extends Fragment {
 
@@ -146,11 +133,9 @@ public class DashboardFragment extends Fragment {
 
     private void RepeatTask()
     {
-        Thread repeatTaskThread;
-        repeatTaskThread = new Thread()
-        {
-            public void run()
-            {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
                 while (!Thread.currentThread().isInterrupted())
                 {
 
@@ -166,8 +151,8 @@ public class DashboardFragment extends Fragment {
                     });
                     try
                     {
-                        // Sleep for 60 seconds
-                        Thread.sleep(60*1000);
+                        // Sleep for 600 seconds
+                        Thread.sleep(600*1000);
                     }
 
                     catch (Exception e)
@@ -175,9 +160,8 @@ public class DashboardFragment extends Fragment {
                         e.printStackTrace();
                     }
                 }
-            };
-        };
-        repeatTaskThread.start();
+            }
+        });
     }
 
 
