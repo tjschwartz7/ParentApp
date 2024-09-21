@@ -25,9 +25,8 @@ public class ReaderWriter
 
     }
 
-    public boolean writeDataToTextFile(String path, HashMap<String, String> writeMap)
+    public void writeDataToTextFile(Context c, HashMap<String, String> writeMap)
     {
-        boolean success = false;
         boolean found = false;
 
         writeMap.forEach((key, value) ->
@@ -57,8 +56,7 @@ public class ReaderWriter
         FileInputStream fis = null;
         try
         {
-            fis = new FileInputStream(path);
-            //fis = v.getContext().openFileInput("AccountData.txt");
+            fis = c.openFileInput("AccountData.txt");
         }
         catch (FileNotFoundException e)
         {
@@ -66,7 +64,6 @@ public class ReaderWriter
         }
         InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
         try (BufferedReader reader = new BufferedReader(isr)) {
-            int i = 0;
             String line = reader.readLine();
             while (line != null)
             {
@@ -79,25 +76,33 @@ public class ReaderWriter
                     //Overwrite the line here
                     line = newData;
                     found = true;
+                    //If we have already added a line, move this line to the top to indicate that it is the signed in account.
+                    if(!lines.isEmpty())
+                    {
+                        lines.add(lines.get(0));
+                        lines.set(0, line);
+                        line = reader.readLine();
+                        continue;
+                    }
                 }
-                i++;
                 lines.add(line);
                 line = reader.readLine();
             }
             lines.add(line);
+
+            //We only need to write if we find the account data.
+            // This SHOULD always hit, since the only time this is going to be called is after the user is signed in.
             if(found)
             {
-                success = true;
-            }
-            else
-            {
-                try(FileOutputStream fos = new FileOutputStream(path, false))
-                //try (FileOutputStream fos = v.getContext().openFileOutput("AccountData.txt", Context.MODE_PRIVATE))
+                try (FileOutputStream fos = c.openFileOutput("AccountData.txt", Context.MODE_PRIVATE))
                 {
                     for(String l: lines)
                     {
-                        //Write each line back to the text file.
-                        fos.write(l.getBytes());
+                        if(l != null)
+                        {
+                            //Write each line back to the text file.
+                            fos.write(l.getBytes());
+                        }
                     }
                 }
             }
@@ -105,20 +110,16 @@ public class ReaderWriter
         catch (IOException e)
         {
             // Error occurred when opening raw file for reading.
+            e.printStackTrace();
         }
-        return success;
     }
 
-    //TODO: CHECK WRITE FUNCTIONALITY!!! MAKE SURE FIRST LINE IS CURRENTLY SIGNED IN ACCOUNT!!!
-    public boolean readTextFileAndInitiallyPopulateGlobals(String path)
+    public void readTextFileAndInitiallyPopulateGlobals(Context c)
     {
-        boolean success = false;
-
         FileInputStream fis = null;
         try
         {
-            fis = new FileInputStream(path);
-            //fis = v.getContext().openFileInput("AccountData.txt");
+            fis = c.openFileInput("AccountData.txt");
         }
         catch (FileNotFoundException e)
         {
@@ -130,8 +131,6 @@ public class ReaderWriter
             String line = reader.readLine();
             if (line != null)
             {
-                line = reader.readLine();
-                success = true;
                 Globals.setInitialValues(line);
             }
             else
@@ -142,11 +141,11 @@ public class ReaderWriter
         catch (IOException e)
         {
             // Error occurred when opening raw file for reading.
+            e.printStackTrace();
         }
-        return success;
     }
 
-    public boolean readTextFileAndPopulateGlobals(String path)
+    public boolean readTextFileAndPopulateGlobals(Context c)
     {
         boolean success = false;
 
@@ -155,8 +154,7 @@ public class ReaderWriter
         FileInputStream fis = null;
         try
         {
-            fis = new FileInputStream(path);
-            //fis = v.getContext().openFileInput("AccountData.txt");
+            fis = c.openFileInput("AccountData.txt");
         }
         catch (FileNotFoundException e)
         {
@@ -191,17 +189,17 @@ public class ReaderWriter
         catch (IOException e)
         {
             // Error occurred when opening raw file for reading.
+            e.printStackTrace();
         }
         return success;
     }
 
-    public void testPrintTextFile(String path)
+    public void testPrintTextFile(Context c)
     {
         FileInputStream fis = null;
         try
         {
-            fis = new FileInputStream(path);
-            //fis = v.getContext().openFileInput("AccountData.txt");
+            fis = c.openFileInput("AccountData.txt");
         }
         catch (FileNotFoundException e)
         {
@@ -220,6 +218,7 @@ public class ReaderWriter
         catch (IOException e)
         {
             // Error occurred when opening raw file for reading.
+            e.printStackTrace();
         }
     }
 }

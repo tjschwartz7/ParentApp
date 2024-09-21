@@ -119,8 +119,8 @@ public class Login2 extends AppCompatActivity {
         });
 
         //TODO: CHECK THIS!!!
-        ReaderWriter rw = new ReaderWriter();
-        rw.readTextFileAndInitiallyPopulateGlobals(this.getFilesDir().getPath() + "/AccountData");
+        //ReaderWriter rw = new ReaderWriter();
+        //rw.readTextFileAndInitiallyPopulateGlobals(this);
 
         TextInputEditText emailInput = findViewById(R.id.id_emailLoginInput);
         TextInputEditText passwordInput = findViewById(R.id.id_passwordLoginInput);
@@ -204,6 +204,7 @@ public class Login2 extends AppCompatActivity {
                     });
 
                     Globals.setLoggedIn(true);
+                    rw.testPrintTextFile(v.getContext());
                     startActivity(intent);
                     finish();
                 }
