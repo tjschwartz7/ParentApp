@@ -153,16 +153,16 @@ public class CreateAccount extends AppCompatActivity
                 }
                 //TODO: Need additional validations (no empty strings allowed, only numbers for phone number, passwordParent and passwordConfirm must match, etc.)
                 //Password validation (: and ; are not allowed, password must be at least 10 characters)
-                if(!str_emailParent.equals(str_passwordConfirm))
+                if(!str_passwordParent.equals(str_passwordConfirm))
                 {
-                    str_errorMessage += "Passwords do not match.";
+                    str_errorMessage += "Passwords do not match. Please reenter your password.";
                 }
 
                 //Phone number validation
 
 
                 //Check if there are any errors.
-                if(str_errorMessage.isEmpty())
+                if(!str_errorMessage.isEmpty())
                 {
                     //TODO: Display Error Message String Somewhere on Page
 

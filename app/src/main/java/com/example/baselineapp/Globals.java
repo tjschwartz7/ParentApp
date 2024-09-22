@@ -282,6 +282,7 @@ public final class Globals extends Application
             Phone Number
             Password
             Baby Birthday
+            Baby First Name
             Notification 1 Title
             Notification 1 Body
             Notification 2 Title

@@ -35,6 +35,7 @@ public class YourBabyActivity extends AppCompatActivity {
         //-----------------
 
         DatePicker birthdate = (DatePicker)findViewById(R.id.id_birthdatePicker);
+        EditText edt_babyFirstName = (EditText)findViewById(R.id.id_firstNameBaby);
 
         Button btn_cancelButton = (Button) findViewById(R.id.id_cancelButton);
         btn_cancelButton.setOnClickListener(new View.OnClickListener() {
@@ -64,6 +65,8 @@ public class YourBabyActivity extends AppCompatActivity {
                 int birthDateId = birthYear * 10000 + birthMonth*100 + birthDay;
                 int currentDateId = currentYear * 10000 + currentMonth*100 + currentDay;
 
+                String str_babyFirstName = edt_babyFirstName.getText().toString();
+
                 //If date is valid (before or equal to current day)
                 if(currentDateId >= birthDateId)
                 {
@@ -73,7 +76,8 @@ public class YourBabyActivity extends AppCompatActivity {
                         String str_filename = "AccountData.txt";
 
                         String str_accountString = getIntent().getExtras().getString("Account String") +
-                                ";Baby Birthday:" + birthYear + "-" + birthMonth + "-" + birthDay;
+                                ";Baby Birthday:" + birthYear + "-" + birthMonth + "-" + birthDay +
+                                ";Baby First Name:" + str_babyFirstName;
 
                         for(int i = 1; i <= 10; i++)
                         {
@@ -89,6 +93,7 @@ public class YourBabyActivity extends AppCompatActivity {
 
 
                         //Following code gets the file, opens it, and then logs the first line of the file as output. Used for testing purposes. Comment out the block if you are not testing it.
+                        /*
                         FileInputStream fis = v.getContext().openFileInput(str_filename);
                         InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
                         StringBuilder stringBuilder = new StringBuilder();
@@ -112,19 +117,12 @@ public class YourBabyActivity extends AppCompatActivity {
                             String tag = "CreateAccount";
                             Log.d(tag, contents);
                         }
+                        */
                     }
                     catch(IOException e)
                     {
                         e.printStackTrace();
                     }
-
-                    //Get string value of user input
-                    String str_babyName = ((EditText) findViewById(R.id.id_firstNameBaby)).getText().toString();
-
-                    //If user enters an empty string, leave at initialized value
-                    if (!str_babyName.isEmpty())
-                        //Otherwise, set to the new value!
-                        Globals.setBabyFirstName(str_babyName);
 
                     startActivity(intent);
                     finish();

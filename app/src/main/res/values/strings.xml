@@ -87,6 +87,11 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
+    <string name="baby_first_name_nickname">Baby First Name/Nickname:</string>
+    <string name="phone_number">Phone Number:</string>
+    <string name="email">Email:</string>
+    <string name="last_name">Last Name:</string>
+    <string name="first_name">First Name:</string>
 
 
 </resources>

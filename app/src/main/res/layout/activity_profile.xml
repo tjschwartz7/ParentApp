@@ -15,7 +15,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         >
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -23,9 +22,35 @@
             android:paddingTop="40dp"
             >
 
+            <TextView
+                android:text="@string/first_name"
+                android:selectAllOnFocus="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                />
+
+            <TextView
+                android:text="@string/last_name"
+                android:selectAllOnFocus="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="0dp"
+            >
+
             <EditText
                 android:id="@+id/id_firstNameParent"
-                android:hint="@string/str_promptFname"
                 android:inputType="textPersonName"
                 android:selectAllOnFocus="true"
                 android:layout_width="match_parent"
@@ -36,7 +61,6 @@
 
             <EditText
                 android:id="@+id/id_lastNameParent"
-                android:hint="@string/str_promptLname"
                 android:inputType="textPersonName"
                 android:selectAllOnFocus="true"
                 android:layout_width="match_parent"
@@ -45,17 +69,42 @@
                 android:maxLength="25"
                 />
         </LinearLayout>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="20dp"
+            android:paddingTop="10dp"
+            >
+
+            <TextView
+                android:text="@string/email"
+                android:selectAllOnFocus="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                />
+
+            <TextView
+                android:text="@string/phone_number"
+                android:selectAllOnFocus="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="0dp"
             >
 
             <EditText
                 android:id="@+id/id_emailParent"
-                android:hint="@string/str_promptEmail"
                 android:inputType="textEmailAddress"
                 android:selectAllOnFocus="true"
                 android:layout_width="match_parent"
@@ -66,7 +115,6 @@
 
             <EditText
                 android:id="@+id/id_phoneNumberParent"
-                android:hint="@string/str_promptPhone"
                 android:inputType="phone"
                 android:selectAllOnFocus="true"
                 android:layout_width="match_parent"
@@ -74,14 +122,48 @@
                 android:layout_weight="2"
                 android:maxLength="14"
                 />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="10dp"
+            >
+
+            <TextView
+                android:text="@string/baby_first_name_nickname"
+                android:selectAllOnFocus="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="10dp"
+            >
+            <EditText
+                android:id="@+id/id_firstNameBaby"
+                android:inputType="textPersonName"
+                android:selectAllOnFocus="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:maxLength="25"
+                />
 
         </LinearLayout>
         <TextView
+            android:id="@+id/id_babyBirthdayText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/str_babyBirthdayPrompt"
             android:textSize="24sp"
-            android:paddingTop="20dp"
+            android:paddingTop="10dp"
             android:layout_gravity="center"
             />
         <LinearLayout

@@ -5,94 +5,89 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".YourBabyActivity"
-    >
+    tools:context=".YourBabyActivity">
 
     <ScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:id="@+id/scrollView2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
+        <LinearLayout
             android:id="@+id/id_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
             android:gravity="center"
-            >
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="We need some info..."
-                android:textStyle="bold"
-                android:textSize="24sp"
                 android:layout_gravity="center"
-                />
+                android:text="We need some additional info..."
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/id_firstNameBaby"
-                android:hint="Baby First Name"
-                android:inputType="textPersonName"
-                android:selectAllOnFocus="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
+                android:hint="Baby First Name/Nickname"
+                android:inputType="textPersonName"
                 android:maxLength="25"
-                />
+                android:paddingTop="15dp"
+                android:selectAllOnFocus="true" />
 
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="When was your baby born?"
-                android:textSize="24sp"
                 android:layout_gravity="center"
-                />
+                android:paddingTop="10dp"
+                android:text="When was your baby born?"
+                android:textSize="24sp" />
 
             <DatePicker
                 android:id="@+id/id_birthdatePicker"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                />
+                android:layout_height="wrap_content" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingTop="100dp"
-                >
+                android:paddingTop="10dp">
 
                 <Button
                     android:id="@+id/id_cancelButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/str_cancel"
                     android:layout_gravity="end"
-                    android:textColor="#FFF"
-                    android:textSize="20sp"
-                    android:elevation="0dp"
                     android:layout_margin="5dp"
-                    android:fontFamily="@font/antic"
-                    android:backgroundTint="@color/grey"
                     android:layout_weight="2"
-                    />
+                    android:backgroundTint="@color/grey"
+                    android:elevation="0dp"
+                    android:fontFamily="@font/antic"
+                    android:text="@string/str_cancel"
+                    android:textColor="#FFF"
+                    android:textSize="20sp" />
 
                 <Button
                     android:id="@+id/id_saveButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/str_saveChanges"
                     android:layout_gravity="end"
-                    android:textColor="#FFF"
-                    android:textSize="20sp"
-                    android:elevation="0dp"
                     android:layout_margin="5dp"
-                    android:fontFamily="@font/antic"
                     android:layout_weight="2"
-                    />
+                    android:elevation="0dp"
+                    android:fontFamily="@font/antic"
+                    android:text="@string/str_saveChanges"
+                    android:textColor="#FFF"
+                    android:textSize="20sp" />
 
             </LinearLayout>
 
