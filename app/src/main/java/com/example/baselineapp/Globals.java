@@ -17,6 +17,16 @@ public final class Globals extends Application
     private static String pulseUnit;
     private static HashMap<String, String> map;
 
+    public static Boolean userLoggedIn() {
+        return bool_loggedIn;
+    }
+
+    public static void setLoggedIn(Boolean loggedIn) {
+        bool_loggedIn = loggedIn;
+    }
+
+    private static Boolean bool_loggedIn;
+
     public static Intent getNotificationService() {
         return NotificationService;
     }

@@ -136,7 +136,7 @@ public class DashboardFragment extends Fragment {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                while (!Thread.currentThread().isInterrupted())
+                while (Globals.userLoggedIn())
                 {
 
 

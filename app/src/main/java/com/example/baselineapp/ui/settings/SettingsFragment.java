@@ -48,8 +48,10 @@ public class SettingsFragment extends Fragment {
         });
 
         binding.idLogout.setOnClickListener(v -> {
+            Globals.setLoggedIn(false);
             getActivity().getApplication().stopService(Globals.getNotificationService());
-            Intent intent = new Intent(SettingsFragment.this.getActivity(), Login2.class);
+
+            Intent intent = new Intent(getActivity(), Login2.class);
             startActivity(intent);
         });
 
