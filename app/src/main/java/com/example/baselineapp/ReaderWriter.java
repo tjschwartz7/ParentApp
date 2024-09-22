@@ -40,7 +40,8 @@ public class ReaderWriter
                 ";Last Name:" + Globals.getMap().get("Last Name") +
                 ";Phone Number:" + Globals.getMap().get("Phone Number") +
                 ";Password:" + Globals.getMap().get("Password") +
-                ";Baby Birthday:" + Globals.getMap().get("Baby Birthday");
+                ";Baby Birthday:" + Globals.getMap().get("Baby Birthday") +
+                ";Baby First Name:" + Globals.getMap().get("Baby First Name");
 
         for(int i = 1; i <= 10; i++)
         {
