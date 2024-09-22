@@ -191,14 +191,23 @@ public class Login2 extends AppCompatActivity {
                         @Override
                         public void run() {
 
-                            boolean isRunning = isMyServiceRunning(NotificationService.class, getApplicationContext());
-                            if(!isRunning)
+                            boolean notificationServiceIsRunning = isMyServiceRunning(NotificationService.class, getApplicationContext());
+                            if(!notificationServiceIsRunning)
                             {
                                 Globals.setNotificationService(new Intent( Login2.this, NotificationService. class ));
                                 System.out.println("Creating notification setup service... now!");
+                                startService(new Intent( Login2.this, NotificationSetup. class ));
                             }
 
-                            startService(new Intent( Login2.this, NotificationSetup. class ));
+                            boolean TCPClientServiceIsRunning = isMyServiceRunning(TCPClientService.class, getApplicationContext());
+                            if(!TCPClientServiceIsRunning)
+                            {
+                                Globals.setTCPClientService(new Intent( Login2.this, TCPClientService. class ));
+                                System.out.println("Creating TCP Client service... now!");
+                                startService(new Intent( Login2.this, TCPClientService. class ));
+                            }
+
+
                         }
                     });
 

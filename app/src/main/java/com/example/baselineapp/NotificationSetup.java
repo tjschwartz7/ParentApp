@@ -37,7 +37,7 @@ public class NotificationSetup extends Service
         Log. e ( TAG , "onStartCommand" ) ;
         super .onStartCommand(intent , flags , startId) ;
         setupNotification(); ;
-        return START_STICKY ;
+        return START_NOT_STICKY;
     }
     @Override
     public void onCreate ()

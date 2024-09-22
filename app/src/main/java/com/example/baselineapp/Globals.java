@@ -9,6 +9,12 @@ import java.util.LinkedList;
 
 public final class Globals extends Application
 {
+    //TCP Connection data
+    private static Boolean bool_isConnected;
+    private static Intent TcpClientService;
+
+
+
     private static double bloodOxVal;
     private static String bloodOxUnit;
     private static double tempVal;
@@ -29,6 +35,12 @@ public final class Globals extends Application
 
     public static Intent getNotificationService() {
         return NotificationService;
+    }
+    public static Intent getTCPClientService() {
+        return TcpClientService;
+    }
+    public static void setTCPClientService(Intent tcpClientService) {
+        TcpClientService = tcpClientService;
     }
 
     public static void setNotificationService(Intent notificationService) {
