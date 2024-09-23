@@ -7,11 +7,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.VideoView;
 
 import androidx.activity.EdgeToEdge;
@@ -23,7 +21,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -199,12 +196,12 @@ public class Login2 extends AppCompatActivity {
                                 startService(new Intent( Login2.this, NotificationSetup. class ));
                             }
 
-                            boolean TCPClientServiceIsRunning = isMyServiceRunning(TCPClientService.class, getApplicationContext());
+                            boolean TCPClientServiceIsRunning = isMyServiceRunning(TCPServerService.class, getApplicationContext());
                             if(!TCPClientServiceIsRunning)
                             {
-                                Globals.setTCPClientService(new Intent( Login2.this, TCPClientService. class ));
+                                Globals.setTCPServerService(new Intent( Login2.this, TCPServerService. class ));
                                 System.out.println("Creating TCP Client service... now!");
-                                startService(new Intent( Login2.this, TCPClientService. class ));
+                                startService(new Intent( Login2.this, TCPServerService. class ));
                             }
 
 

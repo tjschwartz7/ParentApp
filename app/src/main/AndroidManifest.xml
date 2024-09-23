@@ -94,6 +94,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </service>
-        <service android:name=".TCPClientService" />
+        <service android:name=".TCPServerService" />
     </application>
 </manifest>

@@ -11,7 +11,7 @@ public final class Globals extends Application
 {
     //TCP Connection data
     private static Boolean bool_isConnected;
-    private static Intent TcpClientService;
+    private static Intent TcpServerService;
 
 
 
@@ -36,11 +36,11 @@ public final class Globals extends Application
     public static Intent getNotificationService() {
         return NotificationService;
     }
-    public static Intent getTCPClientService() {
-        return TcpClientService;
+    public static Intent getTCPServerService() {
+        return TcpServerService;
     }
-    public static void setTCPClientService(Intent tcpClientService) {
-        TcpClientService = tcpClientService;
+    public static void setTCPServerService(Intent tcpServerService) {
+        TcpServerService = tcpServerService;
     }
 
     public static void setNotificationService(Intent notificationService) {

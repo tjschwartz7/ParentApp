@@ -1,12 +1,10 @@
 package com.example.baselineapp.ui.settings;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -16,10 +14,7 @@ import com.example.baselineapp.ChangePassword;
 import com.example.baselineapp.DebugConsole;
 import com.example.baselineapp.Globals;
 import com.example.baselineapp.Login2;
-import com.example.baselineapp.MainActivity;
 import com.example.baselineapp.NotificationSettings;
-import com.example.baselineapp.R;
-import com.example.baselineapp.YourBabyActivity;
 import com.example.baselineapp.databinding.FragmentSettingsBinding;
 import com.example.baselineapp.ProfileActivity;
 
@@ -50,7 +45,7 @@ public class SettingsFragment extends Fragment {
         binding.idLogout.setOnClickListener(v -> {
             Globals.setLoggedIn(false);
             getActivity().getApplication().stopService(Globals.getNotificationService());
-            getActivity().getApplication().stopService(Globals.getTCPClientService());
+            getActivity().getApplication().stopService(Globals.getTCPServerService());
 
             Intent intent = new Intent(getActivity(), Login2.class);
             startActivity(intent);
