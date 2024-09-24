@@ -42,11 +42,6 @@ public class NotificationsFragment extends Fragment {
             binding.idContainer.addView(rowTextView);
         }
 
-
-
-        
-
-
         //notificationsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }

@@ -67,8 +67,8 @@ public class TCPServerService extends Service {
         }
     }
 
-    private class ClientHandler implements Runnable {
-        private Socket clientSocket;
+    private static class ClientHandler implements Runnable {
+        private final Socket clientSocket;
 
         public ClientHandler(Socket socket) {
             this.clientSocket = socket;
@@ -77,20 +77,63 @@ public class TCPServerService extends Service {
         @Override
         public void run() {
             try {
-                PrintWriter out =
-                        new PrintWriter(clientSocket.getOutputStream(), true);
+                //Shouldn't need these
+                //PrintWriter out =
+                //        new PrintWriter(clientSocket.getOutputStream(), true);
                 BufferedReader in = new BufferedReader(
                         new InputStreamReader(clientSocket.getInputStream()));
-
                 String message;
-                while ((message = in.readLine()) != null) {
+                while(Globals.userLoggedIn())
+                {
+                    message = in.readLine();
+
                     Log.d(TAG, "Received: " + message);
-                    // Echo the received message back to the client
-                    out.println("Echo: " + message);
-                    Thread.sleep(2000);
+                    String str_data;
+                    //First 4 characters is the code
+                    switch(message.charAt(0))
+                    {
+                        case '0':
+                            Log.d(TAG, "Received TEMPERATURE data ");
+                            str_data = message.substring(2); //Get string after first code and space
+                            try
+                            {
+                                double dbl_data = Double.valueOf(str_data);
+                                Globals.setTempVal((int)(dbl_data*100) / 100.0);
+                            }
+                            catch(Exception ex)
+                            {
+                                Log.e(TAG, "Message error: " + ex.getMessage());
+                            }
+
+                            break;
+                        case '1':
+                            Log.d(TAG, "Received PULSE data ");
+                            str_data = message.substring(2); //Get string after first code and space
+                            try
+                            {
+                                double dbl_data = Double.valueOf(str_data);
+                                Globals.setPulseVal((int)(dbl_data*100) / 100.0);
+                            }
+                            catch(Exception ex)
+                            {
+                                Log.e(TAG, "Message error: " + ex.getMessage());
+                            }
+                            break;
+                        case '2':
+                            Log.d(TAG, "Received BLOOD OX data ");
+                            str_data = message.substring(2); //Get string after first code and space
+                            try
+                            {
+                                double dbl_data = Double.valueOf(str_data);
+                                Globals.setBloodOxVal((int)(dbl_data*100) / 100.0);
+                            }
+                            catch(Exception ex)
+                            {
+                                Log.e(TAG, "Message error: " + ex.getMessage());
+                            }
+                            break;
+                    }
                 }
-
-
             } catch (Exception e) {
                 Log.e(TAG, "Client error: " + e.getMessage());
             } finally {
@@ -104,5 +147,4 @@ public class TCPServerService extends Service {
             }
         }
     }
-
 }

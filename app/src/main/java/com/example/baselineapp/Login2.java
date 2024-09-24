@@ -45,34 +45,25 @@ public class Login2 extends AppCompatActivity {
             return insets;
         });
 
-        Log.d("ThreadTest", "OnCreate is running");
-
-        try {
-            AsyncTask.execute(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        // Switch to the main thread to update the UI
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                // Update the UI components safely on the main thread
-                                final VideoView logo = (VideoView) findViewById(R.id.id_logoVideo);
-                                logo.setVideoPath("android.resource://" + getPackageName() + "/" + R.raw.logoanimation);
-                                logo.start();
-                                Log.d("ThreadTest", "Thread is running and updating UI");
-                            }
-                        });
-                    } catch (Exception e) {
-                        Log.e("ThreadError", "Error in thread: " + e.getMessage());
-                    }
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    // Switch to the main thread to update the UI
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            // Update the UI components safely on the main thread
+                            final VideoView logo = (VideoView) findViewById(R.id.id_logoVideo);
+                            logo.setVideoPath("android.resource://" + getPackageName() + "/" + R.raw.logoanimation);
+                            logo.start();
+                        }
+                    });
+                } catch (Exception e) {
+                    Log.e("ThreadError", "Error in thread: " + e.getMessage());
                 }
-            });
-        }
-        catch(Exception ex)
-        {
-            Log.e("ThreadError", "Error creating thread: " + ex.getMessage());
-        }
+            }
+        });
 
 
         AsyncTask.execute(new Runnable() {
@@ -239,7 +230,6 @@ public class Login2 extends AppCompatActivity {
         });
 
     }
-
 
     public boolean isMyServiceRunning(Class<?> serviceClass, Context context) {
         ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);

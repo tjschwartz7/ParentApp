@@ -1,6 +1,7 @@
 package com.example.baselineapp.ui.settings;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,10 +44,19 @@ public class SettingsFragment extends Fragment {
         });
 
         binding.idLogout.setOnClickListener(v -> {
-            Globals.setLoggedIn(false);
-            getActivity().getApplication().stopService(Globals.getNotificationService());
-            getActivity().getApplication().stopService(Globals.getTCPServerService());
+            Globals.setLoggedIn(false); //Notify any listeners that we're logged out now
 
+            //Stop our services on logout
+            AsyncTask.execute(new Runnable() {
+                  @Override
+                  public void run() {
+                      getActivity().getApplication().stopService(Globals.getNotificationService());
+                      getActivity().getApplication().stopService(Globals.getTCPServerService());
+
+                  }
+            });
+
+            //Go back to login
             Intent intent = new Intent(getActivity(), Login2.class);
             startActivity(intent);
         });

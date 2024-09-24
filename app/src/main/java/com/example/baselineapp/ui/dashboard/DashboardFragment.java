@@ -17,6 +17,7 @@ import com.example.baselineapp.databinding.FragmentDashboardBinding;
 public class DashboardFragment extends Fragment {
 
     private FragmentDashboardBinding binding;
+    private static boolean bool_pageUpdaterCreated;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -28,10 +29,11 @@ public class DashboardFragment extends Fragment {
         //Code starts here
         //-----------------
 
-        updatePage();
-
-        RepeatTask();
-
+        if(!bool_pageUpdaterCreated)
+        {
+            updatePage();
+            RepeatTask();
+        }
 
         //-----------------
 
@@ -133,13 +135,12 @@ public class DashboardFragment extends Fragment {
 
     private void RepeatTask()
     {
+        bool_pageUpdaterCreated = true;
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
                 while (Globals.userLoggedIn())
                 {
-
-
                     // Update TextView in runOnUiThread
                     getActivity().runOnUiThread(new Runnable()
                     {
@@ -149,12 +150,12 @@ public class DashboardFragment extends Fragment {
                             updatePage();
                         }
                     });
+
                     try
                     {
-                        // Sleep for 600 seconds
-                        Thread.sleep(600*1000);
+                        // Sleep for 5 seconds
+                        Thread.sleep(3*1000);
                     }
-
                     catch (Exception e)
                     {
                         e.printStackTrace();
@@ -162,6 +163,7 @@ public class DashboardFragment extends Fragment {
                 }
             }
         });
+        bool_pageUpdaterCreated = false;
     }
 
 

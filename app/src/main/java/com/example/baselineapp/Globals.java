@@ -15,12 +15,6 @@ public final class Globals extends Application
 
 
 
-    private static double bloodOxVal;
-    private static String bloodOxUnit;
-    private static double tempVal;
-    private static String tempUnit;
-    private static double pulseVal;
-    private static String pulseUnit;
     private static HashMap<String, String> map;
 
     public static Boolean userLoggedIn() {
@@ -55,11 +49,12 @@ public final class Globals extends Application
     private static boolean bool_warningActive = false;
     private static boolean bool_cautionActive = false;
 
-    private static double dbl_bloodOxVal = 94;
+
+    private static double dbl_bloodOxVal;
     private static String str_bloodOxUnit = "%";
-    private static double dbl_tempVal = 98.7;
+    private static double dbl_tempVal;
     private static String str_tempUnit = "F";
-    private static double dbl_pulseVal = 120;
+    private static double dbl_pulseVal;
     private static String str_pulseUnit = "bpm";
 
     private static double dbl_bloodOxLowWarningThreshold = 88;
@@ -209,6 +204,18 @@ public final class Globals extends Application
 
     public static double getPulseVal() {return dbl_pulseVal;}
 
+    public static void setBloodOxVal(double bloodOxVal) {
+        Globals.dbl_bloodOxVal = bloodOxVal;
+    }
+
+    public static void setTempVal(double tempVal) {
+        Globals.dbl_tempVal = tempVal;
+    }
+
+    public static void setPulseVal(double pulseVal) {
+        Globals.dbl_pulseVal = pulseVal;
+    }
+
     public static void debugOnlySetVitals(double bloodOx, double pulse, double temp)
     {
         dbl_bloodOxVal = bloodOx;
@@ -241,12 +248,12 @@ public final class Globals extends Application
             profile = profile.substring(endIndex+1);
             map.put(key, value);
         }
-        bloodOxVal = 0.0;
-        bloodOxUnit = "%";
-        tempVal = 0.0;
-        tempUnit = "F";
-        pulseVal = 0.0;
-        pulseUnit = "bpm";
+        dbl_bloodOxVal = 0.0;
+        str_bloodOxUnit = "%";
+        dbl_tempVal = 0.0;
+        str_tempUnit = "F";
+        dbl_pulseVal = 0.0;
+        str_pulseUnit = "bpm";
     }
 
     public static String getPulseUnit() {return str_pulseUnit;}
