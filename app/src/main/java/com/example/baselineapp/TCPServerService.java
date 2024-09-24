@@ -2,6 +2,7 @@ package com.example.baselineapp;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -78,62 +79,24 @@ public class TCPServerService extends Service {
         public void run() {
             try {
                 //Shouldn't need these
-                //PrintWriter out =
-                //        new PrintWriter(clientSocket.getOutputStream(), true);
+                PrintWriter out =
+                        new PrintWriter(clientSocket.getOutputStream(), true);
                 BufferedReader in = new BufferedReader(
                         new InputStreamReader(clientSocket.getInputStream()));
-                String message;
-                while(Globals.userLoggedIn())
-                {
-                    message = in.readLine();
 
-                    Log.d(TAG, "Received: " + message);
-                    String str_data;
-                    //First 4 characters is the code
-                    switch(message.charAt(0))
-                    {
-                        case '0':
-                            Log.d(TAG, "Received TEMPERATURE data ");
-                            str_data = message.substring(2); //Get string after first code and space
-                            try
-                            {
-                                double dbl_data = Double.valueOf(str_data);
-                                Globals.setTempVal((int)(dbl_data*100) / 100.0);
-                            }
-                            catch(Exception ex)
-                            {
-                                Log.e(TAG, "Message error: " + ex.getMessage());
-                            }
-
-                            break;
-                        case '1':
-                            Log.d(TAG, "Received PULSE data ");
-                            str_data = message.substring(2); //Get string after first code and space
-                            try
-                            {
-                                double dbl_data = Double.valueOf(str_data);
-                                Globals.setPulseVal((int)(dbl_data*100) / 100.0);
-                            }
-                            catch(Exception ex)
-                            {
-                                Log.e(TAG, "Message error: " + ex.getMessage());
-                            }
-                            break;
-                        case '2':
-                            Log.d(TAG, "Received BLOOD OX data ");
-                            str_data = message.substring(2); //Get string after first code and space
-                            try
-                            {
-                                double dbl_data = Double.valueOf(str_data);
-                                Globals.setBloodOxVal((int)(dbl_data*100) / 100.0);
-                            }
-                            catch(Exception ex)
-                            {
-                                Log.e(TAG, "Message error: " + ex.getMessage());
-                            }
-                            break;
+                AsyncTask.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        ClientHandler(in);
                     }
-                }
+                });
+
+                AsyncTask.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        ServerHandler(out);
+                    }
+                });
             } catch (Exception e) {
                 Log.e(TAG, "Client error: " + e.getMessage());
             } finally {
@@ -146,5 +109,82 @@ public class TCPServerService extends Service {
                 }
             }
         }
+
+
+        private static void ClientHandler(BufferedReader in) {
+            try {
+                String message;
+                while(Globals.userLoggedIn()) {
+                    message = in.readLine();
+
+                    Log.d(TAG, "Received: " + message);
+                    String str_data;
+                    //First 4 characters is the code
+                    switch(message.charAt(0)) {
+                        case '0':
+                            Log.d(TAG, "Received TEMPERATURE data ");
+                            str_data = message.substring(2); //Get string after first code and space
+                            try {
+                                double dbl_data = Double.valueOf(str_data);
+                                Globals.setTempVal((int)(dbl_data*100) / 100.0);
+                            }
+                            catch(Exception ex) {
+                                Log.e(TAG, "Message error: " + ex.getMessage());
+                            }
+
+                            break;
+                        case '1':
+                            Log.d(TAG, "Received PULSE data ");
+                            str_data = message.substring(2); //Get string after first code and space
+                            try {
+                                double dbl_data = Double.valueOf(str_data);
+                                Globals.setPulseVal((int)(dbl_data*100) / 100.0);
+                            }
+                            catch(Exception ex) {
+                                Log.e(TAG, "Message error: " + ex.getMessage());
+                            }
+                            break;
+                        case '2':
+                            Log.d(TAG, "Received BLOOD OX data ");
+                            str_data = message.substring(2); //Get string after first code and space
+                            try {
+                                double dbl_data = Double.valueOf(str_data);
+                                Globals.setBloodOxVal((int)(dbl_data*100) / 100.0);
+                            }
+                            catch(Exception ex) {
+                                Log.e(TAG, "Message error: " + ex.getMessage());
+                            }
+                            break;
+                    }
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "Client error: " + e.getMessage());
+            }
+        }
+
+
+
+        private static void ServerHandler(PrintWriter out)
+        {
+            try {
+                if(Globals.getShutdownCommandStatus())
+                {
+                    out.println("0\n"); //Shutdown code
+                    Globals.sendShutdownCommand(false);
+                }
+                else if(Globals.getPowerEnableStatus())
+                {
+                    out.println("1\n"); //Power On code
+                    Globals.sendPowerEnableCommand(false);
+                }
+
+
+            }
+            catch(Exception ex) {
+                Log.e(TAG, "Server error: " + ex.getMessage());
+            }
+        }
+
+
     }
 }

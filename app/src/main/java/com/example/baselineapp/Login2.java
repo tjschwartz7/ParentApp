@@ -65,7 +65,6 @@ public class Login2 extends AppCompatActivity {
             }
         });
 
-
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {

@@ -9,14 +9,93 @@ import java.util.LinkedList;
 
 public final class Globals extends Application
 {
+    public Globals(){}
+    //---------------------------------------------------------
     //TCP Connection data
     private static Boolean bool_isConnected;
+
+    private static Boolean bool_sendShutdownCommand;
+
+    private static Boolean bool_sendPowerEnableCommand;
+
+    //---------------------------------------------------------
+    //Instance data
+    private static Boolean bool_loggedIn;
+    private static Intent NotificationService;
     private static Intent TcpServerService;
 
 
+    //---------------------------------------------------------
+    //Baby State Data
 
+    private static boolean bool_warningActive = false;
+    private static boolean bool_cautionActive = false;
+
+    //---------------------------------------------------------
+    //Baby Vitals Data
+    private static double dbl_bloodOxVal;
+    private static String str_bloodOxUnit = "%";
+    private static double dbl_tempVal;
+    private static String str_tempUnit = "F";
+    private static double dbl_pulseVal;
+    private static String str_pulseUnit = "bpm";
+
+    //---------------------------------------------------------
+    //Baby Metadata
+    private static String str_babyFirstName;
+    private static DatePicker dp_birthdate;
+
+    //---------------------------------------------------------
+    //Baby Threshold Data
+
+    private static double dbl_bloodOxLowWarningThreshold = 0;
+    private static double dbl_bloodOxLowCautionThreshold = 0;
+
+    private static double dbl_pulseLowWarningThreshold = 0;
+    private static double dbl_pulseLowCautionThreshold = 0;
+    private static double dbl_pulseHighWarningThreshold = 0;
+    private static double dbl_pulseHighCautionThreshold = 0;
+
+    private static double dbl_tempLowWarningThreshold = 0;
+    private static double dbl_tempLowCautionThreshold = 0;
+    private static double dbl_tempHighWarningThreshold = 0;
+    private static double dbl_tempHighCautionThreshold = 0;
+
+    //---------------------------------------------------------
+    //File data
     private static HashMap<String, String> map;
 
+    //---------------------------------------------------------
+    //Notifications
+    private static LinkedList<Notification> notifications = new LinkedList<Notification>();
+
+    //---------------------------------------------------------
+    //Security
+    private static String str_code;
+
+    //---------------------------------------------------------
+    //FUNCTIONS
+    //---------------------------------------------------------
+    //TCP Connection Information
+
+    public static Boolean getShutdownCommandStatus() {
+        return bool_sendShutdownCommand;
+    }
+
+    public static void sendShutdownCommand(Boolean sendShutdownCommand) {
+        Globals.bool_sendShutdownCommand = sendShutdownCommand;
+    }
+
+    public static Boolean getPowerEnableStatus() {
+        return bool_sendPowerEnableCommand;
+    }
+
+    public static void sendPowerEnableCommand(Boolean sendPowerEnableCommand) {
+        Globals.bool_sendPowerEnableCommand = sendPowerEnableCommand;
+    }
+
+    //---------------------------------------------------------
+    //Instance Information
     public static Boolean userLoggedIn() {
         return bool_loggedIn;
     }
@@ -24,9 +103,6 @@ public final class Globals extends Application
     public static void setLoggedIn(Boolean loggedIn) {
         bool_loggedIn = loggedIn;
     }
-
-    private static Boolean bool_loggedIn;
-
     public static Intent getNotificationService() {
         return NotificationService;
     }
@@ -41,37 +117,38 @@ public final class Globals extends Application
         NotificationService = notificationService;
     }
 
-    private static Intent NotificationService;
+    //---------------------------------------------------------
+    //Baby Vital Data
 
-    private static LinkedList<Notification> notifications = new LinkedList<Notification>();
-    private static String str_code;
+    public static double getBloodOxVal() {return dbl_bloodOxVal;}
+    public static String getBloodOxUnit() {return str_bloodOxUnit;}
 
-    private static boolean bool_warningActive = false;
-    private static boolean bool_cautionActive = false;
+    public static double getTempVal() {return dbl_tempVal;}
+    public static String getTempUnit() {return str_tempUnit;}
 
+    public static double getPulseVal() {return dbl_pulseVal;}
 
-    private static double dbl_bloodOxVal;
-    private static String str_bloodOxUnit = "%";
-    private static double dbl_tempVal;
-    private static String str_tempUnit = "F";
-    private static double dbl_pulseVal;
-    private static String str_pulseUnit = "bpm";
+    public static void setBloodOxVal(double bloodOxVal) {
+        Globals.dbl_bloodOxVal = bloodOxVal;
+    }
 
-    private static double dbl_bloodOxLowWarningThreshold = 88;
-    private static double dbl_bloodOxLowCautionThreshold = 90;
+    public static void setTempVal(double tempVal) {
+        Globals.dbl_tempVal = tempVal;
+    }
 
-    private static double dbl_pulseLowWarningThreshold = 65;
-    private static double dbl_pulseLowCautionThreshold = 70;
-    private static double dbl_pulseHighWarningThreshold = 195;
-    private static double dbl_pulseHighCautionThreshold = 190;
+    public static void setPulseVal(double pulseVal) {
+        Globals.dbl_pulseVal = pulseVal;
+    }
+    public static String getPulseUnit() {return str_pulseUnit;}
+    public static void debugOnlySetVitals(double bloodOx, double pulse, double temp)
+    {
+        dbl_bloodOxVal = bloodOx;
+        dbl_pulseVal = pulse;
+        dbl_tempVal = temp;
+    }
 
-    private static double dbl_tempLowWarningThreshold = 95;
-    private static double dbl_tempLowCautionThreshold = 96.8;
-    private static double dbl_tempHighWarningThreshold = 101;
-    private static double dbl_tempHighCautionThreshold = 99.5;
-
-    private static DatePicker dp_birthdate;
-
+    //---------------------------------------------------------
+    //Baby Metadata
     public static String getBabyFirstName() {
         return str_babyFirstName;
     }
@@ -79,8 +156,6 @@ public final class Globals extends Application
     public static void setBabyFirstName(String str_babyFirstName) {
         Globals.str_babyFirstName = str_babyFirstName;
     }
-
-    private static String str_babyFirstName;
 
     public static DatePicker getBirthdate() {
         return dp_birthdate;
@@ -90,6 +165,8 @@ public final class Globals extends Application
         dp_birthdate = birthdate;
     }
 
+    //---------------------------------------------------------
+    //Baby State Information
     public static boolean isWarningActive() {
         return bool_warningActive;
     }
@@ -98,9 +175,6 @@ public final class Globals extends Application
         bool_warningActive = warningActive;
     }
 
-    public Globals(){}
-    public Globals(String profile){}
-
     public static boolean isCautionActive() {
         return bool_cautionActive;
     }
@@ -108,10 +182,9 @@ public final class Globals extends Application
     public static void setCautionActive(boolean cautionActive) {
         bool_cautionActive = cautionActive;
     }
-    public static String getCode() {
-        return str_code;
-    }
 
+    //---------------------------------------------------------
+    //Baby Threshold Information
     public static double getBloodOxLowWarningThreshold() {
         return Globals.dbl_bloodOxLowWarningThreshold;
     }
@@ -192,37 +265,8 @@ public final class Globals extends Application
         Globals.dbl_tempHighCautionThreshold = dbl_tempHighCautionThreshold;
     }
 
-    public static void setCode(String code) {
-        str_code = code;
-    }
-
-    public static double getBloodOxVal() {return dbl_bloodOxVal;}
-    public static String getBloodOxUnit() {return str_bloodOxUnit;}
-
-    public static double getTempVal() {return dbl_tempVal;}
-    public static String getTempUnit() {return str_tempUnit;}
-
-    public static double getPulseVal() {return dbl_pulseVal;}
-
-    public static void setBloodOxVal(double bloodOxVal) {
-        Globals.dbl_bloodOxVal = bloodOxVal;
-    }
-
-    public static void setTempVal(double tempVal) {
-        Globals.dbl_tempVal = tempVal;
-    }
-
-    public static void setPulseVal(double pulseVal) {
-        Globals.dbl_pulseVal = pulseVal;
-    }
-
-    public static void debugOnlySetVitals(double bloodOx, double pulse, double temp)
-    {
-        dbl_bloodOxVal = bloodOx;
-        dbl_pulseVal = pulse;
-        dbl_tempVal = temp;
-    }
-
+    //---------------------------------------------------------
+    //File Information
     /*
          List of Keys that will appear in map:
             Email
@@ -256,8 +300,10 @@ public final class Globals extends Application
         str_pulseUnit = "bpm";
     }
 
-    public static String getPulseUnit() {return str_pulseUnit;}
+    public static HashMap<String,String> getMap() {return map;}
 
+    //---------------------------------------------------------
+    //Notifications
     public static LinkedList<Notification> getNotifications() {return notifications;}
 
     public static void addNotification(String title, String body)
@@ -283,24 +329,13 @@ public final class Globals extends Application
 
     public static int getNumNotifications() {return notifications.size();}
 
-    public static void setWarningThresholds(                     double temp_high, double pulse_high,
-                                     double bloodOx_low,  double temp_low,  double pulse_low)
-    {
-        setBloodOxLowWarningThreshold(bloodOx_low);
-        setTempLowWarningThreshold(temp_high);
-        setTempLowWarningThreshold(temp_low);
-        setPulseHighWarningThreshold(pulse_high);
-        setPulseLowWarningThreshold(pulse_low);
+    //---------------------------------------------------------
+    //Security
+    public static String getCode() {
+        return str_code;
+    }
+    public static void setCode(String code) {
+        str_code = code;
     }
 
-    public static HashMap<String,String> getMap() {return map;}
-    public static void setCautionThresholds(                     double temp_high, double pulse_high,
-                                     double bloodOx_low,  double temp_low,  double pulse_low)
-    {
-        setBloodOxLowCautionThreshold(bloodOx_low);
-        setTempLowCautionThreshold(temp_high);
-        setTempLowCautionThreshold(temp_low);
-        setPulseHighCautionThreshold(pulse_high);
-        setPulseLowCautionThreshold(pulse_low);
-    }
 }
