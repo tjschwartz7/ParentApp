@@ -57,8 +57,6 @@ public class NotificationSetup extends Service
     {
         //Code goes here
 
-        System.out.println("Creating notification service.");
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService( new Intent( this, NotificationService. class )) ;
         }
