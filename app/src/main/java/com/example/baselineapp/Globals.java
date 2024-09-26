@@ -16,6 +16,8 @@ import java.util.LinkedList;
 public final class Globals extends Application
 {
     public Globals(){}
+
+
     //---------------------------------------------------------
     //TCP Connection data
     private static Boolean bool_isConnected;
@@ -99,6 +101,15 @@ public final class Globals extends Application
     public static void sendPowerEnableCommand(Boolean sendPowerEnableCommand) {
         Globals.bool_sendPowerEnableCommand = sendPowerEnableCommand;
     }
+
+    public static Boolean getClientIsConnected() {
+        return bool_isConnected;
+    }
+
+    public static void setClientIsConnected(Boolean bool_isConnected) {
+        Globals.bool_isConnected = bool_isConnected;
+    }
+
 
     //---------------------------------------------------------
     //Instance Information
