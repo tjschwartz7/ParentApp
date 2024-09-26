@@ -1,6 +1,7 @@
 package com.example.baselineapp;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.VideoView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -18,9 +20,12 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import org.apache.commons.validator.routines.EmailValidator;
+
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -58,13 +63,24 @@ public class Login2 extends AppCompatActivity {
                 //Read from text file. Find line with matching email.
                 String str_errorMessage = "";
                 FileInputStream fis = null;
+                String str_emailInput = emailInput.getText().toString();
+                String str_passwordInput = passwordInput.getText().toString();
                 try
                 {
                     fis = v.getContext().openFileInput("AccountData.txt");
                 }
                 catch (FileNotFoundException e)
                 {
-                    throw new RuntimeException(e);
+                    try (FileOutputStream fos = v.getContext().openFileOutput("AccountData.txt", Context.MODE_PRIVATE))
+                    {
+                        fos.write("".getBytes());
+                        fis = v.getContext().openFileInput("AccountData.txt");
+                    }
+                    catch(IOException a)
+                    {
+                        a.printStackTrace();
+                        throw new RuntimeException();
+                    }
                 }
                 InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
                 try (BufferedReader reader = new BufferedReader(isr)) {
@@ -75,7 +91,7 @@ public class Login2 extends AppCompatActivity {
                         int endIndex = line.indexOf(';');
                         //Email address should be first in the string/line.
                         String storedEmail = line.substring(beginIndex, endIndex);
-                        if(storedEmail.equals(emailInput.getText().toString()))
+                        if(storedEmail.equals(str_emailInput))
                         {
                             break;
                         }
@@ -83,14 +99,14 @@ public class Login2 extends AppCompatActivity {
                     }
                     if(line == null)
                     {
-                        str_errorMessage += "Account does not exist.";
+                        str_errorMessage += "- Account with this email address does not exist.\n";
                     }
                     else
                     {
                         Globals.setInitialValues(line);
-                        if(!Globals.getMap().get("Password").equals(passwordInput.getText().toString()))
+                        if(!Globals.getMap().get("Password").equals(str_passwordInput))
                         {
-                            str_errorMessage += "Wrong password.";
+                            str_errorMessage += "- Wrong password.\n";
                         }
                     }
                 }
@@ -99,17 +115,44 @@ public class Login2 extends AppCompatActivity {
                     // Error occurred when opening raw file for reading.
                     e.printStackTrace();
                 }
-                if(str_errorMessage.isEmpty())
+
+                if(str_emailInput.isEmpty())
                 {
-                    ReaderWriter rw = new ReaderWriter();
-                    rw.testPrintTextFile(v.getContext());
-                    startActivity(intent);
-                    finish();
+                    str_errorMessage += "- Please enter an email address.\n";
                 }
-                else
+                if(str_passwordInput.isEmpty())
                 {
-                    //TODO: Display error message to user.
+                    str_errorMessage += "- Please enter a password.\n";
                 }
+
+                //Check if there are any errors.
+                if(!str_errorMessage.isEmpty())
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+
+                    builder.setTitle("Input Issues");
+                    str_errorMessage = "Please fix the following issues: \n" + str_errorMessage;
+                    builder.setMessage(str_errorMessage);
+                    // Add the buttons.
+                    builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User taps OK button.
+                            dialog.cancel();
+                        }
+                    });
+
+                    // Create the AlertDialog.
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+
+                    return;
+                }
+
+
+                //ReaderWriter rw = new ReaderWriter();
+                //rw.testPrintTextFile(v.getContext());
+                startActivity(intent);
+                finish();
             }
         });
 

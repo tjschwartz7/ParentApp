@@ -27,6 +27,25 @@ public class ReaderWriter
 
     public void writeDataToTextFile(Context c, HashMap<String, String> writeMap)
     {
+        FileInputStream fis = null;
+        try
+        {
+            fis = c.openFileInput("AccountData.txt");
+        }
+        catch (FileNotFoundException e)
+        {
+            try (FileOutputStream fos = c.openFileOutput("AccountData.txt", Context.MODE_PRIVATE))
+            {
+                fos.write("".getBytes());
+                fis = c.openFileInput("AccountData.txt");
+            }
+            catch(IOException a)
+            {
+                a.printStackTrace();
+                throw new RuntimeException();
+            }
+        }
+
         boolean found = false;
 
         writeMap.forEach((key, value) ->
@@ -54,20 +73,12 @@ public class ReaderWriter
 
         String email = Globals.getMap().get("Email");
 
-        FileInputStream fis = null;
-        try
-        {
-            fis = c.openFileInput("AccountData.txt");
-        }
-        catch (FileNotFoundException e)
-        {
-            throw new RuntimeException(e);
-        }
         InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
         try (BufferedReader reader = new BufferedReader(isr)) {
             String line = reader.readLine();
             while (line != null)
             {
+                line = line + "\n";
                 int beginIndex = line.indexOf(':') + 1;
                 int endIndex = line.indexOf(';');
                 //Email address should be first in the string/line.
@@ -124,7 +135,16 @@ public class ReaderWriter
         }
         catch (FileNotFoundException e)
         {
-            throw new RuntimeException(e);
+            try (FileOutputStream fos = c.openFileOutput("AccountData.txt", Context.MODE_APPEND))
+            {
+                fos.write("".getBytes());
+                fis = c.openFileInput("AccountData.txt");
+            }
+            catch(IOException a)
+            {
+                a.printStackTrace();
+                throw new RuntimeException();
+            }
         }
         InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
         try (BufferedReader reader = new BufferedReader(isr))
@@ -159,7 +179,16 @@ public class ReaderWriter
         }
         catch (FileNotFoundException e)
         {
-            throw new RuntimeException(e);
+            try (FileOutputStream fos = c.openFileOutput("AccountData.txt", Context.MODE_PRIVATE))
+            {
+                fos.write("".getBytes());
+                fis = c.openFileInput("AccountData.txt");
+            }
+            catch(IOException a)
+            {
+                a.printStackTrace();
+                throw new RuntimeException();
+            }
         }
         InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
         try (BufferedReader reader = new BufferedReader(isr))
@@ -195,6 +224,54 @@ public class ReaderWriter
         return success;
     }
 
+    public boolean scanTextFileForEmail(Context c, String str_email)
+    {
+        boolean found = false;
+
+        FileInputStream fis = null;
+        try
+        {
+            fis = c.openFileInput("AccountData.txt");
+        }
+        catch (FileNotFoundException e)
+        {
+            try (FileOutputStream fos = c.openFileOutput("AccountData.txt", Context.MODE_PRIVATE))
+            {
+                fos.write("".getBytes());
+                fis = c.openFileInput("AccountData.txt");
+            }
+            catch(IOException a)
+            {
+                a.printStackTrace();
+                throw new RuntimeException();
+            }
+        }
+        InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
+        try (BufferedReader reader = new BufferedReader(isr))
+        {
+            String line = reader.readLine();
+            while (line != null)
+            {
+                int beginIndex = line.indexOf(':') + 1;
+                int endIndex = line.indexOf(';');
+                //Email address should be first in the string/line.
+                String storedEmail = line.substring(beginIndex, endIndex);
+                if (storedEmail.equals(str_email))
+                {
+                    found = true;
+                    break;
+                }
+                line = reader.readLine();
+            }
+        }
+        catch (IOException e)
+        {
+            // Error occurred when opening raw file for reading.
+            e.printStackTrace();
+        }
+        return found;
+    }
+
     public void testPrintTextFile(Context c)
     {
         FileInputStream fis = null;
@@ -204,7 +281,16 @@ public class ReaderWriter
         }
         catch (FileNotFoundException e)
         {
-            throw new RuntimeException(e);
+            try (FileOutputStream fos = c.openFileOutput("AccountData.txt", Context.MODE_PRIVATE))
+            {
+                fos.write("".getBytes());
+                fis = c.openFileInput("AccountData.txt");
+            }
+            catch(IOException a)
+            {
+                a.printStackTrace();
+                throw new RuntimeException();
+            }
         }
         InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
         try (BufferedReader reader = new BufferedReader(isr))

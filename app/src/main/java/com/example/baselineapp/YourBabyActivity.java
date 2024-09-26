@@ -1,6 +1,7 @@
 package com.example.baselineapp;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,10 +11,13 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import org.apache.commons.validator.routines.EmailValidator;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -67,32 +71,71 @@ public class YourBabyActivity extends AppCompatActivity {
 
                 String str_babyFirstName = edt_babyFirstName.getText().toString();
 
-                //If date is valid (before or equal to current day)
-                if(currentDateId >= birthDateId)
+                String str_errorMessage = "";
+
+                //Primary name validation. Check if string is all alphabetical characters.
+                if(!TextValidator.isAlpha(str_babyFirstName))
                 {
-                    //Create the account based on user information previously entered
-                    try
+                    str_errorMessage += "- Only English letters allowed in name.\n";
+                }
+
+                if(str_babyFirstName.isEmpty())
+                {
+                    str_errorMessage += "- Please enter baby's first name/nickname.\n";
+                }
+
+                //If current date is not valid (before selected birthday)
+                if(currentDateId < birthDateId)
+                {
+                    str_errorMessage += "- Date selected must be before current date.\n";
+                }
+
+                //Check if there are any errors.
+                if(!str_errorMessage.isEmpty())
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+
+                    builder.setTitle("Input Issues");
+                    str_errorMessage = "Please fix the following issues: \n" + str_errorMessage;
+                    builder.setMessage(str_errorMessage);
+                    // Add the buttons.
+                    builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User taps OK button.
+                            dialog.cancel();
+                        }
+                    });
+
+                    // Create the AlertDialog.
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+
+                    return;
+                }
+
+                //Create the account based on user information previously entered
+                try
+                {
+                    String str_filename = "AccountData.txt";
+
+                    String str_accountString = getIntent().getExtras().getString("Account String") +
+                            ";Baby Birthday:" + birthYear + "-" + birthMonth + "-" + birthDay +
+                            ";Baby First Name:" + str_babyFirstName;
+
+                    for(int i = 1; i <= 10; i++)
                     {
-                        String str_filename = "AccountData.txt";
+                        str_accountString += ";Notification " + i + " Title:" + "" +
+                                ";Notification " + i + " Body:" + "";
+                    }
+                    str_accountString += ";\n";
 
-                        String str_accountString = getIntent().getExtras().getString("Account String") +
-                                ";Baby Birthday:" + birthYear + "-" + birthMonth + "-" + birthDay +
-                                ";Baby First Name:" + str_babyFirstName;
-
-                        for(int i = 1; i <= 10; i++)
-                        {
-                            str_accountString += ";Notification " + i + " Title:" + "" +
-                                    ";Notification " + i + " Body:" + "";
-                        }
-                        str_accountString += ";\n";
-
-                        try (FileOutputStream fos = v.getContext().openFileOutput(str_filename, Context.MODE_APPEND))
-                        {
-                            fos.write(str_accountString.getBytes());
-                        }
+                    try (FileOutputStream fos = v.getContext().openFileOutput(str_filename, Context.MODE_APPEND))
+                    {
+                        fos.write(str_accountString.getBytes());
+                    }
 
 
-                        //Following code gets the file, opens it, and then logs the first line of the file as output. Used for testing purposes. Comment out the block if you are not testing it.
+                    //Following code gets the file, opens it, and then logs the first line of the file as output. Used for testing purposes. Comment out the block if you are not testing it.
                         /*
                         FileInputStream fis = v.getContext().openFileInput(str_filename);
                         InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
@@ -117,18 +160,13 @@ public class YourBabyActivity extends AppCompatActivity {
                             Log.d(tag, contents);
                         }
                         */
-                    }
-                    catch(IOException e)
-                    {
-                        e.printStackTrace();
-                    }
-                    startActivity(intent);
-                    finish();
                 }
-                else
+                catch(IOException e)
                 {
-                    //TODO: Display an error message to the user here stating that the date selected is not valid
+                    e.printStackTrace();
                 }
+                startActivity(intent);
+                finish();
             }
         });
 
@@ -140,5 +178,8 @@ public class YourBabyActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+
     }
+
 }

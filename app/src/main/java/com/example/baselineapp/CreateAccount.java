@@ -1,6 +1,7 @@
 package com.example.baselineapp;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
@@ -13,11 +14,15 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.apache.commons.validator.routines.EmailValidator;
 
@@ -132,39 +137,80 @@ public class CreateAccount extends AppCompatActivity
 
                 String str_errorMessage = "";
 
-                //TODO: Check if email address already exists
+                ReaderWriter rw = new ReaderWriter();
+                if(rw.scanTextFileForEmail(v.getContext(), str_emailParent))
+                {
+                    str_errorMessage += "- Account with this email already exists.\n";
+                }
                 //Email validation
                 if(!EmailValidator.getInstance().isValid(str_emailParent))
                 {
-                    str_errorMessage += "There was a problem with the email address you entered. Please make sure that your email address was typed correctly.\n";
+                    str_errorMessage += "- Email address is not formatted correctly.\n";
                 }
-                //Secondary email validation (: and ; characters are not allowed)
-                if(!isValid(str_emailParent))
+                //Secondary email validation (: \ and ; characters are not allowed)
+                String str_emailBadCharacters = TextValidator.isValid(str_emailParent);
+                if(!str_emailBadCharacters.isEmpty())
                 {
-                    str_errorMessage += "There was a problem with the email address you entered. Colons (:) and semi-colons (;) are not allowed.\n";
+                    str_errorMessage += "- Email address contains invalid characters: (" + str_emailBadCharacters + ")\n";
                 }
                 if(str_emailParent.isEmpty())
                 {
-                    str_errorMessage += "Please enter an email address.\n";
+                    str_errorMessage += "- Please enter an email address.\n";
                 }
                 if(str_phoneNumberParent.length() != 10)
                 {
-                    str_errorMessage += "Please ensure a proper phone number has been entered.\n";
+                    str_errorMessage += "- Phone numbers must be 10 digits (US only).\n";
                 }
-                //TODO: Need additional validations (no empty strings allowed, only numbers for phone number, passwordParent and passwordConfirm must match, etc.)
                 //Password validation (: and ; are not allowed, password must be at least 10 characters)
                 if(!str_passwordParent.equals(str_passwordConfirm))
                 {
-                    str_errorMessage += "Passwords do not match. Please reenter your password.";
+                    str_errorMessage += "- Passwords do not match.\n";
+                }
+                if(str_passwordParent.length() < 8)
+                {
+                    str_errorMessage += "- Password must be at least 8 characters.\n";
+                }
+                String str_passwordBadCharacters = TextValidator.isValid(str_passwordParent);
+                if(!str_emailBadCharacters.isEmpty())
+                {
+                    str_errorMessage += "- Password contains invalid characters: (" + str_passwordBadCharacters + ")\n";
                 }
 
-                //Phone number validation
-
+                //Check if first name is alphabetical.
+                //Primary name validation. Check if string is all alphabetical characters.
+                if(!TextValidator.isAlpha(str_firstNameParent) || !TextValidator.isAlpha(str_lastNameParent))
+                {
+                    str_errorMessage += "- Only English letters allowed in name.\n";
+                }
+                if(str_firstNameParent.isEmpty())
+                {
+                    str_errorMessage += "- Please enter your first name.\n";
+                }
+                if(str_lastNameParent.isEmpty())
+                {
+                    str_errorMessage += "- Please enter your last name.\n";
+                }
 
                 //Check if there are any errors.
                 if(!str_errorMessage.isEmpty())
                 {
                     //TODO: Display Error Message String Somewhere on Page
+                    AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+
+                    builder.setTitle("Input Issues");
+                    str_errorMessage = "Please fix the following issues: \n" + str_errorMessage;
+                    builder.setMessage(str_errorMessage);
+                    // Add the buttons.
+                    builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User taps OK button.
+                            dialog.cancel();
+                        }
+                    });
+
+                    // Create the AlertDialog.
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
 
                     return;
                 }
@@ -191,19 +237,5 @@ public class CreateAccount extends AppCompatActivity
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-    }
-    //Takes a string and ensures that specific characters do not occur
-    private boolean isValid(String str_stringToValidate)
-    {
-        char[] char_arr = str_stringToValidate.toCharArray();
-        //Must check for these characters: ; : \\ \n
-        for (char c : char_arr)
-        {
-            if (c == ':' || c == ';' || c == '\\' || c == '\n')
-            {
-                return false;
-            }
-        }
-        return true;
     }
 }
