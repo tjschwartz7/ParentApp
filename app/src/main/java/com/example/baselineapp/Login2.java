@@ -182,7 +182,6 @@ public class Login2 extends AppCompatActivity {
                             if(!notificationServiceIsRunning)
                             {
                                 Globals.setNotificationService(new Intent( Login2.this, NotificationService. class ));
-                                System.out.println("Creating notification setup service... now!");
                                 startService(new Intent( Login2.this, NotificationSetup. class ));
                             }
 
@@ -190,7 +189,6 @@ public class Login2 extends AppCompatActivity {
                             if(!TCPClientServiceIsRunning)
                             {
                                 Globals.setTCPServerService(new Intent( Login2.this, TCPServerService. class ));
-                                System.out.println("Creating TCP Client service... now!");
                                 startService(new Intent( Login2.this, TCPServerService. class ));
                             }
 
