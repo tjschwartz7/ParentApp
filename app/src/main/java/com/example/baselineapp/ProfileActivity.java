@@ -1,5 +1,6 @@
 package com.example.baselineapp;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -11,6 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -94,7 +96,8 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
         edt_firstNameBaby.setText(Globals.getMap().get("Baby First Name"));
-        edt_emailParent.setText(Globals.getMap().get("Email"));
+        String str_emailParentStored = Globals.getMap().get("Email");
+        edt_emailParent.setText(str_emailParentStored);
         edt_phoneNumberParent.setText(Globals.getMap().get("Phone Number"));
         edt_firstNameParent.setText(Globals.getMap().get("First Name"));
         edt_lastNameParent.setText(Globals.getMap().get("Last Name"));
@@ -117,27 +120,6 @@ public class ProfileActivity extends AppCompatActivity {
 
                 String str_errorMessage = "";
 
-                //TODO: Check if email address already exists
-                //Email validation
-                if(!EmailValidator.getInstance().isValid(str_emailParent))
-                {
-                    str_errorMessage += "There was a problem with the email address you entered. Please make sure that your email address was typed correctly.\n";
-                }
-                //Secondary email validation (: and ; characters are not allowed)
-                if(!isValid(str_emailParent))
-                {
-                    str_errorMessage += "There was a problem with the email address you entered. Colons (:), semi-colons (;) and backslashes (\\) are not allowed.\n";
-                }
-                if(str_emailParent.isEmpty())
-                {
-                    str_errorMessage += "Please enter an email address.\n";
-                }
-                if(str_phoneNumberParent.length() != 10)
-                {
-                    str_errorMessage += "Please ensure a proper phone number has been entered. Phone numbers must follow the standard US telephone number format. Example: (123) 456-7890.\n";
-                }
-                //TODO: Need additional validations (no empty strings allowed, only numbers for phone number, passwordParent and passwordConfirm must match, etc.)
-
                 int currentYear = Calendar.getInstance().get(Calendar.YEAR);
                 int birthYear = dp_birthdayPicker.getYear();
 
@@ -151,18 +133,76 @@ public class ProfileActivity extends AppCompatActivity {
                 int birthDateId = birthYear * 10000 + birthMonth*100 + birthDay;
                 int currentDateId = currentYear * 10000 + currentMonth*100 + currentDay;
 
-                //If date is valid (before or equal to current day)
-                if(currentDateId < birthDateId)
+                ReaderWriter rw = new ReaderWriter();
+                if(!str_emailParentStored.equals(str_emailParent) && rw.scanTextFileForEmail(v.getContext(), str_emailParent))
                 {
-                    str_errorMessage += "Invalid baby birthday selected. Please pick a date on or before today in the calendar.";
+                    str_errorMessage += "- Account with this email already exists.\n";
+                }
+                //Email validation
+                if(!EmailValidator.getInstance().isValid(str_emailParent))
+                {
+                    str_errorMessage += "- Email address is not formatted correctly.\n";
+                }
+                //Secondary email validation (: \ and ; characters are not allowed)
+                String str_emailBadCharacters = TextValidator.isValid(str_emailParent);
+                if(!str_emailBadCharacters.isEmpty())
+                {
+                    str_errorMessage += "- Email address contains invalid characters: (" + str_emailBadCharacters + ")\n";
+                }
+                if(str_emailParent.isEmpty())
+                {
+                    str_errorMessage += "- Please enter an email address.\n";
+                }
+                if(str_phoneNumberParent.length() != 10)
+                {
+                    str_errorMessage += "- Phone numbers must be 10 digits (US only).\n";
                 }
 
+                //Check if first name is alphabetical.
+                //Primary name validation. Check if string is all alphabetical characters.
+                if(!TextValidator.isAlpha(str_firstNameParent) || !TextValidator.isAlpha(str_lastNameParent) || !TextValidator.isAlpha(str_babyFirstName))
+                {
+                    str_errorMessage += "- Only English letters allowed in names.\n";
+                }
+                if(str_firstNameParent.isEmpty())
+                {
+                    str_errorMessage += "- Please enter your first name.\n";
+                }
+                if(str_lastNameParent.isEmpty())
+                {
+                    str_errorMessage += "- Please enter your last name.\n";
+                }
 
+                if(str_babyFirstName.isEmpty())
+                {
+                    str_errorMessage += "- Please enter baby's first name/nickname.\n";
+                }
+
+                //If current date is not valid (before selected birthday)
+                if(currentDateId < birthDateId)
+                {
+                    str_errorMessage += "- Date selected must be before current date.\n";
+                }
 
                 //Check if there are any errors.
                 if(!str_errorMessage.isEmpty())
                 {
-                    //TODO: Display Error Message String Somewhere on Page
+                    AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+
+                    builder.setTitle("Input Issues");
+                    str_errorMessage = "Please fix the following issues: \n" + str_errorMessage;
+                    builder.setMessage(str_errorMessage);
+                    // Add the buttons.
+                    builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User taps OK button.
+                            dialog.cancel();
+                        }
+                    });
+
+                    // Create the AlertDialog.
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
 
                     return;
                 }
@@ -174,7 +214,6 @@ public class ProfileActivity extends AppCompatActivity {
                 writeMap.put("First Name", str_firstNameParent);
                 writeMap.put("Last Name", str_lastNameParent);
 
-                ReaderWriter rw = new ReaderWriter();
                 rw.writeDataToTextFile(v.getContext(), writeMap);
                 Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
                 startActivity(intent);
