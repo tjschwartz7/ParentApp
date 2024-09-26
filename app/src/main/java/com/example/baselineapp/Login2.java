@@ -5,6 +5,8 @@ import android.Manifest;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -24,6 +26,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.textfield.TextInputEditText;
+
+import org.apache.commons.validator.routines.EmailValidator;
 
 import org.apache.commons.validator.routines.EmailValidator;
 
@@ -122,6 +126,10 @@ public class Login2 extends AppCompatActivity {
                 }
             }
         });
+
+        //TODO: CHECK THIS!!!
+        //ReaderWriter rw = new ReaderWriter();
+        //rw.readTextFileAndInitiallyPopulateGlobals(this);
 
         //TODO: CHECK THIS!!!
         //ReaderWriter rw = new ReaderWriter();
@@ -257,8 +265,6 @@ public class Login2 extends AppCompatActivity {
                 finish();
             }
         });
-
-
 
         Button btn_signUp = (Button) findViewById(R.id.id_signUp);
         btn_signUp.setOnClickListener(new View.OnClickListener() {
