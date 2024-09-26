@@ -19,6 +19,7 @@ import java.util.TimerTask ;
 public class NotificationService extends Service {
     public static final String NOTIFICATION_CHANNEL_ID = "10001" ;
     private final static String default_notification_channel_id = "default" ;
+    private static boolean bool_connectionErrorNotifiedFlag = false;
     Timer shortTimer;
     Timer longTimer;
     TimerTask shortTimerTask ;
@@ -59,6 +60,15 @@ public class NotificationService extends Service {
             .setContentText("Your baby is safe with us")
             .setStyle(new NotificationCompat.BigTextStyle()
                     .bigText("Notifications will be sent if anything seems off."))
+            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setAutoCancel(true);
+
+    NotificationCompat.Builder notif_nannyNotConnected = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_dashboard_black_24dp)
+            .setContentTitle("Not receiving baby data")
+            .setContentText("Having trouble connecting to the Nanny.")
+            .setStyle(new NotificationCompat.BigTextStyle()
+                    .bigText("Try making sure you're wi-fi is working."))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true);
 
@@ -179,18 +189,40 @@ public class NotificationService extends Service {
             return;
         }
 
+        //If client is connected and we've sent the connection error flag,
+        //we can reset it now for future disconnects.
+        if(Globals.getClientIsConnected() && bool_connectionErrorNotifiedFlag)
+        {
+            bool_connectionErrorNotifiedFlag = false;
+        }
 
+        if(Globals.getClientIsConnected())
+            sendBabyVitalsNotifications();
+        else if(!bool_connectionErrorNotifiedFlag) //If we haven't already sent the warning
+        {
+            //Notify
+            assert mNotificationManager != null;
+            mNotificationManager.notify(( int ) System. currentTimeMillis () , notif_nannyNotConnected.build()) ;
+            bool_connectionErrorNotifiedFlag = true;
+        }
+
+
+
+    }
+
+    void sendBabyVitalsNotifications()
+    {
         //Read lots of data from Globals for readability sake
         boolean pulseWarning    = Globals.getPulseVal() >= Globals.getPulseHighWarningThreshold() ||
-                                  Globals.getPulseVal() <= Globals.getPulseLowWarningThreshold();
+                Globals.getPulseVal() <= Globals.getPulseLowWarningThreshold();
         boolean tempWarning     = Globals.getTempVal() >= Globals.getTempHighWarningThreshold() ||
-                                  Globals.getTempVal() <= Globals.getTempLowWarningThreshold();
+                Globals.getTempVal() <= Globals.getTempLowWarningThreshold();
         boolean bloodOxWarning  = Globals.getBloodOxVal() <= Globals.getBloodOxLowWarningThreshold();
 
         boolean pulseCaution    = Globals.getPulseVal() >= Globals.getPulseHighCautionThreshold() ||
-                                  Globals.getPulseVal() <= Globals.getPulseLowCautionThreshold();
+                Globals.getPulseVal() <= Globals.getPulseLowCautionThreshold();
         boolean tempCaution     = Globals.getTempVal() >= Globals.getTempHighCautionThreshold() ||
-                                  Globals.getTempVal() <= Globals.getTempLowCautionThreshold();
+                Globals.getTempVal() <= Globals.getTempLowCautionThreshold();
         boolean bloodOxCaution  = Globals.getBloodOxVal() <= Globals.getBloodOxLowCautionThreshold();
         boolean isWarningActive = Globals.isWarningActive();
         boolean isCautionActive = Globals.isCautionActive();
@@ -267,8 +299,8 @@ public class NotificationService extends Service {
             Globals.setCautionActive(false);
             Globals.setWarningActive(false);
         }
-
     }
+
 
     void handleThresholds()
     {

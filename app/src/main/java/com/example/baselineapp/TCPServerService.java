@@ -50,6 +50,7 @@ public class TCPServerService extends Service {
     private class ServerRunnable implements Runnable {
         @Override
         public void run() {
+            Globals.setClientIsConnected(false);
             try {
 
                 serverSocket = new ServerSocket(SERVER_PORT, 5, InetAddress.getByName("0.0.0.0"));
@@ -58,10 +59,12 @@ public class TCPServerService extends Service {
                 while (isRunning) {
                     Log.d(TAG, "Waiting... ");
                     Socket clientSocket = serverSocket.accept(); // Accept incoming connections
+                    //Globals.setClientIsConnected(true);
                     Log.d(TAG, "Client connected: " + clientSocket.getInetAddress());
 
                     new ClientHandler(clientSocket).run();
                 }
+
             } catch (Exception e) {
                 Log.e(TAG, "Server error: " + e.getMessage());
             }

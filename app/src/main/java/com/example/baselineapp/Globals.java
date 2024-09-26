@@ -20,7 +20,7 @@ public final class Globals extends Application
 
     //---------------------------------------------------------
     //TCP Connection data
-    private static Boolean bool_isConnected;
+    private static Boolean bool_isConnected  = false;
 
     private static Boolean bool_sendShutdownCommand;
 
@@ -106,8 +106,8 @@ public final class Globals extends Application
         return bool_isConnected;
     }
 
-    public static void setClientIsConnected(Boolean bool_isConnected) {
-        Globals.bool_isConnected = bool_isConnected;
+    public static void setClientIsConnected(Boolean isConnected) {
+        Globals.bool_isConnected = isConnected;
     }
 
 
