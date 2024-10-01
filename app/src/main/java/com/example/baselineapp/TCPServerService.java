@@ -59,7 +59,7 @@ public class TCPServerService extends Service {
                 while (isRunning) {
                     Log.d(TAG, "Waiting... ");
                     Socket clientSocket = serverSocket.accept(); // Accept incoming connections
-                    //Globals.setClientIsConnected(true);
+                    Globals.setClientIsConnected(true);
                     Log.d(TAG, "Client connected: " + clientSocket.getInetAddress());
 
                     new ClientHandler(clientSocket).run();

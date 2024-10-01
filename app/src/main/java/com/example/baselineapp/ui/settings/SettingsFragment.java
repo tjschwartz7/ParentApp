@@ -65,9 +65,10 @@ public class SettingsFragment extends Fragment {
                     AsyncTask.execute(new Runnable() {
                         @Override
                         public void run() {
+                            //Shut down all of our services
                             getActivity().getApplication().stopService(Globals.getNotificationService());
                             getActivity().getApplication().stopService(Globals.getTCPServerService());
-
+                            getActivity().getApplication().stopService(Globals.getUdpServerService());
                         }
                     });
 

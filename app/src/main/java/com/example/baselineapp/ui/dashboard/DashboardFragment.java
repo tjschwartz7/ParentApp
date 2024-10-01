@@ -153,7 +153,7 @@ public class DashboardFragment extends Fragment {
 
                     try
                     {
-                        // Sleep for 5 seconds
+                        // Sleep for 3 seconds
                         Thread.sleep(3*1000);
                     }
                     catch (Exception e)

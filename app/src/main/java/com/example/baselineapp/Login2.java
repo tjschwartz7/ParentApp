@@ -245,13 +245,20 @@ public class Login2 extends AppCompatActivity {
                             startService(new Intent( Login2.this, NotificationSetup. class ));
                         }
 
-                        boolean TCPClientServiceIsRunning = isMyServiceRunning(TCPServerService.class, getApplicationContext());
-                        if(!TCPClientServiceIsRunning)
+                        boolean TCPServiceIsRunning = isMyServiceRunning(TCPServerService.class, getApplicationContext());
+                        if(!TCPServiceIsRunning)
                         {
                             Globals.setTCPServerService(new Intent( Login2.this, TCPServerService. class ));
                             startService(new Intent( Login2.this, TCPServerService. class ));
                         }
 
+                        boolean UDPServiceIsRunning = isMyServiceRunning(UDPServerService.class, getApplicationContext());
+                        if(!UDPServiceIsRunning)
+                        {
+                            Log.d("UDP Testing", "Creating UDP service!");
+                            Globals.setUdpServerService(new Intent( Login2.this, UDPServerService. class ));
+                            startService(new Intent( Login2.this, UDPServerService. class ));
+                        }
 
                     }
                 });

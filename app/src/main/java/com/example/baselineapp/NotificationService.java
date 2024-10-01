@@ -19,7 +19,8 @@ import java.util.TimerTask ;
 public class NotificationService extends Service {
     public static final String NOTIFICATION_CHANNEL_ID = "10001" ;
     private final static String default_notification_channel_id = "default" ;
-    private static boolean bool_connectionErrorNotifiedFlag = false;
+    private static boolean bool_tcpConnectionErrorNotifiedFlag = false;
+    private static boolean bool_udpConnectionErrorNotifiedFlag = false;
     Timer shortTimer;
     Timer longTimer;
     TimerTask shortTimerTask ;
@@ -68,7 +69,16 @@ public class NotificationService extends Service {
             .setContentTitle("Not receiving baby data")
             .setContentText("Having trouble connecting to the Nanny.")
             .setStyle(new NotificationCompat.BigTextStyle()
-                    .bigText("Try making sure you're wi-fi is working."))
+                    .bigText("Try making sure your wi-fi is working."))
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setAutoCancel(true);
+
+    NotificationCompat.Builder notif_nannyCamNotConnected = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_dashboard_black_24dp)
+            .setContentTitle("Not receiving A/V data")
+            .setContentText("Having trouble connecting to your Nanny Cam.")
+            .setStyle(new NotificationCompat.BigTextStyle()
+                    .bigText("Try making sure your wi-fi is working."))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true);
 
@@ -191,19 +201,36 @@ public class NotificationService extends Service {
 
         //If client is connected and we've sent the connection error flag,
         //we can reset it now for future disconnects.
-        if(Globals.getClientIsConnected() && bool_connectionErrorNotifiedFlag)
+        if(Globals.getClientIsConnected() && bool_tcpConnectionErrorNotifiedFlag)
         {
-            bool_connectionErrorNotifiedFlag = false;
+            bool_tcpConnectionErrorNotifiedFlag = false;
         }
 
         if(Globals.getClientIsConnected())
             sendBabyVitalsNotifications();
-        else if(!bool_connectionErrorNotifiedFlag) //If we haven't already sent the warning
+        else if(!bool_tcpConnectionErrorNotifiedFlag) //If we haven't already sent the warning
         {
             //Notify
             assert mNotificationManager != null;
             mNotificationManager.notify(( int ) System. currentTimeMillis () , notif_nannyNotConnected.build()) ;
-            bool_connectionErrorNotifiedFlag = true;
+            bool_tcpConnectionErrorNotifiedFlag = true;
+        }
+
+        Log.d(TAG, "Is UDP connected: " + Globals.getUDPIsConnected() );
+        Log.d(TAG, "Notified: " + bool_udpConnectionErrorNotifiedFlag);
+        //If client is connected and we've sent the connection error flag,
+        //we can reset it now for future disconnects.
+        if(Globals.getUDPIsConnected() && bool_udpConnectionErrorNotifiedFlag)
+        {
+            bool_udpConnectionErrorNotifiedFlag = false;
+        }
+
+        if(!Globals.getUDPIsConnected() && !bool_udpConnectionErrorNotifiedFlag) //If we haven't already sent the warning
+        {
+            //Notify
+            assert mNotificationManager != null;
+            mNotificationManager.notify(( int ) System. currentTimeMillis () , notif_nannyCamNotConnected.build()) ;
+            bool_udpConnectionErrorNotifiedFlag = true;
         }
 
 

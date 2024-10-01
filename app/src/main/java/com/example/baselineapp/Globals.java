@@ -22,15 +22,24 @@ public final class Globals extends Application
     //TCP Connection data
     private static Boolean bool_isConnected  = false;
 
-    private static Boolean bool_sendShutdownCommand;
+    private static Boolean bool_sendShutdownCommand = false;
 
-    private static Boolean bool_sendPowerEnableCommand;
+    private static Boolean bool_sendPowerEnableCommand = false;
+
+    //---------------------------------------------------------
+    //UDP Connection data
+
+    private static double dbl_timeSinceLastMessageSent = 0;
+    private static double dbl_timeOfLastMessageSend = 0;
+    private static Boolean bool_udpIsConnected = false;
+
 
     //---------------------------------------------------------
     //Instance data
     private static Boolean bool_loggedIn;
     private static Intent NotificationService;
     private static Intent TcpServerService;
+    private static Intent UdpServerService;
 
 
     //---------------------------------------------------------
@@ -110,6 +119,32 @@ public final class Globals extends Application
         Globals.bool_isConnected = isConnected;
     }
 
+    //---------------------------------------------------------
+    //UDP Connection Information
+
+    public static double getTimeSinceLastUDPMessageSent() {
+        return dbl_timeSinceLastMessageSent;
+    }
+
+    public static void setTimeSinceLastUDPMessageSent(double dbl_timeSinceLastMessageSent) {
+        Globals.dbl_timeSinceLastMessageSent = dbl_timeSinceLastMessageSent;
+    }
+
+    public static double getTimeOfLastUDPMessageSend() {
+        return dbl_timeOfLastMessageSend;
+    }
+
+    public static void setTimeOfLastUDPMessageSend(double dbl_timeOfLastMessageSend) {
+        Globals.dbl_timeOfLastMessageSend = dbl_timeOfLastMessageSend;
+    }
+
+    public static Boolean getUDPIsConnected() {
+        return bool_udpIsConnected;
+    }
+
+    public static void setUDPIsConnected(Boolean bool_udpIsConnected) {
+        Globals.bool_udpIsConnected = bool_udpIsConnected;
+    }
 
     //---------------------------------------------------------
     //Instance Information
@@ -132,6 +167,14 @@ public final class Globals extends Application
 
     public static void setNotificationService(Intent notificationService) {
         NotificationService = notificationService;
+    }
+
+    public static Intent getUdpServerService() {
+        return UdpServerService;
+    }
+
+    public static void setUdpServerService(Intent udpServerService) {
+        UdpServerService = udpServerService;
     }
 
     //---------------------------------------------------------
