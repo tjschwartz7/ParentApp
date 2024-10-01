@@ -40,6 +40,7 @@ public class TCPServerService extends Service {
             Log.e(TAG, "Error closing server socket: " + e.getMessage());
         }
         Log.d(TAG, "Server stopped");
+        Globals.setClientIsConnected(false);
     }
 
     @Override

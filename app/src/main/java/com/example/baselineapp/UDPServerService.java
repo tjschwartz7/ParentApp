@@ -36,6 +36,7 @@ public class UDPServerService extends Service {
             Log.e(TAG, "Error closing socket: " + e.getMessage());
         }
         Log.d(TAG, "Server socket stopped");
+        Globals.setClientIsConnected(false);
     }
 
     @Override
