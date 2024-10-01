@@ -63,16 +63,13 @@ public class UDPServerService extends Service {
                 heartbeat();
 
                 while (isRunning) {
-                    Log.d(TAG, "Waiting... ");
-                    byte[] buffer = new byte[256];
-                    //This is our packet
-                    DatagramPacket request = new DatagramPacket(buffer, buffer.length);
-                    serverSocket.receive(request); //Blocking wait
+
+                    HandleRequest();
+
                     //Check if we're disconnected to avoid needless writing
                     if(!Globals.getUDPIsConnected())
                         //We've just received a message, so we should be connected
                         Globals.setUDPIsConnected(true);
-                    Log.d(TAG, "Bits received: " + buffer.toString());
                     //Reset our start time
                     Globals.setTimeOfLastUDPMessageSend(System.currentTimeMillis());
                 }
@@ -83,6 +80,54 @@ public class UDPServerService extends Service {
         }
     }
 
+
+    public void HandleRequest()
+    {
+        final int SERVER_PORT = 13007;
+        DatagramSocket socket = null;
+        try {
+            InetAddress bindAddress = InetAddress.getByName("0.0.0.0");
+            System.out.println(bindAddress.getHostName());
+
+            // Create a DatagramSocket to listen on port 13002
+            socket = new DatagramSocket(SERVER_PORT, bindAddress);
+            byte[] receiveData = new byte[1024];
+
+            System.out.println("UDP Server is listening on port " + SERVER_PORT);
+            System.out.println("Inet connection: " + socket.getInetAddress());
+
+            while (isRunning) {
+                // Prepare to receive data
+                DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+
+                // Receive packet from client
+                socket.receive(receivePacket);
+                // Get client's address and port
+                InetAddress clientAddress = receivePacket.getAddress();
+                int clientPort = receivePacket.getPort();
+
+                // Convert received data to string
+                String receivedMessage = new String(receivePacket.getData(), 0, receivePacket.getLength());
+                Log.d(TAG, "Received from client: " + receivedMessage);
+
+                // Send response back to the client
+                String responseMessage = "Hello from the server!";
+                byte[] sendData = responseMessage.getBytes();
+
+                DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, clientAddress, clientPort);
+                socket.send(sendPacket);
+            }
+
+            socket.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (socket != null && !socket.isClosed()) {
+                socket.close();
+            }
+        }
+    }
 
     public void heartbeat()
     {
