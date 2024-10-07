@@ -141,15 +141,21 @@ public class DashboardFragment extends Fragment {
             public void run() {
                 while (Globals.userLoggedIn())
                 {
-                    // Update TextView in runOnUiThread
-                    getActivity().runOnUiThread(new Runnable()
-                    {
-                        @Override
-                        public void run()
+                    try {
+                        // Update TextView in runOnUiThread
+                        getActivity().runOnUiThread(new Runnable()
                         {
-                            updatePage();
-                        }
-                    });
+                            @Override
+                            public void run()
+                            {
+                                updatePage();
+                            }
+                        });
+                    }catch(Exception ex)
+                    {
+                        System.out.println(ex.getMessage());
+                    }
+
 
                     try
                     {

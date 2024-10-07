@@ -16,7 +16,7 @@ import java.net.Socket;
 
 public class TCPServerService extends Service {
     private static final String TAG = "TcpServerService";
-    private static final int SERVER_PORT = 13000; // Your chosen port number
+    private static final int SERVER_PORT = 13000;
     private ServerSocket serverSocket;
     private boolean isRunning;
 
@@ -82,7 +82,6 @@ public class TCPServerService extends Service {
         @Override
         public void run() {
             try {
-                //Shouldn't need these
                 PrintWriter out =
                         new PrintWriter(clientSocket.getOutputStream(), true);
                 BufferedReader in = new BufferedReader(

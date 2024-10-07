@@ -196,7 +196,7 @@ public class Login2 extends AppCompatActivity {
                 catch (IOException e)
                 {
                     // Error occurred when opening raw file for reading.
-                    e.printStackTrace();
+                    Log.e("Login", e.getMessage());
                 }
 
                 if(str_emailInput.isEmpty())

@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -54,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
         //Start our NotificationSetup class
         //This will do all of the setup work and eventually start our NotificationService class
         //Which handles notification logic and sending later
-        System.out.println("Creating notification setup service... now!");
         startService(new Intent( this, NotificationSetup.class ));
 
     }

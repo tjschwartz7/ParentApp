@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,9 +67,15 @@ public class SettingsFragment extends Fragment {
                         @Override
                         public void run() {
                             //Shut down all of our services
-                            getActivity().getApplication().stopService(Globals.getNotificationService());
-                            getActivity().getApplication().stopService(Globals.getTCPServerService());
-                            getActivity().getApplication().stopService(Globals.getUdpServerService());
+                            try {
+                                getActivity().getApplication().stopService(Globals.getNotificationService());
+                                getActivity().getApplication().stopService(Globals.getTCPServerService());
+                                getActivity().getApplication().stopService(Globals.getUdpServerService());
+                            }catch(Exception ex){
+                                Log.e("Settings", ex.getMessage());
+                            }
+
+
                         }
                     });
 

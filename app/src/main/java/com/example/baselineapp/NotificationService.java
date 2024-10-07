@@ -127,7 +127,6 @@ public class NotificationService extends Service {
             stopTimerTask();
         } catch (Exception e) {
             Log.e(TAG, "Error in onDestroy: " + e.getMessage());
-            e.printStackTrace(); // Print the stack trace to understand where the issue is
         } finally {
             super.onDestroy(); // Always call super.onDestroy() in the end
         }
@@ -195,7 +194,7 @@ public class NotificationService extends Service {
                 Manifest.permission.POST_NOTIFICATIONS
         ) != PackageManager.PERMISSION_GRANTED)
         {
-            System.out.println("Permission denied");
+            Log.e(TAG,"Permission denied");
             return;
         }
 
@@ -216,6 +215,9 @@ public class NotificationService extends Service {
             bool_tcpConnectionErrorNotifiedFlag = true;
         }
 
+        //We'll do it here because I can't make anymore threads in the UDP service :(
+        Globals.setTimeSinceLastUDPMessageSent(System.currentTimeMillis() - Globals.getTimeOfLastUDPMessageSend());
+        Globals.setUDPIsConnected(Globals.getTimeSinceLastUDPMessageSent() < 5000);
         Log.d(TAG, "Is UDP connected: " + Globals.getUDPIsConnected() );
         Log.d(TAG, "Notified: " + bool_udpConnectionErrorNotifiedFlag);
         //If client is connected and we've sent the connection error flag,
