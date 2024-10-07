@@ -238,6 +238,8 @@ public class Login2 extends AppCompatActivity {
                     @Override
                     public void run() {
 
+
+                        Globals.setLoggedIn(true);
                         boolean notificationServiceIsRunning = isMyServiceRunning(NotificationService.class, getApplicationContext());
                         if(!notificationServiceIsRunning)
                         {
@@ -263,7 +265,7 @@ public class Login2 extends AppCompatActivity {
                     }
                 });
 
-                Globals.setLoggedIn(true);
+
 
 
                 //ReaderWriter rw = new ReaderWriter();

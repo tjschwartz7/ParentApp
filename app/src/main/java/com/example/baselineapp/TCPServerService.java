@@ -87,19 +87,9 @@ public class TCPServerService extends Service {
                 BufferedReader in = new BufferedReader(
                         new InputStreamReader(clientSocket.getInputStream()));
 
-                AsyncTask.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        ClientHandler(in);
-                    }
-                });
+                ServerHandler(out);
+                ClientHandler(in);
 
-                AsyncTask.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        ServerHandler(out);
-                    }
-                });
             } catch (Exception e) {
                 Log.e(TAG, "Client error: " + e.getMessage());
             } finally {

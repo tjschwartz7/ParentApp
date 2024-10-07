@@ -218,8 +218,6 @@ public class NotificationService extends Service {
         //We'll do it here because I can't make anymore threads in the UDP service :(
         Globals.setTimeSinceLastUDPMessageSent(System.currentTimeMillis() - Globals.getTimeOfLastUDPMessageSend());
         Globals.setUDPIsConnected(Globals.getTimeSinceLastUDPMessageSent() < 5000);
-        Log.d(TAG, "Is UDP connected: " + Globals.getUDPIsConnected() );
-        Log.d(TAG, "Notified: " + bool_udpConnectionErrorNotifiedFlag);
         //If client is connected and we've sent the connection error flag,
         //we can reset it now for future disconnects.
         if(Globals.getUDPIsConnected() && bool_udpConnectionErrorNotifiedFlag)
