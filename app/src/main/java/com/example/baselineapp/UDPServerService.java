@@ -6,9 +6,13 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
 
 public class UDPServerService extends Service {
     private static final String TAG = "UDPServerService";
@@ -20,6 +24,7 @@ public class UDPServerService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "Server starting");
         isRunning = true;
+        SendIPAddressToClient();
         new Thread(new ServerRunnable()).start();
         return START_NOT_STICKY;
     }
@@ -44,6 +49,36 @@ public class UDPServerService extends Service {
         return null; // Not a bound service
     }
 
+    private void SendIPAddressToClient()
+    {
+        String serverHostname = "headlesswifi.local";  // Remote host
+        int serverPort = 13000;  // Replace with the remote server port
+        try {
+            // Get the current IP address of the machine
+            InetAddress localHost = InetAddress.getLocalHost();
+            String currentIpAddress = localHost.getHostAddress();
+            Log.d(TAG, "Your current IP Address: " + currentIpAddress);
+
+            // Connect to the server
+            Socket socket = new Socket(serverHostname, serverPort);
+            Log.d(TAG, "Connected to server at " + serverHostname + ":" + serverPort);
+
+            // Send the IP address to the server
+            DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());
+            outputStream.writeUTF(currentIpAddress);
+            Log.d(TAG, "IP Address sent to the server: " + currentIpAddress);
+
+            // Close the connection
+            outputStream.close();
+            socket.close();
+            Log.d(TAG, "Connection closed.");
+
+        } catch (UnknownHostException e) {
+            Log.e(TAG, "Unable to find local host.");
+        } catch (IOException e) {
+            Log.e(TAG, "IO error occurred.");
+        }
+    }
     private class ServerRunnable implements Runnable {
         @Override
         public void run() {
@@ -70,7 +105,7 @@ public class UDPServerService extends Service {
 
     public void HandleRequest()
     {
-        DatagramSocket socket = null;
+        serverSocket = null;
         try {
             //Listen on SERVER_PORT under all IP addresses on the network
             InetAddress bindAddress = InetAddress.getByName("0.0.0.0");
@@ -78,7 +113,7 @@ public class UDPServerService extends Service {
 
 
             // Create a DatagramSocket to listen on port 13002
-            socket = new DatagramSocket(SERVER_PORT, bindAddress);
+            serverSocket = new DatagramSocket(SERVER_PORT, bindAddress);
             byte[] receiveData = new byte[1024];
 
             while (isRunning) {
@@ -86,7 +121,7 @@ public class UDPServerService extends Service {
                 DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
 
                 // Receive packet from client
-                socket.receive(receivePacket);
+                serverSocket.receive(receivePacket);
                 // Get client's address and port
                 InetAddress clientAddress = receivePacket.getAddress();
                 int clientPort = receivePacket.getPort();
@@ -103,13 +138,13 @@ public class UDPServerService extends Service {
                 Globals.setTimeOfLastUDPMessageSend(System.currentTimeMillis());
             }
 
-            socket.close();
+            serverSocket.close();
 
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         } finally {
-            if (socket != null && !socket.isClosed()) {
-                socket.close();
+            if (serverSocket != null && !serverSocket.isClosed()) {
+                serverSocket.close();
             }
         }
     }
