@@ -6,25 +6,28 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
 
+import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
 public class UDPServerService extends Service {
     private static final String TAG = "UDPServerService";
     private static final int SERVER_PORT = 13002; // Our port we're using
     private DatagramSocket serverSocket;
-    private boolean isRunning;
+    private volatile boolean isRunning;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "Server starting");
         isRunning = true;
-        SendIPAddressToClient();
+
         new Thread(new ServerRunnable()).start();
         return START_NOT_STICKY;
     }
@@ -49,36 +52,6 @@ public class UDPServerService extends Service {
         return null; // Not a bound service
     }
 
-    private void SendIPAddressToClient()
-    {
-        String serverHostname = "headlesswifi.local";  // Remote host
-        int serverPort = 13000;  // Replace with the remote server port
-        try {
-            // Get the current IP address of the machine
-            InetAddress localHost = InetAddress.getLocalHost();
-            String currentIpAddress = localHost.getHostAddress();
-            Log.d(TAG, "Your current IP Address: " + currentIpAddress);
-
-            // Connect to the server
-            Socket socket = new Socket(serverHostname, serverPort);
-            Log.d(TAG, "Connected to server at " + serverHostname + ":" + serverPort);
-
-            // Send the IP address to the server
-            DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());
-            outputStream.writeUTF(currentIpAddress);
-            Log.d(TAG, "IP Address sent to the server: " + currentIpAddress);
-
-            // Close the connection
-            outputStream.close();
-            socket.close();
-            Log.d(TAG, "Connection closed.");
-
-        } catch (UnknownHostException e) {
-            Log.e(TAG, "Unable to find local host.");
-        } catch (IOException e) {
-            Log.e(TAG, "IO error occurred.");
-        }
-    }
     private class ServerRunnable implements Runnable {
         @Override
         public void run() {
@@ -89,12 +62,7 @@ public class UDPServerService extends Service {
                 //Give the program five seconds to try and connect
                 //before we send off any warnings.
                 Globals.setTimeOfLastUDPMessageSend(System.currentTimeMillis());
-
-                //This is a blocking function
-                HandleRequest();
-
-
-
+                UDPStateMachine();
 
             } catch (Exception e) {
                 Log.e(TAG, "Server error: " + e.getMessage());
@@ -102,8 +70,71 @@ public class UDPServerService extends Service {
         }
     }
 
+    private boolean WaitingState() {
+        String serverHostname = "headlesswifi.local";  // Remote host
+        int serverPort = 13000;  // Replace with the remote server port
+        Socket socket = null;
 
-    public void HandleRequest()
+        try {
+            // Connect to the server
+            socket = new Socket(serverHostname, serverPort);
+            socket.setSoTimeout(5000);  // Set a 5-second timeout
+            Log.d(TAG, "Connected to server at " + serverHostname + ":" + serverPort);
+
+            // Send the IP address to the server
+            DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());
+            outputStream.writeUTF("syn");
+            Log.d(TAG, "Data sent to client.");
+
+            // Reading response from the server
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            String response = in.readLine();  // Read server response (wait up to 5 seconds)
+            Log.d(TAG, "Response from server: " + response);
+
+            // Close the streams
+            outputStream.close();
+            in.close();
+
+            return true;  // Successfully communicated
+
+        } catch (UnknownHostException e) {
+            //Log.e(TAG, "Unable to find local host.");
+        } catch (IOException e) {
+            //Log.e(TAG, "IO error occurred: " + e.getMessage());
+        } finally {
+            // Ensure socket is closed
+            if (socket != null && !socket.isClosed()) {
+                try {
+                    socket.close();
+                    Log.d(TAG, "Connection closed.");
+                } catch (IOException ex) {
+                    Log.e(TAG, "IO Exception closing socket: " + ex.getMessage());
+                }
+            }
+        }
+
+        return false;  // Failed to communicate
+    }
+
+    public void UDPStateMachine()
+    {
+        while(isRunning) {
+            while(!WaitingState()) {
+                try {
+                    Thread.sleep(200);
+                }
+                catch(Exception ex){
+                    Log.e(TAG, "Exception: " + ex.getMessage());
+                }
+            }
+            InputState();
+        }
+
+
+
+    }
+
+    private void InputState()
     {
         serverSocket = null;
         try {
@@ -114,9 +145,11 @@ public class UDPServerService extends Service {
 
             // Create a DatagramSocket to listen on port 13002
             serverSocket = new DatagramSocket(SERVER_PORT, bindAddress);
-            byte[] receiveData = new byte[1024];
+            serverSocket.setSoTimeout(5000); //If it times out, let the function return
 
+            byte[] receiveData = new byte[1024];
             while (isRunning) {
+
                 // Prepare to receive data
                 DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
 
@@ -138,8 +171,8 @@ public class UDPServerService extends Service {
                 Globals.setTimeOfLastUDPMessageSend(System.currentTimeMillis());
             }
 
-            serverSocket.close();
-
+        } catch (SocketTimeoutException ste) {
+            Log.e(TAG, "UDP Timed out: " + ste.getMessage());
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         } finally {
