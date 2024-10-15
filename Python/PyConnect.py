@@ -20,12 +20,19 @@ connection_lost_flag = True
 TCP_PORT = 13002
 UDP_PORT = 13003
 
+#Sockets
+app_socket = socket.socket
+app_address = ""
+
 
 #####################################################################
 # wait_for_remote_ip
 # Waits for the phone app to connect to us before we continue with heartbeats
 # and udp data.
 def get_app_data():
+    global connection_lost_flag
+    global app_socket
+    global app_address
     # Create a socket object
     pi_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     our_address = "0.0.0.0"
@@ -38,7 +45,7 @@ def get_app_data():
         pi_socket.listen(1)
         # Accept a connection
         print(f"Server listening on {our_address}:{TCP_PORT}")
-        app_socket, app_address = pi_socket.accept()
+        app_socket, app_address_tuple = pi_socket.accept()
         print(f"Connection from {app_address}")
         
         try:
@@ -48,43 +55,46 @@ def get_app_data():
                 print(f"Received: {data.decode()}")
                 try:
                     #If this doesn't fail, its valid
-                    ipaddress.ip_address(app_address[0])
+                    ipaddress.ip_address(app_address_tuple[0])
                     # legal
-                    print('Received valid IP Address- %s' % (app_address[0]))
+                    print('Received valid IP Address- %s' % (app_address_tuple[0]))
                     waitingOnIPAddr = False #We got it
                     # Send a response back to the client letting them know we've received their message
                     response = "ack" #Acknowledged rx
                     app_socket.sendall(response.encode())
-                    return app_socket, app_address
+                    connection_lost_flag = False
+                    app_address = app_address_tuple[0]
                 except socket.error:
                     # Not legal - try again!
-                    print('ERROR: Received invalid IP Address- %s' % (app_address))
+                    print('ERROR: Received invalid IP Address- %s' % (app_address_tuple))
 
         
         except Exception as e:
             print(f"Error: {e}")
 
-def run_camera_thread(app_address):
-    camera_thread = threading.Thread(target=run_camera, args=(app_address, UDP_PORT))
+def run_camera_thread():
+    camera_thread = threading.Thread(target=run_camera)
     camera_thread.start()
 
-def run_heartbeat_thread(app_socket):
-    heartbeat_thread = threading.Thread(target=heartbeat, args=(app_socket))
+def run_heartbeat_thread():
+    heartbeat_thread = threading.Thread(target=heartbeat)
     heartbeat_thread.start()
     
 def state_machine():
     global exit_flag
     global connection_lost_flag
-    app_socket = socket.socket
+    global app_socket
+    
     try:
         while not exit_flag:
-            app_socket, app_address_tuple = get_app_data()
+            get_app_data()
             # Create this camera thread to run the whole duration of the program
-            run_heartbeat_thread(app_socket)
-            run_camera_thread(app_address_tuple[0])
+            run_heartbeat_thread()
+            run_camera_thread()
             while not connection_lost_flag:
                 time.sleep(.5) #Cycle spinning
 
+            print("Lost connection. Closing app socket.")
             app_socket.close()
     except KeyboardInterrupt as ki:
         exit_flag = True
@@ -102,14 +112,15 @@ def state_machine():
 # run_camera
 # A thread created to run over the lifecycle of the program, 
 # it collects camera footage and saves it to the current working directory. 
-def run_camera(app_address, port):
+def run_camera():
     global exit_flag  # Declare exit_flag as global to modify it
+    global app_address
     try:
         while(not exit_flag):
             #Retrieve camera data
             #Execute bash script to write raw data to a file
             #Write camera data to file consumer.txt
-            if os.system("rpicam-vid -t 0 --inline -o udp://"+str(app_address)+":" + str(port)) != 0:
+            if os.system("rpicam-vid -t 0 --inline -o udp://"+str(app_address)+":" + str(UDP_PORT)) != 0:
                 exit_flag = True
     except KeyboardInterrupt as ki:
         exit_flag = True
@@ -122,7 +133,8 @@ def run_camera(app_address, port):
 # Thread created to ensure that we stay connected with the main app.
 # If we lose connection, we need to stop sending data, 
 # and then attempt to reconnect.
-def heartbeat(app_socket):
+def heartbeat():
+    global app_socket
     global connection_lost_flag
     
     try:
