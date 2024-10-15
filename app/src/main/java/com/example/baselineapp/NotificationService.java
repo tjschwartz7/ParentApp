@@ -214,10 +214,7 @@ public class NotificationService extends Service {
             mNotificationManager.notify(( int ) System. currentTimeMillis () , notif_nannyNotConnected.build()) ;
             bool_tcpConnectionErrorNotifiedFlag = true;
         }
-
-        //We'll do it here because I can't make anymore threads in the UDP service :(
-        Globals.setTimeSinceLastUDPMessageSent(System.currentTimeMillis() - Globals.getTimeOfLastUDPMessageSend());
-        Globals.setUDPIsConnected(Globals.getTimeSinceLastUDPMessageSent() < 5000);
+        
         //If client is connected and we've sent the connection error flag,
         //we can reset it now for future disconnects.
         if(Globals.getUDPIsConnected() && bool_udpConnectionErrorNotifiedFlag)

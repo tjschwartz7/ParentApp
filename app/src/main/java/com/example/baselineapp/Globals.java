@@ -29,8 +29,6 @@ public final class Globals extends Application
     //---------------------------------------------------------
     //UDP Connection data
 
-    private static double dbl_timeSinceLastMessageSent = 0;
-    private static double dbl_timeOfLastMessageSend = 0;
     private static Boolean bool_udpIsConnected = false;
 
 
@@ -122,21 +120,6 @@ public final class Globals extends Application
     //---------------------------------------------------------
     //UDP Connection Information
 
-    public static double getTimeSinceLastUDPMessageSent() {
-        return dbl_timeSinceLastMessageSent;
-    }
-
-    public static void setTimeSinceLastUDPMessageSent(double dbl_timeSinceLastMessageSent) {
-        Globals.dbl_timeSinceLastMessageSent = dbl_timeSinceLastMessageSent;
-    }
-
-    public static double getTimeOfLastUDPMessageSend() {
-        return dbl_timeOfLastMessageSend;
-    }
-
-    public static void setTimeOfLastUDPMessageSend(double dbl_timeOfLastMessageSend) {
-        Globals.dbl_timeOfLastMessageSend = dbl_timeOfLastMessageSend;
-    }
 
     public static Boolean getUDPIsConnected() {
         return bool_udpIsConnected;

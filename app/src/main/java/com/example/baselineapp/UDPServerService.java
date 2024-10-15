@@ -2,7 +2,6 @@ package com.example.baselineapp;
 
 import android.app.Service;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -14,15 +13,18 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
 public class UDPServerService extends Service {
     private static final String TAG = "UDPServerService";
-    private static final int SERVER_PORT = 13002; // Our port we're using
-    private DatagramSocket serverSocket;
+    private static final int TCP_PORT = 13002;
+    private static final int UDP_PORT = 13003;
     private volatile boolean isRunning;
-
+    private final int socketTimeoutMillis = 20000; //20 seconds
+    private Socket heartbeatSocket;
+    private DatagramSocket videoSocket;
+    private final String serverHostname = "headlesswifi";
+    private byte[] receiveData = new byte[1500];
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "Server starting");
@@ -37,8 +39,11 @@ public class UDPServerService extends Service {
         super.onDestroy();
         isRunning = false;
         try {
-            if (serverSocket != null && !serverSocket.isClosed()) {
-                serverSocket.close();
+            if (videoSocket != null && !videoSocket.isClosed()) {
+                videoSocket.close();
+            }
+            if (heartbeatSocket != null && !heartbeatSocket.isClosed()) {
+                heartbeatSocket.close();
             }
         } catch (Exception e) {
             Log.e(TAG, "Error closing socket: " + e.getMessage());
@@ -57,11 +62,6 @@ public class UDPServerService extends Service {
         public void run() {
             try {
                 Globals.setUDPIsConnected(false); //We haven't connected yet
-
-                //This is our starting point.
-                //Give the program five seconds to try and connect
-                //before we send off any warnings.
-                Globals.setTimeOfLastUDPMessageSend(System.currentTimeMillis());
                 UDPStateMachine();
 
             } catch (Exception e) {
@@ -70,115 +70,112 @@ public class UDPServerService extends Service {
         }
     }
 
-    private boolean WaitingState() {
-        String serverHostname = "headlesswifi.local";  // Remote host
-        int serverPort = 13000;  // Replace with the remote server port
-        Socket socket = null;
+    //State machine:
+    // Loop:
+    //  Loop:
+    //      Connect state
+    //  Initialize UDP stuff
+    //  Loop:
+    //      Send heartbeat
+    //      Input state
 
-        try {
-            // Connect to the server
-            socket = new Socket(serverHostname, serverPort);
-            socket.setSoTimeout(5000);  // Set a 5-second timeout
-            Log.d(TAG, "Connected to server at " + serverHostname + ":" + serverPort);
 
-            // Send the IP address to the server
-            DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());
-            outputStream.writeUTF("syn");
-            Log.d(TAG, "Data sent to client.");
-
-            // Reading response from the server
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            String response = in.readLine();  // Read server response (wait up to 5 seconds)
-            Log.d(TAG, "Response from server: " + response);
-
-            // Close the streams
-            outputStream.close();
-            in.close();
-
-            return true;  // Successfully communicated
-
-        } catch (UnknownHostException e) {
-            //Log.e(TAG, "Unable to find local host.");
-        } catch (IOException e) {
-            //Log.e(TAG, "IO error occurred: " + e.getMessage());
-        } finally {
-            // Ensure socket is closed
-            if (socket != null && !socket.isClosed()) {
-                try {
-                    socket.close();
-                    Log.d(TAG, "Connection closed.");
-                } catch (IOException ex) {
-                    Log.e(TAG, "IO Exception closing socket: " + ex.getMessage());
-                }
-            }
-        }
-
-        return false;  // Failed to communicate
-    }
-
-    public void UDPStateMachine()
-    {
+    public void UDPStateMachine() {
+        //isRunning assumed to be true, if it isn't this should all shut down anyway
         while(isRunning) {
-            while(!WaitingState()) {
+            Log.d(TAG, "Waiting for connection to Nanny at "+serverHostname+":"+ TCP_PORT);
+            while(isRunning) {
+
                 try {
-                    Thread.sleep(200);
+                    Thread.sleep(2000);
+                    Connect();
+                    break;
                 }
                 catch(Exception ex){
                     Log.e(TAG, "Exception: " + ex.getMessage());
                 }
             }
-            InputState();
+            try {
+                Globals.setUDPIsConnected(true);
+                //There's some stuff we only want to do once - do it in here
+                InitializeDatagram();
+                while(isRunning) {
+                    SendHeartbeat();
+                    InputState();
+                }
+            } catch(Exception ex) {
+                Log.e(TAG, "Connection lost: " + ex.getMessage());
+
+            } finally {
+                //Make sure we close our sockets!
+                try {
+                    if(heartbeatSocket != null && !heartbeatSocket.isClosed()) {
+                        heartbeatSocket.close();
+                    }
+                    if(videoSocket != null && !videoSocket.isClosed()) {
+                        videoSocket.close();
+                    }
+                }catch(Exception e) {
+                    Log.e(TAG, "Exception closing socket: " + e.getMessage());
+                }
+                Globals.setUDPIsConnected(false);
+            }
         }
 
 
 
     }
 
-    private void InputState()
+    private void SendHeartbeat() throws IOException {
+        // Send the IP address to the server
+        DataOutputStream heartbeatStream = new DataOutputStream(heartbeatSocket.getOutputStream());
+        //Send heartbeat
+        heartbeatStream.writeUTF("1");
+        Log.d(TAG, "Data sent to client.");
+        Log.d(TAG, "Connected to server at " + serverHostname + ":" + TCP_PORT);
+    }
+
+
+    private void InputState() throws IOException {
+        // Prepare to receive data
+        DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+        // Receive packet from client
+        videoSocket.receive(receivePacket);
+        // Convert received data to string
+        String receivedMessage = new String(receivePacket.getData(), 0, receivePacket.getLength());
+        Log.d(TAG, "Received from client: " + receivedMessage);
+    }
+
+    private void InitializeDatagram() throws IOException {
+        videoSocket = null;
+        //Listen on SERVER_PORT under all IP addresses on the network
+        InetAddress bindAddress = InetAddress.getByName("0.0.0.0");
+        // Create a DatagramSocket to listen on port 13002
+        videoSocket = new DatagramSocket(UDP_PORT, bindAddress);
+        videoSocket.setSoTimeout(socketTimeoutMillis); //If it times out, let the function return
+        Log.d(TAG, "Listening on hostname: " + bindAddress.getHostName());
+    }
+
+    private void Connect() throws IOException, UnknownHostException
     {
-        serverSocket = null;
-        try {
-            //Listen on SERVER_PORT under all IP addresses on the network
-            InetAddress bindAddress = InetAddress.getByName("0.0.0.0");
-            Log.d(TAG, bindAddress.getHostName());
+        heartbeatSocket = null;
+        // Connect to the server
+        heartbeatSocket = new Socket(serverHostname, TCP_PORT);
+        heartbeatSocket.setSoTimeout(socketTimeoutMillis);  // Set a 20-second timeout
+        Log.d(TAG, "Connected to server at " + serverHostname + ":" + TCP_PORT);
 
+        // Send the IP address to the server
+        DataOutputStream outputStream = new DataOutputStream(heartbeatSocket.getOutputStream());
+        outputStream.writeUTF("syn");
+        Log.d(TAG, "Data sent to client.");
 
-            // Create a DatagramSocket to listen on port 13002
-            serverSocket = new DatagramSocket(SERVER_PORT, bindAddress);
-            serverSocket.setSoTimeout(5000); //If it times out, let the function return
+        // Reading response from the server
+        BufferedReader in = new BufferedReader(new InputStreamReader(heartbeatSocket.getInputStream()));
+        String response = in.readLine();  // Read server response (wait up to 5 seconds)
+        Log.d(TAG, "Response from server: " + response);
 
-            byte[] receiveData = new byte[1024];
-            while (isRunning) {
-
-                // Prepare to receive data
-                DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
-
-                // Receive packet from client
-                serverSocket.receive(receivePacket);
-                // Get client's address and port
-                InetAddress clientAddress = receivePacket.getAddress();
-                int clientPort = receivePacket.getPort();
-
-                // Convert received data to string
-                String receivedMessage = new String(receivePacket.getData(), 0, receivePacket.getLength());
-                Log.d(TAG, "Received from client: " + receivedMessage);
-
-                //Check if we're disconnected to avoid needless writing
-                if(!Globals.getUDPIsConnected())
-                    //We've just received a message, so we should be connected
-                    Globals.setUDPIsConnected(true);
-                //Reset our start time
-                Globals.setTimeOfLastUDPMessageSend(System.currentTimeMillis());
-            }
-
-        } catch (SocketTimeoutException ste) {
-            Log.e(TAG, "UDP Timed out: " + ste.getMessage());
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
-        } finally {
-            if (serverSocket != null && !serverSocket.isClosed()) {
-                serverSocket.close();
-            }
-        }
+        // Close the streams
+        outputStream.close();
+        in.close();
     }
 }

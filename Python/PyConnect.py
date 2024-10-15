@@ -11,122 +11,163 @@ import os
 #We send them an 'ack', which 'ack'nowledges that we've received the message,
 #And then we connect to this remote server using the ip they sent us.
 
-def wait_for_remote_ip():
-    server_port = 13000 #Our port
+# Flag to signal the main thread to exit
+exit_flag = False
+#Signals the camera sender to quit sending data (we lost heartbeat)
+connection_lost_flag = True
+
+#Ports
+TCP_PORT = 13002
+UDP_PORT = 13003
+
+
+#####################################################################
+# wait_for_remote_ip
+# Waits for the phone app to connect to us before we continue with heartbeats
+# and udp data.
+def get_app_data():
     # Create a socket object
-    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_address = "0"
+    pi_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    our_address = "0.0.0.0"
     # Bind the socket to the address and port
-    server_socket.bind(("0.0.0.0", server_port))
-    print(f"Server listening on {server_address}:{server_port}")
+    pi_socket.bind((our_address, TCP_PORT))
     
     waitingOnIPAddr = True
     while waitingOnIPAddr:
         # Listen for incoming connections (we only need one connection from the phone app, so 1 backlog)
-        server_socket.listen(1)
+        pi_socket.listen(1)
         # Accept a connection
-        client_socket, client_address = server_socket.accept()
-        print(f"Connection from {client_address}")
+        print(f"Server listening on {our_address}:{TCP_PORT}")
+        app_socket, app_address = pi_socket.accept()
+        print(f"Connection from {app_address}")
         
         try:
             # Receive data from the client
-            data = client_socket.recv(32)
+            data = app_socket.recv(32)
             if data:
                 print(f"Received: {data.decode()}")
-                server_address = client_address
                 try:
                     #If this doesn't fail, its valid
-                    ipaddress.ip_address(server_address)
+                    ipaddress.ip_address(app_address[0])
                     # legal
-                    print('Received valid IP Address- %s' % (server_address))
+                    print('Received valid IP Address- %s' % (app_address[0]))
                     waitingOnIPAddr = False #We got it
                     # Send a response back to the client letting them know we've received their message
                     response = "ack" #Acknowledged rx
-                    client_socket.sendall(response.encode())
-                    print(f"Sent: {response}")
+                    app_socket.sendall(response.encode())
+                    return app_socket, app_address
                 except socket.error:
                     # Not legal - try again!
-                    print('ERROR: Received invalid IP Address- %s' % (server_address))
+                    print('ERROR: Received invalid IP Address- %s' % (app_address))
 
         
         except Exception as e:
             print(f"Error: {e}")
-        
-        finally:
-            # Close the client connection
-            client_socket.close()
-            print(f"Connection with {client_address} closed.")
-            return server_address
+
+def run_camera_thread(app_address):
+    camera_thread = threading.Thread(target=run_camera, args=(app_address, UDP_PORT))
+    camera_thread.start()
+
+def run_heartbeat_thread(app_socket):
+    heartbeat_thread = threading.Thread(target=heartbeat, args=(app_socket))
+    heartbeat_thread.start()
     
-def send_frame(client_socket, server_address, data):
-    byteMessage = bytearray()
-    byteMessage.extend(map(ord, data)) #Transform string into byte array
-    print(f'Sending: {byteMessage}')
-    client_socket.sendto(byteMessage, server_address) 
+def state_machine():
+    global exit_flag
+    global connection_lost_flag
+    app_socket = socket.socket
+    try:
+        while not exit_flag:
+            app_socket, app_address_tuple = get_app_data()
+            # Create this camera thread to run the whole duration of the program
+            run_heartbeat_thread(app_socket)
+            run_camera_thread(app_address_tuple[0])
+            while not connection_lost_flag:
+                time.sleep(.5) #Cycle spinning
 
-# Flag to signal the main thread to exit
-exit_flag = False
-
-def run_camera():
-    global exit_flag  # Declare exit_flag as global to modify it
-    while(not exit_flag):
-        #Retrieve camera data
-        #Execute bash script to write raw data to a file
-        #Write camera data to file consumer.txt
-        if os.system("rpicam-raw -t 2000 --segment 1 -o test%05d.raw") != 0:
-            exit_flag = True
-
-# Collect all data from .raw files
-
-def collect_raw_data_from_directory(client_socket, server_address):
-    # Get the current working directory
-    directory_path = os.getcwd()
-
-    # Iterate over all files in the directory
-    for filename in os.listdir(directory_path):
-        # Check if the file has a .raw extension
-        if filename.endswith(".raw"):
-            file_path = os.path.join(directory_path, filename)
-
-            # Open and read the .raw file
-            with open(file_path, 'r') as file:
-                file_data = file.read()
-                send_frame(client_socket, server_address, file_data)
-            # Delete the file after reading its contents
-            os.remove(file_path)
-            print(f"Deleted file: {filename}")
-
-            print(f"Collected data from: {filename}")
-
-
-def run_client(server_address):
-    # Create a socket object
-    client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    
-    try: 
-        time.sleep(1) #Sleep for a bit to let some frames accumulate
-        while(not exit_flag):
-            collect_raw_data_from_directory(client_socket, server_address)
-            time.sleep(.2)
-    
-    except Exception as e:
-        print(f"Error: {e}")
-    
+            app_socket.close()
+    except KeyboardInterrupt as ki:
+        exit_flag = True
+        connection_lost_flag = True
     finally:
-        # Close the connection
-        client_socket.close()
-        print("Connection closed.")
+        # Wait for the producer thread to finish before exiting
+        print("Main program exiting.")
+        exit_flag = True
+        connection_lost_flag = True
+        app_socket.close()
 
+
+
+#####################################################################
+# run_camera
+# A thread created to run over the lifecycle of the program, 
+# it collects camera footage and saves it to the current working directory. 
+def run_camera(app_address, port):
+    global exit_flag  # Declare exit_flag as global to modify it
+    try:
+        while(not exit_flag):
+            #Retrieve camera data
+            #Execute bash script to write raw data to a file
+            #Write camera data to file consumer.txt
+            if os.system("rpicam-vid -t 0 --inline -o udp://"+str(app_address)+":" + str(port)) != 0:
+                exit_flag = True
+    except KeyboardInterrupt as ki:
+        exit_flag = True
+
+
+
+
+#####################################################################
+# heartbeat
+# Thread created to ensure that we stay connected with the main app.
+# If we lose connection, we need to stop sending data, 
+# and then attempt to reconnect.
+def heartbeat(app_socket):
+    global connection_lost_flag
+    
+    try:
+        
+        # Set a timeout on the client socket to handle lost heartbeats
+        app_socket.settimeout(20)  # Timeout in seconds
+        
+        while not connection_lost_flag:
+            try:
+                # Receive data from the client
+                data = app_socket.recv(32)
+                if data:
+                    print("Received heartbeat")
+
+            except socket.timeout:
+                connection_lost_flag = True
+                # Handle timeout if no heartbeat is received in time
+                print("Connection timed out. No heartbeat received.")
+
+            except Exception as e:
+                print(f"Error: {e}")
+                connection_lost_flag = True
+    except KeyboardInterrupt as ki:
+        connection_lost_flag = True
+    finally:
+        connection_lost_flag = True
+        # Close the client socket
+        app_socket.close()
+        print(f"Heartbeat lost.")
+        
+        # Close the server socket
+        app_socket.close()
+        print("Heartbeat socket closed.")
+
+
+#####################################################################
+# Where all the code above gets run
 if __name__ == "__main__":
-    # Create this camera thread to run the whole duration of the program
-    producer_thread = threading.Thread(target=run_camera)
-    producer_thread.start()
+    state_machine()
 
-    while not exit_flag:
-        server_address = wait_for_remote_ip()
-        run_client(server_address)
-        time.sleep(2) 
 
-    # Wait for the producer thread to finish before exiting
-    producer_thread.join()
-    print("Main program exiting.")
+#State machine:
+# LISTEN
+# get IP address of remote app
+# SEND
+# Send video footage over tcp network
+
+
