@@ -16,7 +16,8 @@
     android:orientation="vertical"
 >
     <!--Our video viewer for the baby footage -->
-    <VideoView
+    <androidx.media3.ui.PlayerView
+        android:id="@+id/id_videoPlayer"
         android:layout_width="match_parent"
         android:layout_height="232dp"
         />

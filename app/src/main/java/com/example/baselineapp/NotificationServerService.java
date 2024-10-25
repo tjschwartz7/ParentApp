@@ -2,19 +2,17 @@ package com.example.baselineapp;
 
 import android.app.Service;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class TCPServerService extends Service {
+public class NotificationServerService extends Service {
     private static final String TAG = "TcpServerService";
     private static final int SERVER_PORT = 13000;
     private ServerSocket serverSocket;

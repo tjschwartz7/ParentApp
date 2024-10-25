@@ -3,9 +3,6 @@ package com.example.baselineapp;
 import android.content.Context;
 import android.Manifest;
 import android.app.ActivityManager;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -26,10 +23,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.textfield.TextInputEditText;
-
-import org.apache.commons.validator.routines.EmailValidator;
-
-import org.apache.commons.validator.routines.EmailValidator;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -247,19 +240,19 @@ public class Login2 extends AppCompatActivity {
                             startService(new Intent( Login2.this, NotificationSetup. class ));
                         }
 
-                        boolean TCPServiceIsRunning = isMyServiceRunning(TCPServerService.class, getApplicationContext());
+                        boolean TCPServiceIsRunning = isMyServiceRunning(NotificationServerService.class, getApplicationContext());
                         if(!TCPServiceIsRunning)
                         {
-                            Globals.setTCPServerService(new Intent( Login2.this, TCPServerService. class ));
-                            startService(new Intent( Login2.this, TCPServerService. class ));
+                            Globals.setTCPServerService(new Intent( Login2.this, NotificationServerService. class ));
+                            startService(new Intent( Login2.this, NotificationServerService. class ));
                         }
 
-                        boolean UDPServiceIsRunning = isMyServiceRunning(UDPServerService.class, getApplicationContext());
+                        boolean UDPServiceIsRunning = isMyServiceRunning(VideoServerService.class, getApplicationContext());
                         if(!UDPServiceIsRunning)
                         {
                             Log.d("UDP Testing", "Creating UDP service!");
-                            Globals.setUdpServerService(new Intent( Login2.this, UDPServerService. class ));
-                            startService(new Intent( Login2.this, UDPServerService. class ));
+                            Globals.setUdpServerService(new Intent( Login2.this, VideoServerService. class ));
+                            startService(new Intent( Login2.this, VideoServerService. class ));
                         }
 
                     }

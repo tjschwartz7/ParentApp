@@ -5,17 +5,15 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 
-import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class UDPServerService extends Service {
+public class VideoServerService extends Service {
     private static final String TAG = "UDPServerService";
     private static final int TCP_PORT = 13002;
     private static final int UDP_PORT = 13003;
@@ -23,8 +21,8 @@ public class UDPServerService extends Service {
     private final int socketTimeoutMillis = 20000; //20 seconds
     private Socket heartbeatSocket;
     private DatagramSocket videoSocket;
-    private final String serverHostname = "headlesswifi";
-    private byte[] receiveData = new byte[1500];
+    private final String serverHostname = "nanny";
+    private final byte[] receiveData = new byte[1500];
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "Server starting");
@@ -87,6 +85,7 @@ public class UDPServerService extends Service {
             while(isRunning) {
 
                 try {
+                    //If we just failed to connect, wait a few seconds before trying again
                     Thread.sleep(2000);
                     Connect();
                     break;
@@ -95,13 +94,17 @@ public class UDPServerService extends Service {
                     Log.e(TAG, "Exception: " + ex.getMessage());
                 }
             }
+
             try {
+                //We are now connected
                 Globals.setUDPIsConnected(true);
                 //There's some stuff we only want to do once - do it in here
-                InitializeDatagram();
+                //InitializeDatagram();
+                //Let this loop just keep running until something goes wrong
                 while(isRunning) {
                     SendHeartbeat();
-                    InputState();
+                    //InputState();
+                    Thread.sleep(1000); //Send heartbeat once per second
                 }
             } catch(Exception ex) {
                 Log.e(TAG, "Connection lost: " + ex.getMessage());
@@ -135,7 +138,6 @@ public class UDPServerService extends Service {
         Log.d(TAG, "Connected to server at " + serverHostname + ":" + TCP_PORT);
     }
 
-
     private void InputState() throws IOException {
         // Prepare to receive data
         DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
@@ -143,7 +145,7 @@ public class UDPServerService extends Service {
         videoSocket.receive(receivePacket);
         // Convert received data to string
         String receivedMessage = new String(receivePacket.getData(), 0, receivePacket.getLength());
-        Log.d(TAG, "Received from client: " + receivedMessage);
+        //Log.d(TAG, "Received from client: " + receivedMessage);
     }
 
     private void InitializeDatagram() throws IOException {
@@ -163,19 +165,6 @@ public class UDPServerService extends Service {
         heartbeatSocket = new Socket(serverHostname, TCP_PORT);
         heartbeatSocket.setSoTimeout(socketTimeoutMillis);  // Set a 20-second timeout
         Log.d(TAG, "Connected to server at " + serverHostname + ":" + TCP_PORT);
-
-        // Send the IP address to the server
-        DataOutputStream outputStream = new DataOutputStream(heartbeatSocket.getOutputStream());
-        outputStream.writeUTF("syn");
-        Log.d(TAG, "Data sent to client.");
-
-        // Reading response from the server
-        BufferedReader in = new BufferedReader(new InputStreamReader(heartbeatSocket.getInputStream()));
-        String response = in.readLine();  // Read server response (wait up to 5 seconds)
-        Log.d(TAG, "Response from server: " + response);
-
-        // Close the streams
-        outputStream.close();
-        in.close();
     }
+
 }

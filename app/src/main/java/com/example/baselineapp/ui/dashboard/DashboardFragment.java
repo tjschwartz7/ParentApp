@@ -1,12 +1,15 @@
 package com.example.baselineapp.ui.dashboard;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.OptIn;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -14,11 +17,23 @@ import com.example.baselineapp.Globals;
 import com.example.baselineapp.R;
 import com.example.baselineapp.databinding.FragmentDashboardBinding;
 
+import androidx.media3.common.MimeTypes;
+import androidx.media3.common.util.UnstableApi;
+import androidx.media3.exoplayer.*;
+import androidx.media3.exoplayer.source.DefaultMediaSourceFactory;
+import androidx.media3.ui.PlayerView;
+import androidx.media3.common.MediaItem;
+
+
 public class DashboardFragment extends Fragment {
 
     private FragmentDashboardBinding binding;
     private static boolean bool_pageUpdaterCreated;
 
+    private ExoPlayer player;
+
+
+    @OptIn(markerClass = UnstableApi.class)
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         DashboardViewModel dashboardViewModel =
@@ -28,6 +43,43 @@ public class DashboardFragment extends Fragment {
 
         //Code starts here
         //-----------------
+
+        if(binding.idVideoPlayer.getPlayer() == null)
+        {
+            player = new ExoPlayer.Builder(binding.getRoot().getContext()).build();
+            // Global settings.
+            ExoPlayer player =
+                    new ExoPlayer.Builder(binding.getRoot().getContext())
+                            .setMediaSourceFactory(
+                                    new DefaultMediaSourceFactory(binding.getRoot().getContext())
+                                            .setLiveTargetOffsetMs(5000))
+                            .build();
+
+
+            Uri mediaUri = Uri.parse("udp://0.0.0.0:13003");
+
+
+
+            // Per MediaItem settings.
+            MediaItem mediaItem =
+                    new MediaItem.Builder()
+                            .setMimeType(MimeTypes.VIDEO_MP4)
+                            .setUri(mediaUri)
+                            .setLiveConfiguration(
+                                    new MediaItem.LiveConfiguration.Builder().setMaxPlaybackSpeed(1.02f).build())
+                            .build();
+            player.setMediaItem(mediaItem);
+
+            binding.idVideoPlayer.setPlayer(player);
+        }
+
+        // Prepare the player.
+        player.prepare();
+        // Start the playback.
+        player.play();
+
+
+
 
         if(!bool_pageUpdaterCreated)
         {
