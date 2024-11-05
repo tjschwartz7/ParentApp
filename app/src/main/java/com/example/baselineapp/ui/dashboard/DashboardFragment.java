@@ -44,6 +44,7 @@ public class DashboardFragment extends Fragment {
         //Code starts here
         //-----------------
 
+        /*
         if(binding.idVideoPlayer.getPlayer() == null)
         {
             player = new ExoPlayer.Builder(binding.getRoot().getContext()).build();
@@ -56,14 +57,15 @@ public class DashboardFragment extends Fragment {
                             .build();
 
 
-            Uri mediaUri = Uri.parse("udp://0.0.0.0:13003");
-
-
+            //If you're on a hotspot it'll be nanny.local
+            Uri mediaUri = Uri.parse("http://192.168.90.132:5000/video_feed");
+            //Otherwise, use nanny
+            //Uri mediaUri = Uri.parse("https://nanny.local:8000/video");
 
             // Per MediaItem settings.
             MediaItem mediaItem =
                     new MediaItem.Builder()
-                            .setMimeType(MimeTypes.VIDEO_MP4)
+                            .setMimeType(MimeTypes.IMAGE_JPEG)
                             .setUri(mediaUri)
                             .setLiveConfiguration(
                                     new MediaItem.LiveConfiguration.Builder().setMaxPlaybackSpeed(1.02f).build())
@@ -77,6 +79,20 @@ public class DashboardFragment extends Fragment {
         player.prepare();
         // Start the playback.
         player.play();
+        */
+        if(binding.idVideoPlayer.getPlayer() == null)
+        {
+
+            //If you're on a hotspot it'll be nanny.local
+            Uri mediaUri = Uri.parse("http://192.168.90.132:5000/video_feed");
+            player = new ExoPlayer.Builder(binding.getRoot().getContext()).build();
+            // Set the media item to be played with the desired duration.
+            player.setMediaItem(
+                    new MediaItem.Builder().setUri(mediaUri).setImageDurationMs(1000).build());
+            // Prepare the player.
+            player.prepare();
+            binding.idVideoPlayer.setPlayer(player);
+        }
 
 
 

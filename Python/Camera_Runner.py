@@ -3,7 +3,7 @@ import subprocess
 try:
     while True:
         # Construct the command
-        cmd = ["rpicam-vid", "-t", "10000", "--codec", "h264", "--inline" , "--segment", "1", "-o", "test%05d.h264"]
+        cmd = ["rpicam-vid", "-t", "0",  "--inline", "--listen", "-o", "tcp://0.0.0.0:13003"]
 
         # Run the command and check the result
         camera_process = subprocess.Popen(cmd, shell=False)

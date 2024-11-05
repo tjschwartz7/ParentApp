@@ -68,7 +68,7 @@ def udp_state_machine():
                             try:
                                 print(app_address)
                                 
-                                cmd = ["ffmpeg","-i", f"{file_path}", "-c", "copy", f"udp://{app_address}:{UDP_PORT}?output.mp4"]
+                                cmd = ["ffmpeg","-i", f"{file_path}", "-vcodec", "copy",  f"udp://{app_address}:{UDP_PORT}?output.mkv"]
                                 #cmd = ["ffmpeg", "-i", f"{file_path}", "-flags", "-global_header", "-vcodec", "libx264", "-map", "0", "-f", "mpegts", f"udp://{app_address}:{UDP_PORT}"]
 
                                 ffmpeg_process = subprocess.Popen(cmd, shell=False)

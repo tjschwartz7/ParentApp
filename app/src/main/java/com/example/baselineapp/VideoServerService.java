@@ -21,7 +21,12 @@ public class VideoServerService extends Service {
     private final int socketTimeoutMillis = 20000; //20 seconds
     private Socket heartbeatSocket;
     private DatagramSocket videoSocket;
-    private final String serverHostname = "nanny";
+
+    //Use this hostname on wifi
+    //private final String serverHostname = "nanny";
+
+    //Use this hostname on hotspots
+    private final String serverHostname = "nanny.local";
     private final byte[] receiveData = new byte[1500];
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
