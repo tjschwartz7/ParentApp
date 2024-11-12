@@ -24,9 +24,10 @@ public class VideoServerService extends Service {
 
     //Use this hostname on wifi
     //private final String serverHostname = "nanny";
-
+    //Had to use this at home while testing (Jacob)...
+    private final String serverHostname = "192.168.0.234";
     //Use this hostname on hotspots
-    private final String serverHostname = "nanny.local";
+    //private final String serverHostname = "nanny.local";
     private final byte[] receiveData = new byte[1500];
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {

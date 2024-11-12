@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.webkit.WebSettings;
 import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
@@ -20,6 +22,7 @@ import com.example.baselineapp.databinding.FragmentDashboardBinding;
 import androidx.media3.common.MimeTypes;
 import androidx.media3.common.util.UnstableApi;
 import androidx.media3.exoplayer.*;
+import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory;
 import androidx.media3.ui.PlayerView;
 import androidx.media3.common.MediaItem;
@@ -44,7 +47,7 @@ public class DashboardFragment extends Fragment {
         //Code starts here
         //-----------------
 
-        /*
+
         if(binding.idVideoPlayer.getPlayer() == null)
         {
             player = new ExoPlayer.Builder(binding.getRoot().getContext()).build();
@@ -58,15 +61,17 @@ public class DashboardFragment extends Fragment {
 
 
             //If you're on a hotspot it'll be nanny.local
-            Uri mediaUri = Uri.parse("http://192.168.90.132:5000/video_feed");
+            //Uri mediaUri = Uri.parse("http://192.168.90.132:5000/video_feed");
+            //Above address seems outdated
+            Uri mediaUri = Uri.parse("http://192.168.0.234:5000/video_feed");
             //Otherwise, use nanny
             //Uri mediaUri = Uri.parse("https://nanny.local:8000/video");
 
             // Per MediaItem settings.
             MediaItem mediaItem =
                     new MediaItem.Builder()
-                            .setMimeType(MimeTypes.IMAGE_JPEG)
                             .setUri(mediaUri)
+                            .setMimeType(MimeTypes.VIDEO_MJPEG)
                             .setLiveConfiguration(
                                     new MediaItem.LiveConfiguration.Builder().setMaxPlaybackSpeed(1.02f).build())
                             .build();
@@ -79,7 +84,8 @@ public class DashboardFragment extends Fragment {
         player.prepare();
         // Start the playback.
         player.play();
-        */
+
+        /*
         if(binding.idVideoPlayer.getPlayer() == null)
         {
 
@@ -93,6 +99,7 @@ public class DashboardFragment extends Fragment {
             player.prepare();
             binding.idVideoPlayer.setPlayer(player);
         }
+        */
 
 
 
@@ -108,6 +115,14 @@ public class DashboardFragment extends Fragment {
         View root = binding.getRoot();
 
         return root;
+    }
+
+    public void onViewCreated(View view, Bundle savedInstanceState)
+    {
+        WebView myWebView = (WebView) getView().findViewById(R.id.webview);
+        WebSettings webSettings = myWebView.getSettings();
+        webSettings.setMediaPlaybackRequiresUserGesture(false);
+        myWebView.loadUrl("http://192.168.0.234:5000/video_feed");
     }
 
     @Override
