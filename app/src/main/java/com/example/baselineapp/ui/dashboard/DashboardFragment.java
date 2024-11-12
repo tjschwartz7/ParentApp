@@ -6,9 +6,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
@@ -33,7 +30,7 @@ public class DashboardFragment extends Fragment {
     private FragmentDashboardBinding binding;
     private static boolean bool_pageUpdaterCreated;
 
-    private WebView webView;
+    private ExoPlayer player;
 
 
     @OptIn(markerClass = UnstableApi.class)
@@ -47,19 +44,58 @@ public class DashboardFragment extends Fragment {
         //Code starts here
         //-----------------
 
-        webView = binding.idWebView;
+        /*
+        if(binding.idVideoPlayer.getPlayer() == null)
+        {
+            player = new ExoPlayer.Builder(binding.getRoot().getContext()).build();
+            // Global settings.
+            ExoPlayer player =
+                    new ExoPlayer.Builder(binding.getRoot().getContext())
+                            .setMediaSourceFactory(
+                                    new DefaultMediaSourceFactory(binding.getRoot().getContext())
+                                            .setLiveTargetOffsetMs(5000))
+                            .build();
 
-        // Configure WebView settings
-        WebSettings webSettings = webView.getSettings();
-        webSettings.setJavaScriptEnabled(true); // If your server requires JavaScript
-        webSettings.setLoadWithOverviewMode(true);
-        webSettings.setUseWideViewPort(true);
 
-        // Ensure links and redirects stay within the WebView
-        webView.setWebViewClient(new WebViewClient());
+            //If you're on a hotspot it'll be nanny.local
+            Uri mediaUri = Uri.parse("http://192.168.90.132:5000/video_feed");
+            //Otherwise, use nanny
+            //Uri mediaUri = Uri.parse("https://nanny.local:8000/video");
 
-        // Load the video feed URL
-        webView.loadUrl("http://nanny.local:5000/video_feed");
+            // Per MediaItem settings.
+            MediaItem mediaItem =
+                    new MediaItem.Builder()
+                            .setMimeType(MimeTypes.IMAGE_JPEG)
+                            .setUri(mediaUri)
+                            .setLiveConfiguration(
+                                    new MediaItem.LiveConfiguration.Builder().setMaxPlaybackSpeed(1.02f).build())
+                            .build();
+            player.setMediaItem(mediaItem);
+
+            binding.idVideoPlayer.setPlayer(player);
+        }
+
+        // Prepare the player.
+        player.prepare();
+        // Start the playback.
+        player.play();
+        */
+        if(binding.idVideoPlayer.getPlayer() == null)
+        {
+
+            //If you're on a hotspot it'll be nanny.local
+            Uri mediaUri = Uri.parse("http://192.168.90.132:5000/video_feed");
+            player = new ExoPlayer.Builder(binding.getRoot().getContext()).build();
+            // Set the media item to be played with the desired duration.
+            player.setMediaItem(
+                    new MediaItem.Builder().setUri(mediaUri).setImageDurationMs(1000).build());
+            // Prepare the player.
+            player.prepare();
+            binding.idVideoPlayer.setPlayer(player);
+        }
+
+
+
 
         if(!bool_pageUpdaterCreated)
         {
