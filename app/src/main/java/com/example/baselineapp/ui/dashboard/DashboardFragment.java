@@ -3,6 +3,7 @@ package com.example.baselineapp.ui.dashboard;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,13 +25,15 @@ import androidx.media3.exoplayer.source.DefaultMediaSourceFactory;
 import androidx.media3.ui.PlayerView;
 import androidx.media3.common.MediaItem;
 
+import java.net.Socket;
+
 
 public class DashboardFragment extends Fragment {
 
     private FragmentDashboardBinding binding;
     private static boolean bool_pageUpdaterCreated;
 
-    private ExoPlayer player;
+
 
 
     @OptIn(markerClass = UnstableApi.class)
@@ -80,11 +83,44 @@ public class DashboardFragment extends Fragment {
         // Start the playback.
         player.play();
         */
+
+        if(Globals.connectionSocket == null || Globals.connectionSocket.isClosed())
+        {
+            System.out.println("BOOM BOOM BOOM BOOM BLDGDGDGDG");
+            try {
+                Globals.connectionSocket = null;
+                // Connect to the server
+                System.out.println("Server hostname " + Globals.serverHostname);
+                System.out.println("TCP: " + Globals.TCP_PORT);
+
+                //TODO: THe code fails RIGHT HERE! The socket returns null! I'm plastic-man!
+                System.out.println(new Socket(Globals.serverHostname, Globals.TCP_PORT));
+                System.out.println("Did a thing");
+                Globals.connectionSocket = new Socket(Globals.serverHostname, Globals.TCP_PORT);
+                System.out.println("bing");
+                Globals.connectionSocket.setSoTimeout(Globals.socketTimeoutMillis);  // Set a 20-second timeout
+                System.out.println("bada boom");
+                System.out.println("Connected to server at " + Globals.serverHostname + ":" + Globals.TCP_PORT);
+            }
+            catch(Exception ex){
+                System.out.println( "Exception: " + ex.getMessage());
+            }
+
+            //Attempt to close the socket
+            try {
+                if (Globals.connectionSocket != null && !Globals.connectionSocket.isClosed()) {
+                    Globals.connectionSocket.close();
+                }
+            } catch (Exception e) {
+                System.out.println("Error closing socket: " + e.getMessage());
+            }
+        }
+
         if(binding.idVideoPlayer.getPlayer() == null)
         {
-
+            ExoPlayer player;
             //If you're on a hotspot it'll be nanny.local
-            Uri mediaUri = Uri.parse("udp://192.168.90.132:5000");
+            Uri mediaUri = Uri.parse("udp://nanny.local:"+Globals.UDP_PORT);
             player = new ExoPlayer.Builder(binding.getRoot().getContext()).build();
 
             player.setMediaItem(MediaItem.fromUri(mediaUri));
@@ -92,9 +128,6 @@ public class DashboardFragment extends Fragment {
             player.prepare();
             binding.idVideoPlayer.setPlayer(player);
         }
-
-
-
 
         if(!bool_pageUpdaterCreated)
         {

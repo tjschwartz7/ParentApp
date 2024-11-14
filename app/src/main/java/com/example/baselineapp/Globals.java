@@ -8,6 +8,7 @@ import android.widget.DatePicker;
 
 import com.example.baselineapp.ui.dashboard.DashboardFragment;
 
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -29,7 +30,16 @@ public final class Globals extends Application
     //---------------------------------------------------------
     //UDP Connection data
 
-    private static Boolean bool_udpIsConnected = false;
+    public static final int TCP_PORT = 13002;
+    public static final int UDP_PORT = 13003;
+    public static final int socketTimeoutMillis = 20000; //20 seconds
+    public static Socket connectionSocket;
+
+    //Use this hostname on wifi
+    //private final String serverHostname = "nanny";
+
+    //Use this hostname on hotspots
+    public static final String serverHostname = "nanny.local";
 
 
     //---------------------------------------------------------
@@ -120,14 +130,6 @@ public final class Globals extends Application
     //---------------------------------------------------------
     //UDP Connection Information
 
-
-    public static Boolean getUDPIsConnected() {
-        return bool_udpIsConnected;
-    }
-
-    public static void setUDPIsConnected(Boolean bool_udpIsConnected) {
-        Globals.bool_udpIsConnected = bool_udpIsConnected;
-    }
 
     //---------------------------------------------------------
     //Instance Information

@@ -22,7 +22,6 @@ public class VideoServerService extends Service {
 
     //Use this hostname on hotspots
     private final String serverHostname = "nanny.local";
-    private final byte[] receiveData = new byte[1500];
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "Server starting");
@@ -44,7 +43,7 @@ public class VideoServerService extends Service {
             Log.e(TAG, "Error closing socket: " + e.getMessage());
         }
         Log.d(TAG, "Server socket stopped");
-        Globals.setClientIsConnected(false);
+        //Globals.setClientIsConnected(false);
     }
 
     @Override
@@ -56,7 +55,7 @@ public class VideoServerService extends Service {
         @Override
         public void run() {
             try {
-                Globals.setUDPIsConnected(false); //We haven't connected yet
+                //Globals.setUDPIsConnected(false); //We haven't connected yet
                 UDPStateMachine();
 
             } catch (Exception e) {
@@ -83,7 +82,6 @@ public class VideoServerService extends Service {
                 //If we just failed to connect, wait a few seconds before trying again
                 Thread.sleep(2000);
                 Connect();
-                break;
             }
             catch(Exception ex){
                 Log.e(TAG, "Exception: " + ex.getMessage());
@@ -98,9 +96,6 @@ public class VideoServerService extends Service {
                 Log.e(TAG, "Error closing socket: " + e.getMessage());
             }
         }
-
-
-
     }
 
     private void Connect() throws IOException, UnknownHostException

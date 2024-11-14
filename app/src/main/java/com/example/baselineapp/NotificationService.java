@@ -214,7 +214,8 @@ public class NotificationService extends Service {
             mNotificationManager.notify(( int ) System. currentTimeMillis () , notif_nannyNotConnected.build()) ;
             bool_tcpConnectionErrorNotifiedFlag = true;
         }
-        
+
+        /*
         //If client is connected and we've sent the connection error flag,
         //we can reset it now for future disconnects.
         if(Globals.getUDPIsConnected() && bool_udpConnectionErrorNotifiedFlag)
@@ -229,7 +230,7 @@ public class NotificationService extends Service {
             mNotificationManager.notify(( int ) System. currentTimeMillis () , notif_nannyCamNotConnected.build()) ;
             bool_udpConnectionErrorNotifiedFlag = true;
         }
-
+        */
 
 
     }
