@@ -84,11 +84,10 @@ public class DashboardFragment extends Fragment {
         {
 
             //If you're on a hotspot it'll be nanny.local
-            Uri mediaUri = Uri.parse("http://192.168.90.132:5000/video_feed");
+            Uri mediaUri = Uri.parse("udp://192.168.90.132:5000");
             player = new ExoPlayer.Builder(binding.getRoot().getContext()).build();
-            // Set the media item to be played with the desired duration.
-            player.setMediaItem(
-                    new MediaItem.Builder().setUri(mediaUri).setImageDurationMs(1000).build());
+
+            player.setMediaItem(MediaItem.fromUri(mediaUri));
             // Prepare the player.
             player.prepare();
             binding.idVideoPlayer.setPlayer(player);

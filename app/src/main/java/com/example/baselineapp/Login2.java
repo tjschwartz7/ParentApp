@@ -250,9 +250,9 @@ public class Login2 extends AppCompatActivity {
                         boolean UDPServiceIsRunning = isMyServiceRunning(VideoServerService.class, getApplicationContext());
                         if(!UDPServiceIsRunning)
                         {
-                            //Log.d("UDP Testing", "Creating UDP service!");
-                            //Globals.setUdpServerService(new Intent( Login2.this, VideoServerService. class ));
-                            //startService(new Intent( Login2.this, VideoServerService. class ));
+                            Log.d("UDP Testing", "Creating UDP service!");
+                            Globals.setUdpServerService(new Intent( Login2.this, VideoServerService. class ));
+                            startService(new Intent( Login2.this, VideoServerService. class ));
                         }
 
                     }
