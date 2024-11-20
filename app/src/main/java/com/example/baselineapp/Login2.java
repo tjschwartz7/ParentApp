@@ -240,11 +240,11 @@ public class Login2 extends AppCompatActivity {
                             startService(new Intent( Login2.this, NotificationSetup. class ));
                         }
 
-                        boolean TCPServiceIsRunning = isMyServiceRunning(NotificationServerService.class, getApplicationContext());
+                        boolean TCPServiceIsRunning = isMyServiceRunning(TCPServerService.class, getApplicationContext());
                         if(!TCPServiceIsRunning)
                         {
-                            Globals.setTCPServerService(new Intent( Login2.this, NotificationServerService. class ));
-                            startService(new Intent( Login2.this, NotificationServerService. class ));
+                            Globals.setTCPServerService(new Intent( Login2.this, TCPServerService. class ));
+                            startService(new Intent( Login2.this, TCPServerService. class ));
                         }
 
                         boolean UDPServiceIsRunning = isMyServiceRunning(VideoServerService.class, getApplicationContext());

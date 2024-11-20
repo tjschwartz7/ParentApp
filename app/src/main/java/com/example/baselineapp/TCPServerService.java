@@ -11,12 +11,15 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.*;
 
-public class NotificationServerService extends Service {
+public class TCPServerService extends Service {
     private static final String TAG = "TcpServerService";
     private static final int SERVER_PORT = 13000;
     private ServerSocket serverSocket;
     private boolean isRunning;
+    private static int previousStatusPacket = 0;
+
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -109,44 +112,42 @@ public class NotificationServerService extends Service {
                     message = in.readLine();
 
                     Log.d(TAG, "Received: " + message);
-                    String str_data;
-                    //First 4 characters is the code
-                    switch(message.charAt(0)) {
-                        case '0':
-                            Log.d(TAG, "Received TEMPERATURE data ");
-                            str_data = message.substring(2); //Get string after first code and space
-                            try {
-                                double dbl_data = Double.valueOf(str_data);
-                                Globals.setTempVal((int)(dbl_data*100) / 100.0);
-                            }
-                            catch(Exception ex) {
-                                Log.e(TAG, "Message error: " + ex.getMessage());
-                            }
 
-                            break;
-                        case '1':
-                            Log.d(TAG, "Received PULSE data ");
-                            str_data = message.substring(2); //Get string after first code and space
-                            try {
-                                double dbl_data = Double.valueOf(str_data);
-                                Globals.setPulseVal((int)(dbl_data*100) / 100.0);
-                            }
-                            catch(Exception ex) {
-                                Log.e(TAG, "Message error: " + ex.getMessage());
-                            }
-                            break;
-                        case '2':
-                            Log.d(TAG, "Received BLOOD OX data ");
-                            str_data = message.substring(2); //Get string after first code and space
-                            try {
-                                double dbl_data = Double.valueOf(str_data);
-                                Globals.setBloodOxVal((int)(dbl_data*100) / 100.0);
-                            }
-                            catch(Exception ex) {
-                                Log.e(TAG, "Message error: " + ex.getMessage());
-                            }
-                            break;
+                    //First byte of the packet is the flags
+                    boolean systemsNominal = (message.charAt(0) == '1');
+                    boolean temperatureSensorWorking = (message.charAt(1) == '1');
+                    boolean bloodOxSensorWorking = (message.charAt(2) == '1');
+                    boolean pulseSensorWorking = (message.charAt(3) == '1');
+                    byte[] bytes = message.substring(16, 80).getBytes();
+                    ByteBuffer buffer = ByteBuffer.allocate(8);
+                    buffer.get(bytes);
+
+                    //Temperature is a float
+                    float temp = buffer.getFloat(0);
+                    //Pulse ox is a short
+                    short pulseOx = buffer.getShort(4);
+                    //Respiration is a short
+                    short respiration = buffer.getShort(6);
+
+                    //It's important to execute this before we set the previousStatusPacket
+                    //This will ensure that any notifications sent will have updated information
+                    Globals.setTempVal(temp);
+                    Globals.setBloodOxVal(respiration);
+                    Globals.setPulseVal(pulseOx);
+                    Globals.setTempSensorStatus(temperatureSensorWorking);
+                    Globals.setPulseOxSensorStatus(bloodOxSensorWorking);
+                    Globals.setRespirationSensorNominal(pulseSensorWorking);
+
+                    //Get the status packet bits
+                    buffer = ByteBuffer.allocate(2);
+                    buffer.get(message.substring(0, 16).getBytes());
+                    int statusPacket = buffer.getShort(0);
+                    if(previousStatusPacket != statusPacket)
+                    {
+                        Globals.setPacifierWarningNotified(false);
                     }
+
+                    previousStatusPacket = statusPacket;
                 }
             } catch (Exception e) {
                 Log.e(TAG, "Client error: " + e.getMessage());

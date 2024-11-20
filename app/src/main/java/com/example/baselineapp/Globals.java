@@ -26,6 +26,12 @@ public final class Globals extends Application
 
     private static Boolean bool_sendPowerEnableCommand = false;
 
+    private static Boolean bool_tempSensorNominal = false;
+    private static Boolean bool_pulseOxSensorNominal = false;
+    private static Boolean bool_respirationSensorNominal = false;
+
+    private static boolean bool_pacifierWarningNotifiedFlag = false;
+
     //---------------------------------------------------------
     //UDP Connection data
 
@@ -115,6 +121,39 @@ public final class Globals extends Application
 
     public static void setClientIsConnected(Boolean isConnected) {
         Globals.bool_isConnected = isConnected;
+    }
+
+    public static Boolean getTempSensorStatus(){
+        return bool_tempSensorNominal;
+    }
+
+    public static void setTempSensorStatus(boolean tempSensorStatus){
+        bool_tempSensorNominal = tempSensorStatus;
+    }
+
+    public static Boolean getPulseOxSensorStatus(){
+        return bool_pulseOxSensorNominal;
+    }
+
+    public static void setPulseOxSensorStatus(boolean pulseOxSensorStatus){
+        bool_pulseOxSensorNominal = pulseOxSensorStatus;
+    }
+
+    public static Boolean getRespirationSensorStatus(){
+        return bool_respirationSensorNominal;
+    }
+
+    public static void setRespirationSensorNominal(boolean respirationSensorNominal){
+        bool_respirationSensorNominal = respirationSensorNominal;
+
+    }
+
+    public static void setPacifierWarningNotified(boolean notified){
+        bool_pacifierWarningNotifiedFlag = notified;
+    }
+
+    public static boolean getPacifierWarningNotified(){
+        return bool_pacifierWarningNotifiedFlag;
     }
 
     //---------------------------------------------------------

@@ -21,6 +21,7 @@ public class NotificationService extends Service {
     private final static String default_notification_channel_id = "default" ;
     private static boolean bool_tcpConnectionErrorNotifiedFlag = false;
     private static boolean bool_udpConnectionErrorNotifiedFlag = false;
+
     Timer shortTimer;
     Timer longTimer;
     TimerTask shortTimerTask ;
@@ -79,6 +80,18 @@ public class NotificationService extends Service {
             .setContentText("Having trouble connecting to your Nanny Cam.")
             .setStyle(new NotificationCompat.BigTextStyle()
                     .bigText("Try making sure your wi-fi is working."))
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setAutoCancel(true);
+
+    NotificationCompat.Builder notif_pacifierWarning = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_dashboard_black_24dp)
+            .setContentTitle("HARDWARE FAILURE")
+            .setContentText("Something has gone wrong with the pacifier.")
+            .setStyle(new NotificationCompat.BigTextStyle()
+                    .bigText((Globals.getTempSensorStatus() ? getString(R.string.str_tempSensorFailure) : "") +
+                            (Globals.getPulseOxSensorStatus() ? getString(R.string.str_pulseOxSensorFailure) : "") +
+                            (Globals.getRespirationSensorStatus() ? getString(R.string.str_pulseOxSensorFailure) : "")
+                    ))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true);
 
@@ -230,6 +243,20 @@ public class NotificationService extends Service {
             bool_udpConnectionErrorNotifiedFlag = true;
         }
 
+        if(
+                (
+                Globals.getTempSensorStatus() ||
+                Globals.getPulseOxSensorStatus() ||
+                Globals.getRespirationSensorStatus()
+                ) &&
+                !Globals.getPacifierWarningNotified())
+
+        {
+            //Notify
+            assert mNotificationManager != null;
+            mNotificationManager.notify(( int ) System. currentTimeMillis () , notif_pacifierWarning.build()) ;
+            Globals.setPacifierWarningNotified(true);
+        }
 
 
     }
