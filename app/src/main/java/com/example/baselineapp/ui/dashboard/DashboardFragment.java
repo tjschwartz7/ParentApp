@@ -51,15 +51,25 @@ public class DashboardFragment extends Fragment {
 
         // Configure WebView settings
         WebSettings webSettings = webView.getSettings();
-        webSettings.setJavaScriptEnabled(true); // If your server requires JavaScript
         webSettings.setLoadWithOverviewMode(true);
         webSettings.setUseWideViewPort(true);
 
         // Ensure links and redirects stay within the WebView
         webView.setWebViewClient(new WebViewClient());
 
-        // Load the video feed URL
-        webView.loadUrl("http://nanny.local:5000/video_feed");
+        try
+        {
+            // Load the video feed URL
+            webView.loadUrl("http://nanny.local:5000/video_feed");
+        }
+        catch (Exception ex)
+        {
+            // URL is not accessible.
+        }
+
+
+
+
 
         if(!bool_pageUpdaterCreated)
         {

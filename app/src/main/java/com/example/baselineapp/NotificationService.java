@@ -89,8 +89,7 @@ public class NotificationService extends Service {
             .setContentText("Something has gone wrong with the pacifier.")
             .setStyle(new NotificationCompat.BigTextStyle()
                     .bigText((Globals.getTempSensorStatus() ? getString(R.string.str_tempSensorFailure) : "") +
-                            (Globals.getPulseOxSensorStatus() ? getString(R.string.str_pulseOxSensorFailure) : "") +
-                            (Globals.getRespirationSensorStatus() ? getString(R.string.str_pulseOxSensorFailure) : "")
+                            (Globals.getPulseOxSensorStatus() ? getString(R.string.str_pulseOxSensorFailure) : "")
                     ))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true);
@@ -246,8 +245,7 @@ public class NotificationService extends Service {
         if(
                 (
                 Globals.getTempSensorStatus() ||
-                Globals.getPulseOxSensorStatus() ||
-                Globals.getRespirationSensorStatus()
+                Globals.getPulseOxSensorStatus()
                 ) &&
                 !Globals.getPacifierWarningNotified())
 

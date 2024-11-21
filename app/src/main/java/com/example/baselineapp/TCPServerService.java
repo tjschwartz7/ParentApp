@@ -12,13 +12,14 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.*;
+import java.nio.charset.Charset;
 
 public class TCPServerService extends Service {
     private static final String TAG = "TcpServerService";
     private static final int SERVER_PORT = 13000;
     private ServerSocket serverSocket;
     private boolean isRunning;
-    private static int previousStatusPacket = 0;
+    private static short previousStatusPacket = 0;
 
 
     @Override
@@ -89,7 +90,7 @@ public class TCPServerService extends Service {
                         new InputStreamReader(clientSocket.getInputStream()));
 
                 ServerHandler(out);
-                ClientHandler(in);
+                handleClient(in);
 
             } catch (Exception e) {
                 Log.e(TAG, "Client error: " + e.getMessage());
@@ -104,50 +105,48 @@ public class TCPServerService extends Service {
             }
         }
 
-
-        private static void ClientHandler(BufferedReader in) {
+        private static void handleClient(BufferedReader in) {
             try {
                 String message;
+                Log.d(TAG, "User logged in: "+Globals.userLoggedIn());
                 while(Globals.userLoggedIn()) {
+                    Log.d(TAG, "Waiting...");
                     message = in.readLine();
 
-                    Log.d(TAG, "Received: " + message);
+                    byte[] byte_message = message.getBytes(Charset.defaultCharset());
+                    Short command = (short)((byte_message[0]) +
+                                    (short)(byte_message[1] * Math.pow(2, 8)));
 
-                    //First byte of the packet is the flags
-                    boolean systemsNominal = (message.charAt(0) == '1');
-                    boolean temperatureSensorWorking = (message.charAt(1) == '1');
-                    boolean bloodOxSensorWorking = (message.charAt(2) == '1');
-                    boolean pulseSensorWorking = (message.charAt(3) == '1');
-                    byte[] bytes = message.substring(16, 80).getBytes();
-                    ByteBuffer buffer = ByteBuffer.allocate(8);
-                    buffer.get(bytes);
+                    boolean temperatureSensorWorking = (command & 0x1) == 1;
+                    boolean bloodOxSensorWorking = (command & 0x2) == 2;
 
-                    //Temperature is a float
-                    float temp = buffer.getFloat(0);
-                    //Pulse ox is a short
-                    short pulseOx = buffer.getShort(4);
-                    //Respiration is a short
-                    short respiration = buffer.getShort(6);
+                    Float temp = (float)(byte_message[5] * Math.pow(2,24) +
+                                 (float)byte_message[4] * Math.pow(2,16)  +
+                                 (float)byte_message[3] * Math.pow(2, 8)  +
+                                 (float)byte_message[2]);
+
+                    Short pulse = (short)((byte_message[6]) +
+                            (short)(byte_message[7] * Math.pow(2, 8)));
+
+                    Short bloodOx = (short)((byte_message[8]) +
+                            (short)(byte_message[9] * Math.pow(2, 8)));
+
+                    Log.d(TAG, ""+command);
 
                     //It's important to execute this before we set the previousStatusPacket
                     //This will ensure that any notifications sent will have updated information
                     Globals.setTempVal(temp);
-                    Globals.setBloodOxVal(respiration);
-                    Globals.setPulseVal(pulseOx);
+                    Globals.setBloodOxVal(bloodOx);
+                    Globals.setPulseVal(pulse);
                     Globals.setTempSensorStatus(temperatureSensorWorking);
                     Globals.setPulseOxSensorStatus(bloodOxSensorWorking);
-                    Globals.setRespirationSensorNominal(pulseSensorWorking);
 
-                    //Get the status packet bits
-                    buffer = ByteBuffer.allocate(2);
-                    buffer.get(message.substring(0, 16).getBytes());
-                    int statusPacket = buffer.getShort(0);
-                    if(previousStatusPacket != statusPacket)
+                    if(previousStatusPacket != command)
                     {
                         Globals.setPacifierWarningNotified(false);
                     }
 
-                    previousStatusPacket = statusPacket;
+                    previousStatusPacket = command;
                 }
             } catch (Exception e) {
                 Log.e(TAG, "Client error: " + e.getMessage());

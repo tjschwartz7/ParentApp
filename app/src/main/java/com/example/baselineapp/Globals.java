@@ -28,7 +28,6 @@ public final class Globals extends Application
 
     private static Boolean bool_tempSensorNominal = false;
     private static Boolean bool_pulseOxSensorNominal = false;
-    private static Boolean bool_respirationSensorNominal = false;
 
     private static boolean bool_pacifierWarningNotifiedFlag = false;
 
@@ -137,15 +136,6 @@ public final class Globals extends Application
 
     public static void setPulseOxSensorStatus(boolean pulseOxSensorStatus){
         bool_pulseOxSensorNominal = pulseOxSensorStatus;
-    }
-
-    public static Boolean getRespirationSensorStatus(){
-        return bool_respirationSensorNominal;
-    }
-
-    public static void setRespirationSensorNominal(boolean respirationSensorNominal){
-        bool_respirationSensorNominal = respirationSensorNominal;
-
     }
 
     public static void setPacifierWarningNotified(boolean notified){
