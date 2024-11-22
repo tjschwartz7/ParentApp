@@ -19,7 +19,7 @@ public class TCPServerService extends Service {
     private static final int SERVER_PORT = 13000;
     private ServerSocket serverSocket;
     private boolean isRunning;
-    private static short previousStatusPacket = 0;
+    private static int previousStatusPacket = 0;
 
 
     @Override
@@ -111,27 +111,22 @@ public class TCPServerService extends Service {
                 Log.d(TAG, "User logged in: "+Globals.userLoggedIn());
                 while(Globals.userLoggedIn()) {
                     Log.d(TAG, "Waiting...");
+                    Log.d(TAG, "BBBBBBBBBBBBBBBBBBBBBBBBB");
                     message = in.readLine();
 
+                    Log.d(TAG, ""+message);
+
                     byte[] byte_message = message.getBytes(Charset.defaultCharset());
-                    Short command = (short)((byte_message[0]) +
-                                    (short)(byte_message[1] * Math.pow(2, 8)));
+                    int command = byte_message[0];
+                    Log.d(TAG, "Command: "+command);
 
                     boolean temperatureSensorWorking = (command & 0x1) == 1;
                     boolean bloodOxSensorWorking = (command & 0x2) == 2;
+                    int temp = byte_message[1];
+                    int pulse = byte_message[2];
+                    int bloodOx = byte_message[3];
 
-                    Float temp = (float)(byte_message[5] * Math.pow(2,24) +
-                                 (float)byte_message[4] * Math.pow(2,16)  +
-                                 (float)byte_message[3] * Math.pow(2, 8)  +
-                                 (float)byte_message[2]);
 
-                    Short pulse = (short)((byte_message[6]) +
-                            (short)(byte_message[7] * Math.pow(2, 8)));
-
-                    Short bloodOx = (short)((byte_message[8]) +
-                            (short)(byte_message[9] * Math.pow(2, 8)));
-
-                    Log.d(TAG, ""+command);
 
                     //It's important to execute this before we set the previousStatusPacket
                     //This will ensure that any notifications sent will have updated information

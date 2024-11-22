@@ -1,5 +1,8 @@
 package com.example.baselineapp.ui.dashboard;
 
+import android.app.ActivityManager;
+import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,6 +13,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.VideoView;
+import android.webkit.URLUtil;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.OptIn;
@@ -17,7 +21,9 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.baselineapp.Globals;
+import com.example.baselineapp.Login2;
 import com.example.baselineapp.R;
+import com.example.baselineapp.TCPServerService;
 import com.example.baselineapp.databinding.FragmentDashboardBinding;
 
 import androidx.media3.common.MimeTypes;
@@ -26,6 +32,9 @@ import androidx.media3.exoplayer.*;
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory;
 import androidx.media3.ui.PlayerView;
 import androidx.media3.common.MediaItem;
+
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 
 public class DashboardFragment extends Fragment {
@@ -59,15 +68,32 @@ public class DashboardFragment extends Fragment {
 
         try
         {
-            // Load the video feed URL
-            webView.loadUrl("http://nanny.local:5000/video_feed");
+            //TODO! Ugliness is displayed if the video isnt found. Oops!
+            if(URLUtil.isValidUrl("http://nanny.local:5000/video_feed"))
+            {
+                webView.loadUrl("http://nanny.local:5000/video_feed");
+            }
+            else
+            {
+                System.out.println("HUC was null.");
+            }
         }
         catch (Exception ex)
         {
+            System.out.println("URL Exception: " + ex.getMessage());
             // URL is not accessible.
         }
 
-
+        if(getContext() != null)
+        {
+            boolean TCPServiceIsRunning = isMyServiceRunning(TCPServerService.class, getContext());
+            if(!TCPServiceIsRunning)
+            {
+                Globals.setTCPServerService(new Intent( getActivity(), TCPServerService. class ));
+                if(getActivity() != null)
+                    getActivity().startService(new Intent( getActivity(), TCPServerService. class ));
+            }
+        }
 
 
 
@@ -214,5 +240,15 @@ public class DashboardFragment extends Fragment {
         bool_pageUpdaterCreated = false;
     }
 
+
+    public boolean isMyServiceRunning(Class<?> serviceClass, Context context) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }

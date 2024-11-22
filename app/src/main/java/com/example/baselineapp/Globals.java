@@ -53,11 +53,11 @@ public final class Globals extends Application
 
     //---------------------------------------------------------
     //Baby Vitals Data
-    private static double dbl_bloodOxVal;
+    private static int int_bloodOxVal;
     private static String str_bloodOxUnit = "%";
-    private static double dbl_tempVal;
+    private static int int_tempVal;
     private static String str_tempUnit = "F";
-    private static double dbl_pulseVal;
+    private static int int_pulseVal;
     private static String str_pulseUnit = "bpm";
 
     //---------------------------------------------------------
@@ -192,31 +192,31 @@ public final class Globals extends Application
     //---------------------------------------------------------
     //Baby Vital Data
 
-    public static double getBloodOxVal() {return dbl_bloodOxVal;}
+    public static int getBloodOxVal() {return int_bloodOxVal;}
     public static String getBloodOxUnit() {return str_bloodOxUnit;}
 
-    public static double getTempVal() {return dbl_tempVal;}
+    public static int getTempVal() {return int_tempVal;}
     public static String getTempUnit() {return str_tempUnit;}
 
-    public static double getPulseVal() {return dbl_pulseVal;}
+    public static int getPulseVal() {return int_pulseVal;}
 
-    public static void setBloodOxVal(double bloodOxVal) {
-        Globals.dbl_bloodOxVal = bloodOxVal;
+    public static void setBloodOxVal(int bloodOxVal) {
+        Globals.int_bloodOxVal = bloodOxVal;
     }
 
-    public static void setTempVal(double tempVal) {
-        Globals.dbl_tempVal = tempVal;
+    public static void setTempVal(int tempVal) {
+        Globals.int_tempVal = tempVal;
     }
 
-    public static void setPulseVal(double pulseVal) {
-        Globals.dbl_pulseVal = pulseVal;
+    public static void setPulseVal(int pulseVal) {
+        Globals.int_pulseVal = pulseVal;
     }
     public static String getPulseUnit() {return str_pulseUnit;}
-    public static void debugOnlySetVitals(double bloodOx, double pulse, double temp)
+    public static void debugOnlySetVitals(int bloodOx, int pulse, int temp)
     {
-        dbl_bloodOxVal = bloodOx;
-        dbl_pulseVal = pulse;
-        dbl_tempVal = temp;
+        int_bloodOxVal = bloodOx;
+        int_pulseVal = pulse;
+        int_tempVal = temp;
     }
 
     //---------------------------------------------------------
@@ -373,11 +373,11 @@ public final class Globals extends Application
             profile = profile.substring(endIndex+1);
             map.put(key, value);
         }
-        dbl_bloodOxVal = 0.0;
+        int_bloodOxVal = 0;
         str_bloodOxUnit = "%";
-        dbl_tempVal = 0.0;
+        int_tempVal = 0;
         str_tempUnit = "F";
-        dbl_pulseVal = 0.0;
+        int_pulseVal = 0;
         str_pulseUnit = "bpm";
         //Replace all occurrences of $ with \n for notifications.
         for(int i = 1; i <= 10; i++)
