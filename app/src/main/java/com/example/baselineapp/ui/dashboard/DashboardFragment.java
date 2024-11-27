@@ -87,22 +87,44 @@ public class DashboardFragment extends Fragment {
         if(Globals.connectionSocket == null || Globals.connectionSocket.isClosed())
         {
             System.out.println("BOOM BOOM BOOM BOOM BLDGDGDGDG");
-            try {
+            try
+            {
                 Globals.connectionSocket = null;
                 // Connect to the server
                 System.out.println("Server hostname " + Globals.serverHostname);
                 System.out.println("TCP: " + Globals.TCP_PORT);
 
                 //TODO: THe code fails RIGHT HERE! The socket returns null! I'm plastic-man!
-                System.out.println(new Socket(Globals.serverHostname, Globals.TCP_PORT));
-                System.out.println("Did a thing");
-                Globals.connectionSocket = new Socket(Globals.serverHostname, Globals.TCP_PORT);
-                System.out.println("bing");
-                Globals.connectionSocket.setSoTimeout(Globals.socketTimeoutMillis);  // Set a 20-second timeout
-                System.out.println("bada boom");
-                System.out.println("Connected to server at " + Globals.serverHostname + ":" + Globals.TCP_PORT);
+                Thread connectionThread = new Thread(() ->
+                {
+                    try
+                    {
+                        //Socket s = new Socket(Globals.serverHostname, Globals.TCP_PORT);
+                        Globals.connectionSocket = new Socket(Globals.serverHostname, Globals.TCP_PORT);
+                        Globals.connectionSocket.setSoTimeout(Globals.socketTimeoutMillis);  // Set a 20-second timeout
+                        System.out.println("Connected to server at " + Globals.serverHostname + ":" + Globals.TCP_PORT);
+                    }
+                    catch (Exception e)
+                    {
+                        Log.e("SocketDebug", "Error connecting to Pi server", e);
+                    }
+                });
+                connectionThread.start();
+                try
+                {
+                    // Wait for the thread to finish
+                    connectionThread.join();
+                    System.out.println("Connection thread has finished.");
+                }
+                catch (InterruptedException ex)
+                {
+                    Log.e("ThreadDebug", "Thread was interrupted while waiting for connection thread to finish", ex);
+                    System.out.println("Thread was interrupted while waiting for connection thread to finish: " + ex.getMessage());
+
+                }
             }
-            catch(Exception ex){
+            catch(Exception ex)
+            {
                 System.out.println( "Exception: " + ex.getMessage());
             }
 
@@ -118,15 +140,24 @@ public class DashboardFragment extends Fragment {
 
         if(binding.idVideoPlayer.getPlayer() == null)
         {
-            ExoPlayer player;
-            //If you're on a hotspot it'll be nanny.local
-            Uri mediaUri = Uri.parse("udp://nanny.local:"+Globals.UDP_PORT);
-            player = new ExoPlayer.Builder(binding.getRoot().getContext()).build();
+            try
+            {
+                System.out.println("REACHED EXOPLAYER START");
+                ExoPlayer player;
+                //If you're on a hotspot it'll be nanny.local
+                Uri mediaUri = Uri.parse("udp://nanny.local:" + Globals.UDP_PORT);
+                player = new ExoPlayer.Builder(binding.getRoot().getContext()).build();
 
-            player.setMediaItem(MediaItem.fromUri(mediaUri));
-            // Prepare the player.
-            player.prepare();
-            binding.idVideoPlayer.setPlayer(player);
+                player.setMediaItem(MediaItem.fromUri(mediaUri));
+                // Prepare the player.
+                player.prepare();
+                binding.idVideoPlayer.setPlayer(player);
+            }
+            catch(Exception ex)
+            {
+                Log.e("ExoplayerError", "Error starting ExoPlayer", ex);
+                System.out.println("Error starting ExoPlayer: " + ex.getMessage());
+            }
         }
 
         if(!bool_pageUpdaterCreated)

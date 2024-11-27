@@ -36,7 +36,7 @@ public final class Globals extends Application
     public static Socket connectionSocket;
 
     //Use this hostname on wifi
-    //private final String serverHostname = "nanny";
+    //public static final String serverHostname = "nanny";
 
     //Use this hostname on hotspots
     public static final String serverHostname = "nanny.local";
