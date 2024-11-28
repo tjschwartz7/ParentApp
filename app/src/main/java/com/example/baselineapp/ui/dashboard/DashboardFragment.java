@@ -17,9 +17,7 @@ import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.VideoView;
 import android.webkit.URLUtil;
-//import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.OptIn;
