@@ -125,7 +125,8 @@ public class YourBabyActivity extends AppCompatActivity {
                     for(int i = 1; i <= 10; i++)
                     {
                         str_accountString += ";Notification " + i + " Title:" + "" +
-                                ";Notification " + i + " Body:" + "";
+                                ";Notification " + i + " Body:" + "" +
+                                ";Notification " + i + " Date and Time:" + "";
                     }
                     str_accountString += ";\n";
 

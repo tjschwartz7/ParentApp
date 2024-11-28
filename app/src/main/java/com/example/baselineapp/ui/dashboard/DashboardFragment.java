@@ -40,10 +40,9 @@ import java.net.URL;
 public class DashboardFragment extends Fragment {
 
     private FragmentDashboardBinding binding;
-    private static boolean bool_pageUpdaterCreated;
+    private static boolean bool_pageUpdaterCreated = false;
 
     private WebView webView;
-
 
     @OptIn(markerClass = UnstableApi.class)
     public View onCreateView(@NonNull LayoutInflater inflater,

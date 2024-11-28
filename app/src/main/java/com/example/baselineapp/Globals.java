@@ -384,10 +384,12 @@ public final class Globals extends Application
         {
             String title = Globals.getMap().get("Notification " + i + " Title").replace('$', '\n');
             String body = Globals.getMap().get("Notification " + i + " Body").replace('$', '\n');
+            String dateAndTime = Globals.getMap().get("Notification " + i + " Date and Time").replace('$', '\n').replace('.', ':');
             Globals.getMap().put("Notification " + i + " Title", title);
             Globals.getMap().put("Notification " + i + " Body", body);
+            Globals.getMap().put("Notification " + i + " Date and Time", dateAndTime);
             //Adds notification to the front of the LL
-            addNotificationInitial(title, body);
+            addNotificationInitial(title, body, dateAndTime);
         }
     }
 
@@ -397,7 +399,7 @@ public final class Globals extends Application
     //Notifications
     public static LinkedList<Notification> getNotifications() {return notifications;}
 
-    public static void addNotification(String title, String body, Context c)
+    public static void addNotification(String title, String body, String dateAndTime, Context c)
     {
         if(map == null)
         {
@@ -405,7 +407,7 @@ public final class Globals extends Application
         }
 
         //Adds notification to the front of the LL
-        notifications.addFirst(new Notification(title, body));
+        notifications.addFirst(new Notification(title, body, dateAndTime));
 
         //We only maintain 10 notifications at a time, max
         if(notifications.size() >= 10)
@@ -418,30 +420,32 @@ public final class Globals extends Application
         {
             map.put("Notification " + i + " Title", notif.getTitle());
             map.put("Notification " + i + " Body", notif.getBody());
+            map.put("Notification " + i + " Date and Time", notif.getDateAndTime());
             i++;
         }
         ReaderWriter rw = new ReaderWriter();
         rw.writeDataToTextFile(c, Globals.getMap());
     }
 
-    public static void addNotificationInitial(String title, String body)
+    public static void addNotificationInitial(String title, String body, String dateAndTime)
     {
-
-        //Adds notification to the front of the LL
-        notifications.addFirst(new Notification(title, body));
-
-        //We only maintain 10 notifications at a time, max
-        if(notifications.size() >= 10)
+        if(!body.isEmpty())
         {
-            //Remove the oldest notification
-            notifications.removeLast();
-        }
+            //Adds notification to the front of the LL
+            notifications.addFirst(new Notification(title, body, dateAndTime));
 
+            //We only maintain 10 notifications at a time, max
+            if(notifications.size() > 10)
+            {
+                //Remove the oldest notification
+                notifications.removeLast();
+            }
+        }
     }
 
     public static String getNotificationString(int index)
     {
-        return notifications.get(index).title + "\n" + notifications.get(index).body + "\n";
+        return notifications.get(index).title + "\n" + notifications.get(index).dateAndTime + "\n" + notifications.get(index).body + "\n";
     }
 
 
