@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,11 +31,11 @@ public class NotificationSettings extends AppCompatActivity {
         double dbl_tempLowWarningThreshold    = Globals.getTempLowWarningThreshold();
         double dbl_bloodOxLowWarningThreshold = Globals.getBloodOxLowWarningThreshold();
 
-        ((EditText)findViewById(R.id.id_pulseWarningUpperBound)).setText(String.valueOf(dbl_pulseHighWarningThreshold));
-        ((EditText)findViewById(R.id.id_pulseWarningLowerBound)).setText(String.valueOf(dbl_pulseLowWarningThreshold));
-        ((EditText)findViewById(R.id.id_tempWarningUpperBound)).setText(String.valueOf(dbl_tempHighWarningThreshold));
-        ((EditText)findViewById(R.id.id_tempWarningLowerBound)).setText(String.valueOf(dbl_tempLowWarningThreshold));
-        ((EditText)findViewById(R.id.id_bloodOxWarningLowerBound)).setText(String.valueOf(dbl_bloodOxLowWarningThreshold));
+        ((TextView)findViewById(R.id.id_pulseWarningUpperBound)).setText(String.valueOf(dbl_pulseHighWarningThreshold));
+        ((TextView)findViewById(R.id.id_pulseWarningLowerBound)).setText(String.valueOf(dbl_pulseLowWarningThreshold));
+        ((TextView)findViewById(R.id.id_tempWarningUpperBound)).setText(String.valueOf(dbl_tempHighWarningThreshold));
+        ((TextView)findViewById(R.id.id_tempWarningLowerBound)).setText(String.valueOf(dbl_tempLowWarningThreshold));
+        ((TextView)findViewById(R.id.id_bloodOxWarningLowerBound)).setText(String.valueOf(dbl_bloodOxLowWarningThreshold));
 
         //CAUTIONS
         double dbl_pulseHighCautionThreshold  = Globals.getPulseHighCautionThreshold();
@@ -44,11 +44,11 @@ public class NotificationSettings extends AppCompatActivity {
         double dbl_tempLowCautionThreshold    = Globals.getTempLowCautionThreshold();
         double dbl_bloodOxLowCautionThreshold = Globals.getBloodOxLowCautionThreshold();
 
-        ((EditText)findViewById(R.id.id_pulseCautionUpperBound)).setText(String.valueOf(dbl_pulseHighCautionThreshold));
-        ((EditText)findViewById(R.id.id_pulseCautionLowerBound)).setText(String.valueOf(dbl_pulseLowCautionThreshold));
-        ((EditText)findViewById(R.id.id_tempCautionUpperBound)).setText(String.valueOf(dbl_tempHighCautionThreshold));
-        ((EditText)findViewById(R.id.id_tempCautionLowerBound)).setText(String.valueOf(dbl_tempLowCautionThreshold));
-        ((EditText)findViewById(R.id.id_bloodOxCautionLowerBound)).setText(String.valueOf(dbl_bloodOxLowCautionThreshold));
+        ((TextView)findViewById(R.id.id_pulseCautionUpperBound)).setText(String.valueOf(dbl_pulseHighCautionThreshold));
+        ((TextView)findViewById(R.id.id_pulseCautionLowerBound)).setText(String.valueOf(dbl_pulseLowCautionThreshold));
+        ((TextView)findViewById(R.id.id_tempCautionUpperBound)).setText(String.valueOf(dbl_tempHighCautionThreshold));
+        ((TextView)findViewById(R.id.id_tempCautionLowerBound)).setText(String.valueOf(dbl_tempLowCautionThreshold));
+        ((TextView)findViewById(R.id.id_bloodOxCautionLowerBound)).setText(String.valueOf(dbl_bloodOxLowCautionThreshold));
 
         Button cancel_button = (Button) findViewById(R.id.id_cancelButton);
         cancel_button.setOnClickListener(new View.OnClickListener() {
@@ -59,6 +59,7 @@ public class NotificationSettings extends AppCompatActivity {
             }
         });
 
+        /*
         Button save_button = (Button) findViewById(R.id.id_saveButton);
         save_button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -81,25 +82,25 @@ public class NotificationSettings extends AppCompatActivity {
                     //Create a temporary scope for these strings
                     {
                         //Get string value of user input
-                        String str_bloodOxLowerBound = ((EditText) findViewById(R.id.id_bloodOxWarningLowerBound)).getText().toString();
+                        String str_bloodOxLowerBound = ((TextView) findViewById(R.id.id_bloodOxWarningLowerBound)).getText().toString();
                         //If user enters an empty string, leave at initialized value
                         if (!str_bloodOxLowerBound.isEmpty())
                             //Otherwise, set to the new value!
                             dbl_bloodOxWarningLowerBound = Double.parseDouble(str_bloodOxLowerBound);
 
-                        String str_pulseLowerBound = ((EditText) findViewById(R.id.id_pulseWarningLowerBound)).getText().toString();
+                        String str_pulseLowerBound = ((TextView) findViewById(R.id.id_pulseWarningLowerBound)).getText().toString();
                         if (!str_pulseLowerBound.isEmpty())
                             dbl_pulseWarningLowerBound = Double.parseDouble(str_pulseLowerBound);
 
-                        String str_pulseUpperBound = ((EditText) findViewById(R.id.id_pulseWarningUpperBound)).getText().toString();
+                        String str_pulseUpperBound = ((TextView) findViewById(R.id.id_pulseWarningUpperBound)).getText().toString();
                         if (!str_pulseUpperBound.isEmpty())
                             dbl_pulseWarningUpperBound = Double.parseDouble(str_pulseUpperBound);
 
-                        String str_tempLowerBound = ((EditText) findViewById(R.id.id_tempWarningLowerBound)).getText().toString();
+                        String str_tempLowerBound = ((TextView) findViewById(R.id.id_tempWarningLowerBound)).getText().toString();
                         if (!str_tempLowerBound.isEmpty())
                             dbl_tempWarningLowerBound = Double.parseDouble(str_tempLowerBound);
 
-                        String str_tempUpperBound = ((EditText) findViewById(R.id.id_tempWarningUpperBound)).getText().toString();
+                        String str_tempUpperBound = ((TextView) findViewById(R.id.id_tempWarningUpperBound)).getText().toString();
                         if (!str_tempUpperBound.isEmpty())
                             dbl_tempWarningUpperBound = Double.parseDouble(str_tempUpperBound);
                     }
@@ -129,25 +130,25 @@ public class NotificationSettings extends AppCompatActivity {
                     //Create a temporary scope for these strings
                     {
                         //Get string value of user input
-                        String str_bloodOxLowerBound = ((EditText) findViewById(R.id.id_bloodOxCautionLowerBound)).getText().toString();
+                        String str_bloodOxLowerBound = ((TextView) findViewById(R.id.id_bloodOxCautionLowerBound)).getText().toString();
                         //If user enters an empty string, leave at initialized value
                         if (!str_bloodOxLowerBound.isEmpty())
                             //Otherwise, set to the new value!
                             dbl_bloodOxCautionLowerBound = Double.parseDouble(str_bloodOxLowerBound);
 
-                        String str_pulseLowerBound = ((EditText) findViewById(R.id.id_pulseCautionLowerBound)).getText().toString();
+                        String str_pulseLowerBound = ((TextView) findViewById(R.id.id_pulseCautionLowerBound)).getText().toString();
                         if (!str_pulseLowerBound.isEmpty())
                             dbl_pulseCautionLowerBound = Double.parseDouble(str_pulseLowerBound);
 
-                        String str_pulseUpperBound = ((EditText) findViewById(R.id.id_pulseCautionUpperBound)).getText().toString();
+                        String str_pulseUpperBound = ((TextView) findViewById(R.id.id_pulseCautionUpperBound)).getText().toString();
                         if (!str_pulseUpperBound.isEmpty())
                             dbl_pulseCautionUpperBound = Double.parseDouble(str_pulseUpperBound);
 
-                        String str_tempLowerBound = ((EditText) findViewById(R.id.id_tempCautionLowerBound)).getText().toString();
+                        String str_tempLowerBound = ((TextView) findViewById(R.id.id_tempCautionLowerBound)).getText().toString();
                         if (!str_tempLowerBound.isEmpty())
                             dbl_tempCautionLowerBound = Double.parseDouble(str_tempLowerBound);
 
-                        String str_tempUpperBound = ((EditText) findViewById(R.id.id_tempCautionUpperBound)).getText().toString();
+                        String str_tempUpperBound = ((TextView) findViewById(R.id.id_tempCautionUpperBound)).getText().toString();
                         if (!str_tempUpperBound.isEmpty())
                             dbl_tempCautionUpperBound = Double.parseDouble(str_tempUpperBound);
                     }
@@ -161,7 +162,7 @@ public class NotificationSettings extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
-        });
+        });*/
 
         //-----------------
 
