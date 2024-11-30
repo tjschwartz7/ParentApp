@@ -75,6 +75,7 @@ public class SettingsFragment extends Fragment {
                                 Log.e("Settings", ex.getMessage());
                             }
 
+                            Globals.getNotifications().clear();
 
                         }
                     });
