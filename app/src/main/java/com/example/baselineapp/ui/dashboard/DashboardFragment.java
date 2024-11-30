@@ -67,15 +67,8 @@ public class DashboardFragment extends Fragment {
 
         try
         {
-            //TODO! Ugliness is displayed if the video isnt found. Oops!
-            if(URLUtil.isValidUrl("http://nanny.local:5000/video_feed"))
-            {
-                webView.loadUrl("http://nanny.local:5000/video_feed");
-            }
-            else
-            {
-                System.out.println("HUC was null.");
-            }
+
+            webView.loadUrl("http://nanny.local:5000/video_feed");
         }
         catch (Exception ex)
         {
