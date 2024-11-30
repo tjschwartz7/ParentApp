@@ -16,10 +16,10 @@
     android:orientation="vertical"
 >
     <!--Our video viewer for the baby footage -->
-    <VideoView
+    <WebView
+        android:id="@+id/id_webView"
         android:layout_width="match_parent"
-        android:layout_height="232dp"
-        />
+        android:layout_height="wrap_content" />
 
     <!--This layout contains our blood ox and temp data views -->
     <LinearLayout

@@ -22,6 +22,7 @@ public class DebugConsole extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_debug_console);
 
+        /*
         ((EditText)findViewById(R.id.id_bloodOxygenEdit)).setText(String.valueOf(((Globals)getApplication()).getBloodOxVal()));
         ((EditText)findViewById(R.id.id_pulseEdit)).setText(String.valueOf(((Globals)getApplication()).getPulseVal()));
         ((EditText)findViewById(R.id.id_tempEdit)).setText(String.valueOf(((Globals)getApplication()).getTempVal()));
@@ -31,9 +32,9 @@ public class DebugConsole extends AppCompatActivity {
         save_button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                double dbl_bloodOx = ((Globals)getApplication()).getBloodOxVal();
-                double dbl_pulse = ((Globals)getApplication()).getPulseVal();
-                double dbl_temp = ((Globals)getApplication()).getTempVal();
+                int dbl_bloodOx = ((Globals)getApplication()).getBloodOxVal();
+                int dbl_pulse = ((Globals)getApplication()).getPulseVal();
+                int dbl_temp = ((Globals)getApplication()).getTempVal();
 
                 //Get string value of user input
                 String str_bloodOx = ((EditText) findViewById(R.id.id_bloodOxygenEdit)).getText().toString();
@@ -76,6 +77,8 @@ public class DebugConsole extends AppCompatActivity {
                 finish();
             }
         });
+
+         */
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());

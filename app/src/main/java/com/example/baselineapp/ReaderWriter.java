@@ -65,7 +65,8 @@ public class ReaderWriter
         for(int i = 1; i <= 10; i++)
         {
             newData += ";Notification " + i + " Title:" + Globals.getMap().get("Notification " + i + " Title").replace('\n', '$') +
-                    ";Notification " + i + " Body:" + Globals.getMap().get("Notification " + i + " Body").replace('\n', '$');
+                    ";Notification " + i + " Body:" + Globals.getMap().get("Notification " + i + " Body").replace('\n', '$') +
+                    ";Notification " + i + " Date and Time:" + Globals.getMap().get("Notification " + i + " Date and Time").replace('\n', '$').replace(':', '.');
         }
         newData += ";\n";
 

@@ -1,24 +1,50 @@
 package com.example.baselineapp.ui.dashboard;
 
+import android.app.ActivityManager;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.VideoView;
+import android.webkit.URLUtil;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.OptIn;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.baselineapp.Globals;
+import com.example.baselineapp.Login2;
 import com.example.baselineapp.R;
+import com.example.baselineapp.TCPServerService;
 import com.example.baselineapp.databinding.FragmentDashboardBinding;
+
+import androidx.media3.common.MimeTypes;
+import androidx.media3.common.util.UnstableApi;
+import androidx.media3.exoplayer.*;
+import androidx.media3.exoplayer.source.DefaultMediaSourceFactory;
+import androidx.media3.ui.PlayerView;
+import androidx.media3.common.MediaItem;
+
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 
 public class DashboardFragment extends Fragment {
 
     private FragmentDashboardBinding binding;
-    private static boolean bool_pageUpdaterCreated;
+    private static boolean bool_pageUpdaterCreated = false;
 
+    private WebView webView;
+
+    @OptIn(markerClass = UnstableApi.class)
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         DashboardViewModel dashboardViewModel =
@@ -28,6 +54,47 @@ public class DashboardFragment extends Fragment {
 
         //Code starts here
         //-----------------
+
+        webView = binding.idWebView;
+
+        // Configure WebView settings
+        WebSettings webSettings = webView.getSettings();
+        webSettings.setLoadWithOverviewMode(true);
+        webSettings.setUseWideViewPort(true);
+
+        // Ensure links and redirects stay within the WebView
+        webView.setWebViewClient(new WebViewClient());
+
+        try
+        {
+            //TODO! Ugliness is displayed if the video isnt found. Oops!
+            if(URLUtil.isValidUrl("http://nanny.local:5000/video_feed"))
+            {
+                webView.loadUrl("http://nanny.local:5000/video_feed");
+            }
+            else
+            {
+                System.out.println("HUC was null.");
+            }
+        }
+        catch (Exception ex)
+        {
+            System.out.println("URL Exception: " + ex.getMessage());
+            // URL is not accessible.
+        }
+
+        if(getContext() != null)
+        {
+            boolean TCPServiceIsRunning = isMyServiceRunning(TCPServerService.class, getContext());
+            if(!TCPServiceIsRunning)
+            {
+                Globals.setTCPServerService(new Intent( getActivity(), TCPServerService. class ));
+                if(getActivity() != null)
+                    getActivity().startService(new Intent( getActivity(), TCPServerService. class ));
+            }
+        }
+
+
 
         if(!bool_pageUpdaterCreated)
         {
@@ -172,5 +239,15 @@ public class DashboardFragment extends Fragment {
         bool_pageUpdaterCreated = false;
     }
 
+
+    public boolean isMyServiceRunning(Class<?> serviceClass, Context context) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }

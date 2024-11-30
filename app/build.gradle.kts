@@ -46,11 +46,14 @@ dependencies {
     implementation(libs.navigation.ui)
     implementation(libs.annotation)
     implementation(libs.activity)
-    // JavaMail API
-    //implementation("com.sun.mail:android-mail:1.6.7")
-    //implementation("com.sun.mail:android-activation:1.6.7")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
+    implementation("androidx.media3:media3-exoplayer:1.4.1")
+    implementation("androidx.media3:media3-exoplayer-dash:1.4.1")
+    implementation("androidx.media3:media3-exoplayer-rtsp:1.4.1")
+    implementation("androidx.media3:media3-ui:1.4.1")
+
 }

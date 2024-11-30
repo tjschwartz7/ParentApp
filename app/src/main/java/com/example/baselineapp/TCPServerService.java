@@ -2,23 +2,25 @@ package com.example.baselineapp;
 
 import android.app.Service;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.*;
+import java.nio.charset.Charset;
 
 public class TCPServerService extends Service {
     private static final String TAG = "TcpServerService";
     private static final int SERVER_PORT = 13000;
     private ServerSocket serverSocket;
     private boolean isRunning;
+    private static int previousStatusPacket = 0;
+
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -88,7 +90,7 @@ public class TCPServerService extends Service {
                         new InputStreamReader(clientSocket.getInputStream()));
 
                 ServerHandler(out);
-                ClientHandler(in);
+                handleClient(in);
 
             } catch (Exception e) {
                 Log.e(TAG, "Client error: " + e.getMessage());
@@ -103,52 +105,43 @@ public class TCPServerService extends Service {
             }
         }
 
-
-        private static void ClientHandler(BufferedReader in) {
+        private static void handleClient(BufferedReader in) {
             try {
                 String message;
+                Log.d(TAG, "User logged in: "+Globals.userLoggedIn());
                 while(Globals.userLoggedIn()) {
+                    Log.d(TAG, "Waiting...");
+                    Log.d(TAG, "BBBBBBBBBBBBBBBBBBBBBBBBB");
                     message = in.readLine();
 
-                    Log.d(TAG, "Received: " + message);
-                    String str_data;
-                    //First 4 characters is the code
-                    switch(message.charAt(0)) {
-                        case '0':
-                            Log.d(TAG, "Received TEMPERATURE data ");
-                            str_data = message.substring(2); //Get string after first code and space
-                            try {
-                                double dbl_data = Double.valueOf(str_data);
-                                Globals.setTempVal((int)(dbl_data*100) / 100.0);
-                            }
-                            catch(Exception ex) {
-                                Log.e(TAG, "Message error: " + ex.getMessage());
-                            }
+                    Log.d(TAG, ""+message);
 
-                            break;
-                        case '1':
-                            Log.d(TAG, "Received PULSE data ");
-                            str_data = message.substring(2); //Get string after first code and space
-                            try {
-                                double dbl_data = Double.valueOf(str_data);
-                                Globals.setPulseVal((int)(dbl_data*100) / 100.0);
-                            }
-                            catch(Exception ex) {
-                                Log.e(TAG, "Message error: " + ex.getMessage());
-                            }
-                            break;
-                        case '2':
-                            Log.d(TAG, "Received BLOOD OX data ");
-                            str_data = message.substring(2); //Get string after first code and space
-                            try {
-                                double dbl_data = Double.valueOf(str_data);
-                                Globals.setBloodOxVal((int)(dbl_data*100) / 100.0);
-                            }
-                            catch(Exception ex) {
-                                Log.e(TAG, "Message error: " + ex.getMessage());
-                            }
-                            break;
+                    byte[] byte_message = message.getBytes(Charset.defaultCharset());
+                    int command = byte_message[0];
+                    Log.d(TAG, "Command: "+command);
+
+                    boolean temperatureSensorWorking = (command & 0x1) == 1;
+                    boolean bloodOxSensorWorking = (command & 0x2) == 2;
+                    int temp = byte_message[1];
+                    int pulse = byte_message[2];
+                    int bloodOx = byte_message[3];
+
+
+
+                    //It's important to execute this before we set the previousStatusPacket
+                    //This will ensure that any notifications sent will have updated information
+                    Globals.setTempVal(temp);
+                    Globals.setBloodOxVal(bloodOx);
+                    Globals.setPulseVal(pulse);
+                    Globals.setTempSensorStatus(temperatureSensorWorking);
+                    Globals.setPulseOxSensorStatus(bloodOxSensorWorking);
+
+                    if(previousStatusPacket != command)
+                    {
+                        Globals.setPacifierWarningNotified(false);
                     }
+
+                    previousStatusPacket = command;
                 }
             } catch (Exception e) {
                 Log.e(TAG, "Client error: " + e.getMessage());
