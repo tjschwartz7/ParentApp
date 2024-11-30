@@ -110,8 +110,6 @@ public class TCPServerService extends Service {
                 String message;
                 Log.d(TAG, "User logged in: "+Globals.userLoggedIn());
                 while(Globals.userLoggedIn()) {
-                    Log.d(TAG, "Waiting...");
-                    Log.d(TAG, "BBBBBBBBBBBBBBBBBBBBBBBBB");
                     message = in.readLine();
 
                     Log.d(TAG, ""+message);
