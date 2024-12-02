@@ -1,7 +1,6 @@
 import socket
 import subprocess
 import os
-import datetime
 import time
 
 #The basic functionality of PyConnect is this:
@@ -15,16 +14,6 @@ import time
 TCP_PORT = 13002
 UDP_PORT = 13003
 
-from picamera2 import Picamera2
-from picamera2.encoders import H264Encoder
-from picamera2.outputs import FfmpegOutput
-
-picam2 = Picamera2()
-video_config = picam2.create_video_configuration()
-picam2.configure(video_config)
-
-
-
 
 
 
@@ -33,6 +22,7 @@ picam2.configure(video_config)
 # Waits for the phone app to connect to us before we continue with heartbeats
 # and udp data.
 def udp_state_machine():
+
     try:
         while True:
             # Create a socket object
@@ -42,6 +32,7 @@ def udp_state_machine():
             our_address = "0.0.0.0"
             # Bind the socket to the address and port
             pi_socket.bind((our_address, TCP_PORT))
+
             # Listen for incoming connections (we only need one connection from the phone app, so no backlog needed)
             pi_socket.listen(0)
             # Accept a connection
@@ -50,37 +41,67 @@ def udp_state_machine():
             app_socket, app_address_tuple = pi_socket.accept()
             pi_socket.close()
             print(f"Connection from {app_address_tuple[0]}")
+
             # Set the SO_REUSEADDR option to allow the address to be reused
             app_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             app_address = app_address_tuple[0]
+
+
             #Assume we're currently connected (at this point we are)
             connection_lost_flag = False
-            encoder = H264Encoder(10000000)
-            output = FfmpegOutput(f'-f mpegts udp://{app_address}:{UDP_PORT}', audio=True)
 
-            last_frame_time = time.time()
+            #Manage the heartbeat
+            # Set a timeout on the client socket to handle lost heartbeats
+            app_socket.settimeout(20)  # Timeout in seconds
 
-            def frame_callback(frame):
-                global last_frame_time
-                last_frame_time = time.time()
-                # Process the frame as needed
+            while not connection_lost_flag:
+                try:
+                    # Specify the directory containing the .h264 files
+                    print("Begin file reading")
+                    directory = os.getcwd()
 
-            picam2.request_callback = frame_callback
-            picam2.start_recording(encoder, output)
+                    # Iterate through all files in the directory
+                    for filename in os.listdir(directory):
+                        # Check if the file ends with .jpeg
+                        if filename.endswith(".h264"):
+                            file_path = os.path.join(directory, filename)
+                            try:
+                                print(app_address)
 
-            # Check for frame activity
-            while True:
-                if time.time() - last_frame_time > 5:  # 5 seconds threshold
-                    print("Camera has failed or stopped streaming.")
-                    break  # Optionally, reinitialize the camera or take other action
-            
+                                cmd = ["ffmpeg","-i", f"{file_path}", "-vcodec", "copy",  f"udp://{app_address}:{UDP_PORT}?output.mkv"]
+                                #cmd = ["ffmpeg", "-i", f"{file_path}", "-flags", "-global_header", "-vcodec", "libx264", "-map", "0", "-f", "mpegts", f"udp://{app_address}:{UDP_PORT}"]
+
+                                ffmpeg_process = subprocess.Popen(cmd, shell=False)
+                                ffmpeg_process.wait()
+                                # Delete the file
+                                os.remove(file_path)
+                                print(f"Deleted {file_path}")
+                            except Exception as e:
+                                print(f"Exception occurred with file {file_path}: {e}")
+
+                    # Receive data from the client
+                    data = app_socket.recv(32)
+                    if data:
+                        print("Received heartbeat")
+
+                except socket.timeout:
+                    connection_lost_flag = True
+                    # Handle timeout if no heartbeat is received in time
+                    print("Connection timed out. No heartbeat received.")
+
+                except Exception as e:
+                    print(f"Error: {e}")
+                    connection_lost_flag = True
+
+            print("Lost connection. Closing app socket.")
+            app_socket.close()
     except Exception as ex:
         print(f'Error: {ex}')
     finally:
         # Wait for the producer thread to finish before exiting
         print("Main program exiting.")
         app_socket.close()
-        picam2.stop_recording()
+
 
 
 #####################################################################
