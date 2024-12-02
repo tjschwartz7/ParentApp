@@ -47,7 +47,7 @@ public final class Globals extends Application
     //Use this hostname on hotspots
     public static final String serverHostname = "nanny.local";
 
-
+    public static boolean bool_udpIsConnected = false;
     //---------------------------------------------------------
     //Instance data
     private static Boolean bool_loggedIn;
@@ -160,6 +160,14 @@ public final class Globals extends Application
     //---------------------------------------------------------
     //UDP Connection Information
 
+
+    public static Boolean getUDPIsConnected() {
+        return bool_udpIsConnected;
+    }
+
+    public static void setUDPIsConnected(Boolean bool_udpIsConnected) {
+        Globals.bool_udpIsConnected = bool_udpIsConnected;
+    }
 
     //---------------------------------------------------------
     //Instance Information
