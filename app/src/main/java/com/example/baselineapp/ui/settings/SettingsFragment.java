@@ -76,7 +76,6 @@ public class SettingsFragment extends Fragment {
                             }
 
                             Globals.getNotifications().clear();
-
                         }
                     });
 
