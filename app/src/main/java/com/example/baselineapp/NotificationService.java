@@ -261,17 +261,18 @@ public class NotificationService extends Service {
     void sendBabyVitalsNotifications()
     {
         //Read lots of data from Globals for readability sake
-        boolean pulseWarning    = Globals.getPulseVal() >= Globals.getPulseHighWarningThreshold() ||
-                Globals.getPulseVal() <= Globals.getPulseLowWarningThreshold();
-        boolean tempWarning     = Globals.getTempVal() >= Globals.getTempHighWarningThreshold() ||
-                Globals.getTempVal() <= Globals.getTempLowWarningThreshold();
-        boolean bloodOxWarning  = Globals.getBloodOxVal() <= Globals.getBloodOxLowWarningThreshold();
+        boolean pulseWarning    = (Globals.getPulseVal() >= Globals.getPulseHighWarningThreshold() ||
+                Globals.getPulseVal() <= Globals.getPulseLowWarningThreshold()) && Globals.getPulseVal() > 5;
+        boolean tempWarning     = (Globals.getTempVal() >= Globals.getTempHighWarningThreshold() ||
+                Globals.getTempVal() <= Globals.getTempLowWarningThreshold())  && Globals.getTempVal() > 5;
+        boolean bloodOxWarning  = (Globals.getBloodOxVal() <= Globals.getBloodOxLowWarningThreshold()) &&
+                Globals.getBloodOxVal() > 5;
 
-        boolean pulseCaution    = Globals.getPulseVal() >= Globals.getPulseHighCautionThreshold() ||
-                Globals.getPulseVal() <= Globals.getPulseLowCautionThreshold();
-        boolean tempCaution     = Globals.getTempVal() >= Globals.getTempHighCautionThreshold() ||
-                Globals.getTempVal() <= Globals.getTempLowCautionThreshold();
-        boolean bloodOxCaution  = Globals.getBloodOxVal() <= Globals.getBloodOxLowCautionThreshold();
+        boolean pulseCaution    = (Globals.getPulseVal() >= Globals.getPulseHighCautionThreshold() ||
+                Globals.getPulseVal() <= Globals.getPulseLowCautionThreshold())  && Globals.getPulseVal() > 5;
+        boolean tempCaution     = (Globals.getTempVal() >= Globals.getTempHighCautionThreshold() ||
+                Globals.getTempVal() <= Globals.getTempLowCautionThreshold()) && Globals.getTempVal() > 5;
+        boolean bloodOxCaution  = (Globals.getBloodOxVal() <= Globals.getBloodOxLowCautionThreshold()) && Globals.getBloodOxVal() > 5;
         boolean isWarningActive = Globals.isWarningActive();
         boolean isCautionActive = Globals.isCautionActive();
 
