@@ -56,7 +56,7 @@ public class VideoServerService extends Service {
         public void run() {
             try {
                 //Globals.setUDPIsConnected(false); //We haven't connected yet
-                UDPStateMachine();
+                //UDPStateMachine();
 
             } catch (Exception e) {
                 Log.e(TAG, "Server error: " + e.getMessage());
@@ -76,12 +76,12 @@ public class VideoServerService extends Service {
 
     public void UDPStateMachine() {
         //isRunning assumed to be true, if it isn't this should all shut down anyway
-        while(isRunning) {
+        while(isRunning && !Globals.connectionEstablished) {
             Log.d(TAG, "Waiting for connection to Nanny at "+serverHostname+":"+ TCP_PORT);
             try {
                 //If we just failed to connect, wait a few seconds before trying again
                 Thread.sleep(2000);
-                Connect();
+                Globals.connectionEstablished = Connect();
             }
             catch(Exception ex){
                 Log.e(TAG, "Exception: " + ex.getMessage());
@@ -98,13 +98,14 @@ public class VideoServerService extends Service {
         }
     }
 
-    private void Connect() throws IOException, UnknownHostException
+    private boolean Connect() throws IOException, UnknownHostException
     {
         connectionSocket = null;
         // Connect to the server
         connectionSocket = new Socket(serverHostname, TCP_PORT);
         connectionSocket.setSoTimeout(socketTimeoutMillis);  // Set a 20-second timeout
         Log.d(TAG, "Connected to server at " + serverHostname + ":" + TCP_PORT);
+        return true;
     }
 
 }

@@ -247,6 +247,7 @@ public class Login2 extends AppCompatActivity {
                             startService(new Intent( Login2.this, NotificationServerService. class ));
                         }
 
+                        /*
                         boolean UDPServiceIsRunning = isMyServiceRunning(VideoServerService.class, getApplicationContext());
                         if(!UDPServiceIsRunning)
                         {
@@ -254,6 +255,8 @@ public class Login2 extends AppCompatActivity {
                             Globals.setUdpServerService(new Intent( Login2.this, VideoServerService. class ));
                             startService(new Intent( Login2.this, VideoServerService. class ));
                         }
+                        */
+
 
                     }
                 });

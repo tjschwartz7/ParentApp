@@ -34,6 +34,7 @@ public final class Globals extends Application
     public static final int UDP_PORT = 13003;
     public static final int socketTimeoutMillis = 20000; //20 seconds
     public static Socket connectionSocket;
+    public static boolean connectionEstablished = false;
 
     //Use this hostname on wifi
     //public static final String serverHostname = "nanny";

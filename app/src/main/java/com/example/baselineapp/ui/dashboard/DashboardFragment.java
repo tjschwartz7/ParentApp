@@ -1,13 +1,18 @@
 package com.example.baselineapp.ui.dashboard;
 
+//import android.media.MediaPlayer;
+import android.content.Context;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.VideoView;
+//import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.OptIn;
@@ -18,14 +23,19 @@ import com.example.baselineapp.Globals;
 import com.example.baselineapp.R;
 import com.example.baselineapp.databinding.FragmentDashboardBinding;
 
-import androidx.media3.common.MimeTypes;
+//import androidx.media3.common.MimeTypes;
 import androidx.media3.common.util.UnstableApi;
-import androidx.media3.exoplayer.*;
-import androidx.media3.exoplayer.source.DefaultMediaSourceFactory;
-import androidx.media3.ui.PlayerView;
-import androidx.media3.common.MediaItem;
+//import androidx.media3.exoplayer.*;
+//import androidx.media3.exoplayer.source.DefaultMediaSourceFactory;
+//import androidx.media3.ui.PlayerView;
+//import androidx.media3.common.MediaItem;
+import org.videolan.libvlc.LibVLC;
+import org.videolan.libvlc.Media;
+import org.videolan.libvlc.MediaPlayer;
+import org.videolan.libvlc.media.VideoView;
 
 import java.net.Socket;
+import java.util.ArrayList;
 
 
 public class DashboardFragment extends Fragment {
@@ -33,8 +43,9 @@ public class DashboardFragment extends Fragment {
     private FragmentDashboardBinding binding;
     private static boolean bool_pageUpdaterCreated;
 
-
-
+    private LibVLC libVLC;
+    private MediaPlayer mediaPlayer;
+    private VideoView videoView;
 
     @OptIn(markerClass = UnstableApi.class)
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -43,6 +54,7 @@ public class DashboardFragment extends Fragment {
                 new ViewModelProvider(this).get(DashboardViewModel.class);
 
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
 
         //Code starts here
         //-----------------
@@ -84,6 +96,12 @@ public class DashboardFragment extends Fragment {
         player.play();
         */
 
+        /*while(!Globals.connectionEstablished)
+        {
+            //Loop until the VideoServerService establishes the connection
+        }*/
+
+        /*
         if(Globals.connectionSocket == null || Globals.connectionSocket.isClosed())
         {
             System.out.println("BOOM BOOM BOOM BOOM BLDGDGDGDG");
@@ -137,21 +155,64 @@ public class DashboardFragment extends Fragment {
                 System.out.println("Error closing socket: " + e.getMessage());
             }
         }
+         */
 
-        if(binding.idVideoPlayer.getPlayer() == null)
+
+        if(mediaPlayer == null)
         {
             try
             {
+                AudioManager audioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
+                int result = audioManager.requestAudioFocus(focusChange -> {}, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+
+                if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+                    Log.d("Audio", "Audio focus granted");
+                } else {
+                    Log.e("Audio", "Audio focus request failed");
+                }
+                /*
                 System.out.println("REACHED EXOPLAYER START");
                 ExoPlayer player;
                 //If you're on a hotspot it'll be nanny.local
-                Uri mediaUri = Uri.parse("udp://nanny.local:" + Globals.UDP_PORT);
+                Uri mediaUri = Uri.parse("udp://192.168.0.234:" + Globals.UDP_PORT);
                 player = new ExoPlayer.Builder(binding.getRoot().getContext()).build();
 
                 player.setMediaItem(MediaItem.fromUri(mediaUri));
                 // Prepare the player.
                 player.prepare();
                 binding.idVideoPlayer.setPlayer(player);
+                 */
+                // Initialize VLC
+                ArrayList<String> options = new ArrayList<>();
+                //options.add("--rtsp-tcp"); // Add options as needed
+                libVLC = new LibVLC(requireContext(), options);
+                mediaPlayer = new MediaPlayer(libVLC);
+
+                // Set Media Source
+                //String streamUrl = "udp://@192.168.0.234:13003"; // Update with your UDP stream
+                Uri mediaUri = Uri.parse("rtsp://192.168.0.234:8554/live.stream");
+                Media media = new Media(libVLC, mediaUri);
+                //media.addOption("--codec=avcodec");
+                //media.addOption("--aout=opensles");
+                //media.addOption("--audio-time-stretch");
+                //media.addOption("--audio-buffering=1000"); // 1000 ms (1 second) audio buffer
+                //media.addOption("--audio-resampler=soxr"); // Use high-quality resampling
+                //media.addOption("--resample=44100");      // Resample to 44100 Hz
+                //media.addOption("--channels=1");          // Force stereo output
+                //media.addOption("--low-latency");
+                //media.addOption("-vvv");
+                media.setHWDecoderEnabled(true, false);
+                media.addOption(":network-caching=150");
+                media.addOption(":clock-jitter=0");
+                media.addOption(":clock-synchro=0");
+                mediaPlayer.setMedia(media);
+                // Attach VideoView to VLC
+                videoView = root.findViewById(R.id.videoView);
+                mediaPlayer.getVLCVout().setVideoSurface(videoView.getHolder().getSurface(), videoView.getHolder());
+                mediaPlayer.getVLCVout().setWindowSize(videoView.getWidth(), videoView.getHeight());
+                mediaPlayer.getVLCVout().attachViews();
+                // Start playback
+                mediaPlayer.play();
             }
             catch(Exception ex)
             {
@@ -159,6 +220,36 @@ public class DashboardFragment extends Fragment {
                 System.out.println("Error starting ExoPlayer: " + ex.getMessage());
             }
         }
+
+
+        /*
+        surfaceView = rootView.findViewById(R.id.surfaceView);
+
+        surfaceView.post(() ->
+        {
+            SurfaceHolder surfaceHolder = surfaceView.getHolder();
+            surfaceHolder.addCallback(new SurfaceHolder.Callback()
+            {
+                @Override
+                public void surfaceCreated(SurfaceHolder holder)
+                {
+                    startMediaPlayer(holder);
+                }
+
+                @Override
+                public void surfaceChanged(SurfaceHolder holder, int format, int width, int height)
+                {
+                    // Handle surface changes if needed
+                }
+
+                @Override
+                public void surfaceDestroyed(SurfaceHolder holder)
+                {
+                    releaseMediaPlayer();
+                }
+            });
+        });
+        */
 
         if(!bool_pageUpdaterCreated)
         {
@@ -168,17 +259,54 @@ public class DashboardFragment extends Fragment {
 
         //-----------------
 
-        View root = binding.getRoot();
-
         return root;
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        //releaseMediaPlayer();
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+        if (libVLC != null) {
+            libVLC.release();
+            libVLC = null;
+        }
         binding = null;
     }
 
+    /*
+    private void startMediaPlayer(SurfaceHolder holder) {
+        try {
+            if (mediaPlayer == null) {
+                mediaPlayer = new MediaPlayer();
+                Uri mediaUri = Uri.parse("udp://192.168.1.100:" + Globals.UDP_PORT); // Replace with your actual IP and port
+
+                mediaPlayer.setDataSource(this.getContext(), mediaUri);
+                mediaPlayer.setDisplay(holder);
+                mediaPlayer.setOnPreparedListener(mp -> mediaPlayer.start());
+                mediaPlayer.setOnErrorListener((mp, what, extra) -> {
+                    Log.e("MediaPlayerError", "Error: " + what + ", " + extra);
+                    return true;
+                });
+
+                mediaPlayer.prepareAsync(); // Use async to avoid blocking the UI thread
+            }
+        } catch (Exception e) {
+            Log.e("MediaPlayerError", "Failed to initialize MediaPlayer", e);
+        }
+    }
+
+    private void releaseMediaPlayer() {
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+    }
+    */
     public void updatePage()
     {
         double dbl_bloodOxValue = Globals.getBloodOxVal();

@@ -46,6 +46,7 @@ dependencies {
     implementation(libs.navigation.ui)
     implementation(libs.annotation)
     implementation(libs.activity)
+    implementation(libs.libvlc.all.v400eap16)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)

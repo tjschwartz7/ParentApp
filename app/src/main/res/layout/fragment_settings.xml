@@ -53,19 +53,7 @@
             android:backgroundTint="@color/white"
             />
 
-        <Button
-            android:id="@+id/id_debugConsole"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:text="Debug Console"
-            android:textColor="@color/black"
-            android:backgroundTint="@color/white"
-            />
-
-        <Button
+    <Button
             android:id="@+id/id_logout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

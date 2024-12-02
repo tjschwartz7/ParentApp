@@ -95,11 +95,12 @@ public class SettingsFragment extends Fragment {
             startActivity(intent);
         });
 
+        /*
         binding.idDebugConsole.setOnClickListener(v -> {
             Intent intent = new Intent(SettingsFragment.this.getActivity(), DebugConsole.class);
             startActivity(intent);
         });
-
+        */
 
 
         //-----------------
