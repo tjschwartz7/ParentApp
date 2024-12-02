@@ -27,6 +27,11 @@ public final class Globals extends Application
 
     private static Boolean bool_sendPowerEnableCommand = false;
 
+    private static Boolean bool_tempSensorNominal = false;
+    private static Boolean bool_pulseOxSensorNominal = false;
+
+    private static boolean bool_pacifierWarningNotifiedFlag = false;
+
     //---------------------------------------------------------
     //UDP Connection data
 
@@ -59,11 +64,11 @@ public final class Globals extends Application
 
     //---------------------------------------------------------
     //Baby Vitals Data
-    private static double dbl_bloodOxVal;
+    private static int int_bloodOxVal;
     private static String str_bloodOxUnit = "%";
-    private static double dbl_tempVal;
+    private static int int_tempVal;
     private static String str_tempUnit = "F";
-    private static double dbl_pulseVal;
+    private static int int_pulseVal;
     private static String str_pulseUnit = "bpm";
 
     //---------------------------------------------------------
@@ -128,6 +133,30 @@ public final class Globals extends Application
         Globals.bool_isConnected = isConnected;
     }
 
+    public static Boolean getTempSensorStatus(){
+        return bool_tempSensorNominal;
+    }
+
+    public static void setTempSensorStatus(boolean tempSensorStatus){
+        bool_tempSensorNominal = tempSensorStatus;
+    }
+
+    public static Boolean getPulseOxSensorStatus(){
+        return bool_pulseOxSensorNominal;
+    }
+
+    public static void setPulseOxSensorStatus(boolean pulseOxSensorStatus){
+        bool_pulseOxSensorNominal = pulseOxSensorStatus;
+    }
+
+    public static void setPacifierWarningNotified(boolean notified){
+        bool_pacifierWarningNotifiedFlag = notified;
+    }
+
+    public static boolean getPacifierWarningNotified(){
+        return bool_pacifierWarningNotifiedFlag;
+    }
+
     //---------------------------------------------------------
     //UDP Connection Information
 
@@ -166,31 +195,31 @@ public final class Globals extends Application
     //---------------------------------------------------------
     //Baby Vital Data
 
-    public static double getBloodOxVal() {return dbl_bloodOxVal;}
+    public static int getBloodOxVal() {return int_bloodOxVal;}
     public static String getBloodOxUnit() {return str_bloodOxUnit;}
 
-    public static double getTempVal() {return dbl_tempVal;}
+    public static int getTempVal() {return int_tempVal;}
     public static String getTempUnit() {return str_tempUnit;}
 
-    public static double getPulseVal() {return dbl_pulseVal;}
+    public static int getPulseVal() {return int_pulseVal;}
 
-    public static void setBloodOxVal(double bloodOxVal) {
-        Globals.dbl_bloodOxVal = bloodOxVal;
+    public static void setBloodOxVal(int bloodOxVal) {
+        Globals.int_bloodOxVal = bloodOxVal;
     }
 
-    public static void setTempVal(double tempVal) {
-        Globals.dbl_tempVal = tempVal;
+    public static void setTempVal(int tempVal) {
+        Globals.int_tempVal = tempVal;
     }
 
-    public static void setPulseVal(double pulseVal) {
-        Globals.dbl_pulseVal = pulseVal;
+    public static void setPulseVal(int pulseVal) {
+        Globals.int_pulseVal = pulseVal;
     }
     public static String getPulseUnit() {return str_pulseUnit;}
-    public static void debugOnlySetVitals(double bloodOx, double pulse, double temp)
+    public static void debugOnlySetVitals(int bloodOx, int pulse, int temp)
     {
-        dbl_bloodOxVal = bloodOx;
-        dbl_pulseVal = pulse;
-        dbl_tempVal = temp;
+        int_bloodOxVal = bloodOx;
+        int_pulseVal = pulse;
+        int_tempVal = temp;
     }
 
     //---------------------------------------------------------
@@ -347,21 +376,23 @@ public final class Globals extends Application
             profile = profile.substring(endIndex+1);
             map.put(key, value);
         }
-        dbl_bloodOxVal = 0.0;
+        int_bloodOxVal = 0;
         str_bloodOxUnit = "%";
-        dbl_tempVal = 0.0;
+        int_tempVal = 0;
         str_tempUnit = "F";
-        dbl_pulseVal = 0.0;
+        int_pulseVal = 0;
         str_pulseUnit = "bpm";
         //Replace all occurrences of $ with \n for notifications.
         for(int i = 1; i <= 10; i++)
         {
             String title = Globals.getMap().get("Notification " + i + " Title").replace('$', '\n');
             String body = Globals.getMap().get("Notification " + i + " Body").replace('$', '\n');
+            String dateAndTime = Globals.getMap().get("Notification " + i + " Date and Time").replace('$', '\n').replace('.', ':');
             Globals.getMap().put("Notification " + i + " Title", title);
             Globals.getMap().put("Notification " + i + " Body", body);
+            Globals.getMap().put("Notification " + i + " Date and Time", dateAndTime);
             //Adds notification to the front of the LL
-            addNotificationInitial(title, body);
+            addNotificationInitial(title, body, dateAndTime);
         }
     }
 
@@ -371,7 +402,7 @@ public final class Globals extends Application
     //Notifications
     public static LinkedList<Notification> getNotifications() {return notifications;}
 
-    public static void addNotification(String title, String body, Context c)
+    public static void addNotification(String title, String body, String dateAndTime, Context c)
     {
         if(map == null)
         {
@@ -379,7 +410,7 @@ public final class Globals extends Application
         }
 
         //Adds notification to the front of the LL
-        notifications.addFirst(new Notification(title, body));
+        notifications.addFirst(new Notification(title, body, dateAndTime));
 
         //We only maintain 10 notifications at a time, max
         if(notifications.size() >= 10)
@@ -392,30 +423,32 @@ public final class Globals extends Application
         {
             map.put("Notification " + i + " Title", notif.getTitle());
             map.put("Notification " + i + " Body", notif.getBody());
+            map.put("Notification " + i + " Date and Time", notif.getDateAndTime());
             i++;
         }
         ReaderWriter rw = new ReaderWriter();
         rw.writeDataToTextFile(c, Globals.getMap());
     }
 
-    public static void addNotificationInitial(String title, String body)
+    public static void addNotificationInitial(String title, String body, String dateAndTime)
     {
-
-        //Adds notification to the front of the LL
-        notifications.addFirst(new Notification(title, body));
-
-        //We only maintain 10 notifications at a time, max
-        if(notifications.size() >= 10)
+        if(!body.isEmpty())
         {
-            //Remove the oldest notification
-            notifications.removeLast();
-        }
+            //Adds notification to the front of the LL
+            notifications.addFirst(new Notification(title, body, dateAndTime));
 
+            //We only maintain 10 notifications at a time, max
+            if(notifications.size() > 10)
+            {
+                //Remove the oldest notification
+                notifications.removeLast();
+            }
+        }
     }
 
     public static String getNotificationString(int index)
     {
-        return notifications.get(index).title + "\n" + notifications.get(index).body + "\n";
+        return notifications.get(index).title + "\n" + notifications.get(index).dateAndTime + "\n" + notifications.get(index).body + "\n";
     }
 
 

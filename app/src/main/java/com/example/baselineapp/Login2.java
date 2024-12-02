@@ -120,14 +120,6 @@ public class Login2 extends AppCompatActivity {
             }
         });
 
-        //TODO: CHECK THIS!!!
-        //ReaderWriter rw = new ReaderWriter();
-        //rw.readTextFileAndInitiallyPopulateGlobals(this);
-
-        //TODO: CHECK THIS!!!
-        //ReaderWriter rw = new ReaderWriter();
-        //rw.readTextFileAndInitiallyPopulateGlobals(this);
-
         TextInputEditText emailInput = findViewById(R.id.id_emailLoginInput);
         TextInputEditText passwordInput = findViewById(R.id.id_passwordLoginInput);
         //On Go button click, merely go to the MainActivity for now. Will implement appropriate login
@@ -240,12 +232,7 @@ public class Login2 extends AppCompatActivity {
                             startService(new Intent( Login2.this, NotificationSetup. class ));
                         }
 
-                        boolean TCPServiceIsRunning = isMyServiceRunning(NotificationServerService.class, getApplicationContext());
-                        if(!TCPServiceIsRunning)
-                        {
-                            Globals.setTCPServerService(new Intent( Login2.this, NotificationServerService. class ));
-                            startService(new Intent( Login2.this, NotificationServerService. class ));
-                        }
+
 
                         /*
                         boolean UDPServiceIsRunning = isMyServiceRunning(VideoServerService.class, getApplicationContext());

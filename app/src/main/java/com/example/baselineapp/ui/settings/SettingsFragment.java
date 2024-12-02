@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.baselineapp.ChangePassword;
-import com.example.baselineapp.DebugConsole;
+//import com.example.baselineapp.DebugConsole;
 import com.example.baselineapp.Globals;
 import com.example.baselineapp.Login2;
 import com.example.baselineapp.NotificationSettings;
@@ -96,12 +96,11 @@ public class SettingsFragment extends Fragment {
             startActivity(intent);
         });
 
-        /*
-        binding.idDebugConsole.setOnClickListener(v -> {
+        /*binding.idDebugConsole.setOnClickListener(v -> {
             Intent intent = new Intent(SettingsFragment.this.getActivity(), DebugConsole.class);
             startActivity(intent);
-        });
-        */
+        });*/
+
 
 
         //-----------------

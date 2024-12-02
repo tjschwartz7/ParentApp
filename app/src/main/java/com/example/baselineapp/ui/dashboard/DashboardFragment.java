@@ -3,6 +3,8 @@ package com.example.baselineapp.ui.dashboard;
 //import android.media.MediaPlayer;
 import android.content.Context;
 import android.media.AudioManager;
+import android.app.ActivityManager;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,6 +14,11 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.VideoView;
+import android.webkit.URLUtil;
 //import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
@@ -20,7 +27,9 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.baselineapp.Globals;
+import com.example.baselineapp.Login2;
 import com.example.baselineapp.R;
+import com.example.baselineapp.TCPServerService;
 import com.example.baselineapp.databinding.FragmentDashboardBinding;
 
 //import androidx.media3.common.MimeTypes;
@@ -37,11 +46,14 @@ import org.videolan.libvlc.media.VideoView;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 
 public class DashboardFragment extends Fragment {
 
     private FragmentDashboardBinding binding;
-    private static boolean bool_pageUpdaterCreated;
+    private static boolean bool_pageUpdaterCreated = false;
 
     private LibVLC libVLC;
     private MediaPlayer mediaPlayer;
@@ -431,5 +443,15 @@ public class DashboardFragment extends Fragment {
         bool_pageUpdaterCreated = false;
     }
 
+
+    public boolean isMyServiceRunning(Class<?> serviceClass, Context context) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }

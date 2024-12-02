@@ -82,6 +82,17 @@ public class NotificationService extends Service {
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true);
 
+    NotificationCompat.Builder notif_pacifierWarning = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_dashboard_black_24dp)
+            .setContentTitle("HARDWARE FAILURE")
+            .setContentText("Something has gone wrong with the pacifier.")
+            .setStyle(new NotificationCompat.BigTextStyle()
+                    .bigText((Globals.getTempSensorStatus() ? getString(R.string.str_tempSensorFailure) : "") +
+                            (Globals.getPulseOxSensorStatus() ? getString(R.string.str_pulseOxSensorFailure) : "")
+                    ))
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setAutoCancel(true);
+
     @Override
     public IBinder onBind (Intent arg0)
     {
@@ -103,7 +114,7 @@ public class NotificationService extends Service {
     @Override
     public void onCreate ()
     {
-
+        handleThresholds();
         Log. e ( TAG , "onCreate" ) ;
         mNotificationManager = (NotificationManager) getSystemService( NOTIFICATION_SERVICE ) ;
 
@@ -215,7 +226,6 @@ public class NotificationService extends Service {
             bool_tcpConnectionErrorNotifiedFlag = true;
         }
 
-        /*
         //If client is connected and we've sent the connection error flag,
         //we can reset it now for future disconnects.
         if(Globals.getUDPIsConnected() && bool_udpConnectionErrorNotifiedFlag)
@@ -230,7 +240,20 @@ public class NotificationService extends Service {
             mNotificationManager.notify(( int ) System. currentTimeMillis () , notif_nannyCamNotConnected.build()) ;
             bool_udpConnectionErrorNotifiedFlag = true;
         }
-        */
+
+        if(
+                (
+                Globals.getTempSensorStatus() ||
+                Globals.getPulseOxSensorStatus()
+                ) &&
+                !Globals.getPacifierWarningNotified())
+
+        {
+            //Notify
+            assert mNotificationManager != null;
+            mNotificationManager.notify(( int ) System. currentTimeMillis () , notif_pacifierWarning.build()) ;
+            Globals.setPacifierWarningNotified(true);
+        }
 
 
     }
@@ -275,8 +298,23 @@ public class NotificationService extends Service {
                     if(tempWarning) msg += ("Temperature out of range - " +  String.valueOf(Globals.getTempVal())) + "\n";
                     if(bloodOxWarning) msg += ("Blood Oxygen out of range - " +  String.valueOf(Globals.getBloodOxVal())) + "\n";
 
+                    // Get the current date and time
+                    Calendar calendar = Calendar.getInstance();
+
+                    // Extract individual components
+                    int year = calendar.get(Calendar.YEAR);
+                    int month = calendar.get(Calendar.MONTH) + 1; // Months are 0-based
+                    int day = calendar.get(Calendar.DAY_OF_MONTH);
+                    int hour = calendar.get(Calendar.HOUR_OF_DAY); // 24-hour format
+                    int minute = calendar.get(Calendar.MINUTE);
+                    int second = calendar.get(Calendar.SECOND);
+
+                    String dateAndTime = String.format("Timestamp: %04d-%02d-%02d at %02d:%02d:%02d",
+                                year, month, day, hour, minute, second);
+
+
                     //Globals.addNotification("WARNING", msg, getBaseContext().getFilesDir().getPath() + "/AccountData");
-                    Globals.addNotification("WARNING", msg, this);
+                    Globals.addNotification("WARNING", msg, dateAndTime, this);
                 }
                 //If this is still active during next tick, run notification
                 else warning_hasBeenActive5s = true;
@@ -306,8 +344,22 @@ public class NotificationService extends Service {
                     if(tempCaution) msg += ("Temperature out of range -  " +  String.valueOf(Globals.getTempVal())) + "\n";
                     if(bloodOxCaution) msg += ("Blood Oxygen out of range -  " +  String.valueOf(Globals.getBloodOxVal())) + "\n";
 
+                    // Get the current date and time
+                    Calendar calendar = Calendar.getInstance();
+
+                    // Extract individual components
+                    int year = calendar.get(Calendar.YEAR);
+                    int month = calendar.get(Calendar.MONTH) + 1; // Months are 0-based
+                    int day = calendar.get(Calendar.DAY_OF_MONTH);
+                    int hour = calendar.get(Calendar.HOUR_OF_DAY); // 24-hour format
+                    int minute = calendar.get(Calendar.MINUTE);
+                    int second = calendar.get(Calendar.SECOND);
+
+                    String dateAndTime = String.format("Timestamp: %04d-%02d-%02d at %02d:%02d:%02d",
+                            year, month, day, hour, minute, second);
+
                     //Globals.addNotification("CAUTION", msg, getBaseContext().getFilesDir().getPath() + "/AccountData");
-                    Globals.addNotification("CAUTION", msg, this);
+                    Globals.addNotification("CAUTION", msg, dateAndTime, this);
 
                 }
                 //If this is still active during next tick, run notification
@@ -329,12 +381,19 @@ public class NotificationService extends Service {
 
     void handleThresholds()
     {
-        if(Globals.getBirthdate() == null) return;
+        if(Globals.getMap().get("Baby Birthday") == null) return;
 
-        int year = Calendar.getInstance().get(Calendar.YEAR) -
-                Globals.getBirthdate().getYear();
-        int months = year * 12 + (Calendar.getInstance().get(Calendar.MONTH) -
-                Globals.getBirthdate().getMonth());
+        String str_babyBirthday = Globals.getMap().get("Baby Birthday");
+        String[] yearMonthDay = str_babyBirthday.split("-");
+        int year = Integer.parseInt(yearMonthDay[0]);
+        int month = Integer.parseInt(yearMonthDay[1]);
+        int day = Integer.parseInt(yearMonthDay[2]);
+
+        int years = Calendar.getInstance().get(Calendar.YEAR) -
+                year;
+
+        int months = years * 12 + (Calendar.getInstance().get(Calendar.MONTH) -
+                month);
 
         //Temperature thresholds don't change
         Globals.setTempLowCautionThreshold(98);
@@ -375,7 +434,7 @@ public class NotificationService extends Service {
             Globals.setPulseHighCautionThreshold(160);
             Globals.setPulseHighWarningThreshold(165);
         }
-        if(months <= 24)
+        else if(months <= 24)
         {
             Globals.setPulseLowCautionThreshold(80);
             Globals.setPulseLowWarningThreshold(75);

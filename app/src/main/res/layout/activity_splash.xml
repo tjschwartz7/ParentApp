@@ -6,33 +6,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Splash"
-    android:background="#FFBB86FC">
+    android:background="#FFFFFFFF">
 
-    <!-- ToDo: Create Image for Splash Screen and Link Here
-    <ImageView
-        android:id="@+id/splashImageView"
-        android:layout_height="400dp"
+    <VideoView
+        android:id="@+id/id_splashVideo"
         android:layout_width="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="30dp"
-        app:layout_constraintBottom_toTopOf="@+id/splashTextView"
-        app:layout_constraintBottom_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_contraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
-     -->
-
-    <TextView
-        android:id="@+id/id_splashTextView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="250dp"
         android:layout_gravity="center"
-        android:text="Placeholder"
-        android:textAlignment="center"
-        android:textSize="50sp"
-        />
-
+        android:layout_marginTop="240dp"
+        android:layout_marginBottom="241dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
